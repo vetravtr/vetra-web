@@ -1,0 +1,414 @@
+---
+import SectionLayout from "../../layouts/SectionLayout.astro";
+import AlignmentLayout from "../../layouts/AlignmentLayout.astro";
+import Title from "../Title.astro";
+import Description from "../Description.astro";
+import Badge from "../Badge.astro";
+import { cn } from "../../utils/cn";
+import { Image } from "astro:assets";
+import StarsIcon from "../../assets/icons/stars-light-sparkle.svg";
+import BrowserControlsIcon from "../../assets/icons/browser-controls.svg";
+import ArrowLeftBrowserIcon from "../../assets/icons/arrow-left-browser.svg";
+import ArrowRightBrowserIcon from "../../assets/icons/arrow-right-browser.svg";
+import PlusBrowserIcon from "../../assets/icons/plus-browser.svg";
+import PulseGlow from "../effects/PulseGlow.astro";
+import Skeleton from "../Skeleton.astro";
+import BackgroundImage from "../../assets/details/real-time-background.png";
+import BackgroundImageMobile from "../../assets/details/real-time-background-mobile.png";
+
+const sectionOuterClasses = cn(
+  "flex items-center w-full relative",
+  "real-time-reserves-section",
+);
+
+const sectionInnerClasses = cn("w-full pt-[88px]", "max-sm:h-fit");
+
+const mainLayoutClasses = cn(
+  "gap-16 relative z-10 w-full",
+  "flex flex-col items-center",
+);
+
+// Typography Constants
+const TEXT_12_16 =
+  "text-[12px] leading-[16px] max-md:text-[12px] max-md:leading-[16px]";
+const TEXT_14_18 =
+  "text-[14px] leading-[18px] max-md:text-[14px] max-md:leading-[18px]";
+const TEXT_18_22 =
+  "text-[18px] leading-[22px] max-md:text-[18px] max-md:leading-[22px]";
+
+const headerClasses = cn("gap-4", "max-w-[656px] text-center mx-auto");
+
+const browserWindowClasses = cn(
+  "w-full bg-browser-bg rounded-t-2xl overflow-hidden",
+);
+
+const browserToolbarClasses = cn("h-[52px] bg-browser-toolbar px-5 gap-[10px]");
+
+const windowControlsClasses = cn("flex gap-2");
+const windowControl = cn("w-3 h-3 rounded-full");
+
+// Dashboard Styles
+const dashboardContainerClasses = cn("p-8 pb-18.5 max-sm:p-8 gap-6");
+
+const headerDashboardClasses = cn(
+  "flex justify-between items-start max-sm:flex-col max-sm:gap-4",
+);
+
+const metricsGridClasses = cn(
+  "w-full grid grid-cols-2 gap-2 max-sm:grid-cols-1",
+);
+
+const metricCardClasses = cn(
+  "bg-dashboard-card-bg flex flex-col rounded-[4px] p-4 gap-1 h-fit",
+);
+
+const infoGridClasses = cn(
+  "bg-dashboard-card-bg flex-1 grid grid-cols-1 max-sm:grid-cols-1 rounded-[4px]",
+);
+
+const infoCardClasses = cn(
+  "bg-dashboard-card-bg rounded-[4px] p-4 flex-1 h-auto flex flex-col justify-between",
+);
+---
+
+<SectionLayout
+  outerClassName={sectionOuterClasses}
+  innerClassName={sectionInnerClasses}
+  autoMargin={true}
+>
+  <Image
+    src={BackgroundImage}
+    alt="Background"
+    class="absolute inset-0 -z-10 w-full h-full object-cover max-sm:hidden opacity-70"
+  />
+  <Image
+    src={BackgroundImageMobile}
+    alt="Background"
+    class="absolute inset-0 -z-10 w-full h-full object-cover sm:hidden opacity-70"
+  />
+  <PulseGlow bottom={false} className="-z-10" />
+
+  <AlignmentLayout
+    direction="vertical"
+    justify="center"
+    align="center"
+    className={mainLayoutClasses}
+  >
+    {/* Section Header */}
+    <AlignmentLayout
+      direction="vertical"
+      justify="center"
+      align="center"
+      className={headerClasses}
+    >
+      <Badge text="Transparency First">
+        <Image
+          src={StarsIcon}
+          alt="Stars"
+          class="w-full h-full object-contain"
+          width={12}
+          height={12}
+        />
+      </Badge>
+      <Title text="Built on transparency, designed for real use" className="text-center" />
+      <Description
+        text="Low-cost transfers, instant finality, and audit-ready reserves — providing a clear and reliable foundation for digital value."
+        className="text-center"
+      />
+    </AlignmentLayout>
+
+    {/* Browser Window */}
+    <div class={browserWindowClasses}>
+      {/* Toolbar */}
+      {/* Toolbar */}
+      <AlignmentLayout
+        direction="horizontal"
+        justify="between"
+        align="center"
+        className={browserToolbarClasses}
+      >
+        <AlignmentLayout
+          direction="horizontal"
+          justify="start"
+          align="center"
+          className="gap-[15px] flex-1 min-w-fit"
+        >
+          <div class={windowControlsClasses}>
+            <div class={cn(windowControl, "bg-text-grey")}></div>
+            <div class={cn(windowControl, "bg-text-grey")}></div>
+            <div class={cn(windowControl, "bg-text-grey")}></div>
+          </div>
+
+          <div class="w-[37px] h-[22px] max-sm:hidden">
+            <Image
+              src={BrowserControlsIcon}
+              alt="Browser Controls"
+              class="w-full h-full object-contain"
+            />
+          </div>
+
+          <AlignmentLayout
+            direction="horizontal"
+            justify="center"
+            align="center"
+            className="gap-1 max-sm:hidden"
+          >
+            <Image
+              src={ArrowLeftBrowserIcon}
+              alt="Back"
+              width={25}
+              height={22}
+            />
+
+            <Image
+              src={ArrowRightBrowserIcon}
+              alt="Forward"
+              width={25}
+              height={22}
+            />
+          </AlignmentLayout>
+        </AlignmentLayout>
+
+        <div
+          class="p-[6.5px] w-full max-w-[558px] max-sm:max-w-[226px] text-center text-browser-address-text text-[13px] bg-browser-address-bg font-light font-sans rounded-[6px]"
+        >
+          www.vetravtr.com/
+        </div>
+        <AlignmentLayout
+          direction="horizontal"
+          justify="end"
+          align="center"
+          className="flex-1 min-w-fit"
+        >
+          <Image src={PlusBrowserIcon} alt="New Tab" width={13} height={13} />
+        </AlignmentLayout>
+      </AlignmentLayout>
+
+      {/* Dashboard Content */}
+      <AlignmentLayout
+        direction="vertical"
+        justify="start"
+        align="stretch"
+        className={dashboardContainerClasses}
+      >
+        {/* Dashboard Header */}
+        <div class={headerDashboardClasses}>
+          <AlignmentLayout
+            direction="vertical"
+            justify="start"
+            align="start"
+            className="gap-1"
+          >
+            <Title
+              text="Real-Time Reserves"
+              className="text-text-secondary text-[20px] leading-[24px] max-sm:text-[20px] max-sm:leading-[24px]"
+            />
+            <div class="relative min-w-[150px]" data-loading="true">
+              <Skeleton className="skeleton-placeholder h-4 w-32" />
+              <Description
+                text="Updated: Nov 21, 2025, 12:46"
+                className={cn(TEXT_12_16, "dynamic-content hidden")}
+                id="reserves-updated-at"
+              />
+            </div>
+          </AlignmentLayout>
+          <AlignmentLayout
+            direction="horizontal"
+            justify="center"
+            align="center"
+            className="bg-dashboard-badge-bg border border-input-hover-bg rounded-[4px] p-4 max-sm:w-full"
+          >
+            <Title text="1 VTR = 1 USD guaranteed" className={TEXT_14_18} />
+          </AlignmentLayout>
+        </div>
+
+        {/* Metrics Grid */}
+        <div class={metricsGridClasses}>
+          {/* Card 1 */}
+          <div class={metricCardClasses}>
+            <div class="relative min-h-[22px]" data-loading="true">
+              <Skeleton className="skeleton-placeholder h-[22px] w-24" />
+              <Title
+                text="$10.000.320.48"
+                className={cn(TEXT_18_22, "dynamic-content hidden")}
+                id="total-balance"
+              />
+            </div>
+            <Description text="Reserves in Custody" className={TEXT_12_16} />
+          </div>
+          {/* Card 2 */}
+          <div class={metricCardClasses}>
+            <div class="relative min-h-[22px]" data-loading="true">
+              <Skeleton className="skeleton-placeholder h-[22px] w-24" />
+              <Title
+                text="$500.320.48"
+                className={cn(TEXT_18_22, "dynamic-content hidden")}
+                id="total-credit"
+              />
+            </div>
+            <Description text="Total Credit" className={TEXT_12_16} />
+          </div>
+        </div>
+
+        <AlignmentLayout
+          direction="horizontal"
+          justify="start"
+          align="stretch"
+          className="gap-2 w-full grid grid-cols-2 max-sm:grid-cols-1"
+        >
+          {/* Info Grid */}
+            <AlignmentLayout direction="vertical" justify="start" align="start" className={infoGridClasses}>
+              <AlignmentLayout
+                direction="horizontal"
+                justify="between"
+                align="center"
+                className="w-full gap-4 px-4 pt-4 pb-2"
+              >
+                <AlignmentLayout
+                  direction="vertical"
+                  justify="start"
+                  align="start"
+                  className="gap-1 max-w-[291px]"
+                >
+                  <Title text="Custody Certification" className={TEXT_14_18} />
+                  <Description
+                    text="Official document issued by FT Asset Management KB, validating total custody of VETRA funds."
+                    className={TEXT_12_16}
+                  />
+                </AlignmentLayout>
+                <a
+                  href="https://ftassetmanagement.com/verify/FTAM_CERT_24052025.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="border border-badge-purple text-badge-purple px-4 py-2 rounded-full font-serif text-[12px] leading-[16px] font-semibold hover:bg-badge-purple/10 transition-colors whitespace-nowrap"
+                >
+                  View certificate
+                </a>
+              </AlignmentLayout>
+
+              <AlignmentLayout
+                direction="vertical"
+                justify="start"
+                align="start"
+                className="gap-1 px-4 pb-4 pt-2"
+              >
+                <div class="flex flex-col items-start gap-1">
+                  <Title text="Institution" className={TEXT_12_16} />
+                  <div class="relative min-h-[16px]">
+                    <Description
+                      text="FT Asset Management KB"
+                      className={cn(TEXT_12_16)}
+                    />
+                  </div>
+                </div>
+                <div class="flex flex-col items-start gap-1">
+                  <Title text="Location" className={TEXT_12_16} />
+                  <Description
+                    text="Stockholm, Sweden"
+                    className={TEXT_12_16}
+                  />
+                </div>
+                <div class="flex flex-col items-start gap-1">
+                  <Title text="Contact" className={TEXT_12_16} />
+                  <Description
+                    text="+46 8 50 541 351 | info@FTAssetManagement.com"
+                    className={TEXT_12_16}
+                  />
+                </div>
+              </AlignmentLayout>
+            </AlignmentLayout>
+
+          {/* About Verification */}
+          <div class={infoCardClasses}>
+            <div class="flex flex-col gap-1">
+              <Title text="About Verification" className={TEXT_14_18} />
+              <div>
+                <Description
+                  text="All VETRA funds are held in regulated custody by FT Asset Management, a licensed financial institution in Sweden."
+                  className={TEXT_12_16}
+                />
+                <Description
+                  text="The 1:1 parity between VTR and USD is maintained and audited continuously, ensuring total transparency and security for all investors."
+                  className={TEXT_12_16}
+                />
+              </div>
+            </div>
+          </div>
+        </AlignmentLayout>
+      </AlignmentLayout>
+    </div>
+  </AlignmentLayout>
+</SectionLayout>
+
+<script>
+  (function () {
+    "use strict";
+
+    // Fetch and sync data
+    const API_URL = "/api/reserves.json";
+
+    const formatCurrency = (value) => {
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        minimumFractionDigits: 2,
+      }).format(value);
+    };
+
+    const formatDate = (dateString) => {
+      // Input: "23-12-2025 07:00:06"
+      const [datePart, timePart] = dateString.split(" ");
+      const [day, month, year] = datePart.split("-");
+      const [hour, minute] = timePart.split(":");
+
+      const date = new Date(year, month - 1, day, hour, minute);
+
+      return new Intl.DateTimeFormat("en-US", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+        .format(date)
+        .replace(".", "");
+    };
+
+    async function fetchData() {
+      try {
+        const response = await fetch(API_URL);
+        const data = await response.json();
+        const summary = data.StatementSummary;
+
+        if (summary) {
+          const updatedAtEl = document.getElementById("reserves-updated-at");
+          const totalBalanceEl = document.getElementById("total-balance");
+          const totalCreditEl = document.getElementById("total-credit");
+
+          if (updatedAtEl)
+            updatedAtEl.innerText = `Updated: ${formatDate(summary.DateTime)}`;
+          if (totalBalanceEl)
+            totalBalanceEl.innerText = formatCurrency(summary.TotalBalance);
+          if (totalCreditEl)
+            totalCreditEl.innerText = formatCurrency(summary.TotalCredit);
+
+          // Toggle skeletons off
+          document.querySelectorAll('[data-loading="true"]').forEach((el) => {
+            el.querySelector(".skeleton-placeholder")?.classList.add("hidden");
+            el.querySelector(".dynamic-content")?.classList.remove("hidden");
+            el.removeAttribute("data-loading");
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching reserve data:", error);
+        // Fallback: show content anyway if error occurs after some delay
+        document.querySelectorAll('[data-loading="true"]').forEach((el) => {
+          el.querySelector(".skeleton-placeholder")?.classList.add("hidden");
+          el.querySelector(".dynamic-content")?.classList.remove("hidden");
+        });
+      }
+    }
+
+    fetchData();
+  })();
+</script>

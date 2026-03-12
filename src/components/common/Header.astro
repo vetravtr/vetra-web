@@ -1,0 +1,264 @@
+---
+import Button from "../Button.astro";
+import Image from "astro/components/Image.astro";
+import { cn } from "../../utils/cn";
+import Logo from "../../assets/logo.svg";
+import Description from "../Description.astro";
+import Tooltip from "./Tooltip.astro";
+
+// Classes organizadas por categoria para melhor legibilidade
+const headerClasses = cn(
+	// Custom class
+	// Position
+	"fixed top-0 left-1/2 -translate-x-1/2 z-30",
+	// Layout
+	"w-full flex justify-center items-center",
+	// Sizing
+	"h-[80px]",
+	// Spacing
+	"px-19 py-[10px]",
+	// Visual
+	"transition-all duration-300",
+	// Responsividade
+	"max-sm:px-6 max-sm:py-[10px] max-sm:h-auto",
+);
+
+const headerContainerClasses = cn(
+	// Layout
+	"flex justify-between items-center relative",
+	// Sizing
+	"w-full max-w-[1216px]",
+);
+
+const logoContainerClasses = cn(
+	// Layout
+	"items-center",
+	// Visual
+);
+
+// Invertendo cores para texto branco e rotacionando hue para manter o ícone ciano (aprox)
+const logoImageClasses = "w-[115px] h-[40px]";
+
+const navClasses = cn(
+	// Layout
+	"flex gap-8 items-center absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
+	// Responsividade
+	"max-sm:hidden",
+);
+
+const { pathname } = Astro.url;
+
+const isActive = (path: string) => {
+	if (path === "/") {
+		return pathname === "/";
+	}
+	return pathname.startsWith(path);
+};
+
+const getNavClasses = (path: string) => {
+	return isActive(path) ? "nav-active" : "text-text-grey";
+};
+---
+
+<div class={headerClasses} id="header">
+	<div class={headerContainerClasses}>
+		<a href="/" class={logoContainerClasses} aria-label="Home">
+			<Image src={Logo} alt="Logo" class={logoImageClasses} />
+		</a>
+
+		<nav class={navClasses} aria-label="Navigation">
+			<a href="/">
+				<Description
+					text="Home"
+					variant="secondary"
+					className={getNavClasses("/")}
+				/>
+			</a>
+			<a href="/whitepaper">
+				<Description
+					text="Whitepaper"
+					variant="secondary"
+					className={getNavClasses("/whitepaper")}
+				/>
+			</a>
+			<a href="/contact-us">
+				<Description
+					text="Contact us"
+					variant="secondary"
+					className={getNavClasses("/contact-us")}
+				/>
+			</a>
+			<Tooltip 
+				content="0x34514180F94903BF8649884bD7e80fcDC1048b9d" 
+				label="Clique para copiar" 
+				position="bottom"
+			>
+				<Description
+					text="0x34...8b9d"
+					variant="secondary"
+					className={getNavClasses("/#real-time-reserves")}
+				/>
+			</Tooltip>
+		</nav>
+
+		
+
+		<div class="flex gap-4">
+			<a href="https://polygonscan.com/address/0x34514180F94903BF8649884bD7e80fcDC1048b9d" target="_blank" aria-label="Verify on PolygonScan" class="h-[56px]">
+				<Button
+					text="Verify on PolygonScan"
+					className="max-sm:hidden whitespace-nowrap min-w-[250px] w-fit"
+				/>
+			</a>
+		</div>
+
+		<button
+			class="max-sm:flex hidden sm:hidden items-center justify-center w-10 h-10 rounded-lg border border-white/[0.1] bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-300 cursor-pointer group"
+			id="open-menu"
+			onclick="openMenu()"
+			aria-label="Open menu"
+		>
+			<svg
+				class="w-5 h-5 text-white"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				viewBox="0 0 24 24"
+			>
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					d="M4 6h16M4 12h16M4 18h16"></path>
+			</svg>
+		</button>
+
+		<button
+			class="hidden sm:hidden items-center justify-center w-10 h-10 rounded-lg border border-white/[0.1] bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-300 cursor-pointer"
+			id="close-menu"
+			onclick="closeMenu()"
+			aria-label="Fechar menu"
+		>
+			<svg
+				class="w-5 h-5 text-white"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				viewBox="0 0 24 24"
+			>
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					d="M6 18L18 6M6 6l12 12"></path>
+			</svg>
+		</button>
+	</div>
+</div>
+
+<script is:inline>
+	let menuMobile, openMenuH, closeMenuH;
+
+	function initElements() {
+		menuMobile = document.getElementById("menu-mobile");
+		openMenuH = document.getElementById("open-menu");
+		closeMenuH = document.getElementById("close-menu");
+	}
+
+	function initHeader() {
+		const header = document.getElementById("header");
+		const scrollY =
+			window.scrollY ||
+			window.pageYOffset ||
+			document.documentElement.scrollTop ||
+			0;
+
+		if (!header) {
+			// Tentar novamente após um delay se o header não foi encontrado
+			setTimeout(initHeader, 100);
+			return;
+		}
+
+		if (scrollY > 100) {
+			header.classList.add("glass-header");
+		} else {
+			header.classList.remove("glass-header");
+		}
+	}
+
+	function openMenu() {
+		// Só permite abrir o menu em mobile
+		if (window.innerWidth >= 640) {
+			return;
+		}
+		if (!menuMobile || !openMenuH || !closeMenuH) {
+			initElements();
+		}
+		menuMobile?.classList.remove("hidden");
+		menuMobile?.classList.remove("menu-closed");
+		// Pequeno delay para garantir que o display: block seja aplicado antes da transição
+		setTimeout(() => {
+			menuMobile?.classList.add("menu-open");
+		}, 10);
+		openMenuH?.classList.add("hidden");
+		openMenuH?.classList.remove("max-sm:flex");
+		closeMenuH?.classList.remove("hidden");
+		closeMenuH?.classList.add("max-sm:flex");
+	}
+
+	function closeMenu() {
+		if (!menuMobile || !openMenuH || !closeMenuH) {
+			initElements();
+		}
+		menuMobile?.classList.remove("menu-open");
+		menuMobile?.classList.add("menu-closed");
+		menuMobile?.classList.add("hidden");
+		closeMenuH?.classList.add("hidden");
+		closeMenuH?.classList.remove("max-sm:flex");
+		openMenuH?.classList.remove("hidden");
+		openMenuH?.classList.add("max-sm:flex");
+	}
+
+
+
+	// Inicializar quando o DOM estiver pronto
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", () => {
+			initElements();
+			initHeader();
+		});
+	} else {
+		initElements();
+		initHeader();
+	}
+	
+	window.addEventListener("scroll", initHeader, { passive: true });
+</script>
+
+<style>
+	/* Glass effect for header */
+	.glass-header {
+		background: rgba(0, 0, 0, 0.25);
+		backdrop-filter: blur(20px);
+		-webkit-backdrop-filter: blur(20px);
+	}
+
+	.glass-header > * {
+		position: relative;
+		z-index: 2;
+	}
+
+	@media (max-width: 380px) {
+		.logo-title {
+			font-size: 20px;
+		}
+	}
+
+	@media (max-width: 360px) {
+		.logo-title {
+			display: none;
+		}
+	}
+
+	:global(.nav-active) {
+		color: white;
+	}
+</style>

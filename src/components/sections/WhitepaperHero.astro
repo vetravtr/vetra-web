@@ -1,0 +1,91 @@
+---
+import Badge from "../Badge.astro";
+import SectionLayout from "../../layouts/SectionLayout.astro";
+import AlignmentLayout from "../../layouts/AlignmentLayout.astro";
+import Title from "../Title.astro";
+import Description from "../Description.astro";
+
+import BackgroundImage from "../../assets/details/background.png";
+import BackgroundImageMobile from "../../assets/details/background-mobile.png";
+import { cn } from "../../utils/cn";
+import { Image } from "astro:assets";
+import StarsIcon from "../../assets/icons/stars-light-sparkle.svg";
+
+// Classes organizadas por categoria para melhor legibilidade
+const sectionOuterClasses = cn(
+  // Layout
+  "flex items-center w-full relative",
+  // Identificador
+  "hero-section",
+);
+
+const sectionInnerClasses = cn(
+  // Layout & Sizing
+  "w-full h-[432px] gap-0",
+);
+
+const mainLayoutClasses = cn(
+  //
+  "absolute top-[168px] max-md:top-1/2 max-md:-translate-y-1/2 max-md:px-6 left-1/2 -translate-x-1/2 w-full",
+  // Spacing & Layout
+  "gap-12 z-10",
+);
+
+const contentSectionClasses = cn(
+  // Spacing
+  "gap-2",
+);
+---
+
+<SectionLayout
+  outerClassName={sectionOuterClasses}
+  innerClassName={sectionInnerClasses}
+  autoMargin={true}
+>
+  <Image
+    src={BackgroundImage}
+    alt="Background"
+    class="absolute inset-0 -z-10 w-full h-full object-cover object-top max-sm:hidden"
+  />
+  <Image
+    src={BackgroundImageMobile}
+    alt="Background"
+    class="absolute inset-0 -z-10 w-full h-full object-cover sm:hidden"
+  />
+
+  <AlignmentLayout
+    direction="vertical"
+    justify="center"
+    align="center"
+    className={mainLayoutClasses}
+  >
+    <AlignmentLayout
+      direction="vertical"
+      justify="center"
+      align="center"
+      className="w-full"
+      style="gap: 1.5rem;"
+    >
+      <Badge text="Whitepaper">
+        <Image
+          src={StarsIcon}
+          alt="Stars"
+          class="w-full h-full object-contain"
+        />
+      </Badge>
+
+      <AlignmentLayout
+        direction="vertical"
+        justify="center"
+        align="center"
+        className={contentSectionClasses}
+      >
+        <Title text="VETRA Whitepaper v1.0" className="text-center" />
+        <Description
+          text="A true currency: stability, transparency, and trust in the digital age, offering security and real value in every transaction."
+          className="max-w-[581px] text-center"
+        />
+      </AlignmentLayout>
+    </AlignmentLayout>
+  </AlignmentLayout>
+</SectionLayout>

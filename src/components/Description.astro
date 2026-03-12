@@ -1,0 +1,25 @@
+---
+import { cn } from "../utils/cn";
+
+interface Props {
+	text: string;
+	className?: string;
+	variant?: "primary" | "secondary";
+	id?: string;
+}
+
+const { text, className = "", variant = "primary", id }: Props = Astro.props;
+
+// Classes organizadas por categoria
+const descriptionClasses = cn(
+	// Typography
+	"text-text-grey",
+	!className.includes("font-") && "font-serif", // Fallback to font-serif if no font is provided
+	variant === "primary" && "text-[16px] leading-[20px]",
+	variant === "secondary" && "text-[14px] leading-[20px]",
+	// Custom
+	className,
+);
+---
+
+<p id={id} class={descriptionClasses}>{text}</p>

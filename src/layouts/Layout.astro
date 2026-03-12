@@ -1,0 +1,98 @@
+---
+import SmoothScroll from "../components/SmoothScroll.astro";
+
+// Font imports
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/500.css";
+import "@fontsource/inter/600.css";
+import "@fontsource/libre-franklin/400.css";
+import "@fontsource/libre-franklin/400-italic.css";
+import "@fontsource/libre-franklin/100.css";
+import "@fontsource/libre-franklin/500.css";
+import "@fontsource/urbanist/400.css";
+import "@fontsource/urbanist/400-italic.css";
+import "@fontsource/urbanist/100.css";
+import "@fontsource/urbanist/600.css";
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  type?: string;
+}
+
+const {
+  title = "Vetra - The Best Stablecoin of 2026",
+  description = "Built for real user. Crafted for low-cost transfers, instant finality, and audit-ready transparency making digital value dependable.",
+  image = "/favicon.svg",
+  type = "website",
+} = Astro.props;
+
+const canonicalURL = new URL(
+  Astro.url.pathname,
+  Astro.site || "https://generic-client-base.com",
+);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Primary Meta Tags -->
+    <title>{title}</title>
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+    <meta
+      name="keywords"
+      content="stablecoin, crypto, payment, global transfer, low cost, instant settlement, vetra"
+    />
+    <meta name="author" content="Vetra" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="English" />
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(image, canonicalURL).href} />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:site_name" content="Vetra" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalURL} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(image, canonicalURL).href} />
+
+    <!-- Resource Hints -->
+    <!-- Fonts with font-display swap for better performance -->
+  </head>
+
+  <body class="bg-background-page relative">
+    <SmoothScroll />
+    <slot />
+  </body>
+</html>
+
+<style>
+  html {
+    margin: 0;
+    width: 100%;
+    min-height: 100%;
+    overscroll-behavior: none;
+    overflow-x: hidden;
+  }
+
+  body {
+    margin: 0;
+    width: 100%;
+    min-height: 100%;
+    overscroll-behavior: none;
+  }
+</style>

@@ -1,0 +1,24 @@
+---
+import Layout from "../layouts/Layout.astro";
+import GenericHeader from "../components/common/GenericHeader.astro";
+import ContactHero from "../components/sections/ContactHero.astro";
+import ContactCards from "../components/sections/ContactCards.astro";
+import Footer from "../components/sections/Footer.astro";
+import Newsletter from "../components/sections/Newsletter.astro";
+import "../styles/global.css";
+---
+
+<Layout title="Contact Us - Vetra">
+  <GenericHeader />
+
+  <div class="relative z-10">
+    <main>
+      <ContactHero />
+
+      <ContactCards />
+
+      <Newsletter />
+    </main>
+    <Footer />
+  </div>
+</Layout>

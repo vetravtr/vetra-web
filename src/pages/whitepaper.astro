@@ -1,0 +1,22 @@
+---
+import Layout from "../layouts/Layout.astro";
+import GenericHeader from "../components/common/GenericHeader.astro";
+import Footer from "../components/sections/Footer.astro";
+import WhitepaperContent from "../components/sections/WhitepaperContent.astro";
+import Newsletter from "../components/sections/Newsletter.astro";
+import WhitepaperHero from "../components/sections/WhitepaperHero.astro";
+import "../styles/global.css";
+---
+
+<Layout title="Whitepaper - Vetra">
+  <GenericHeader />
+
+  <div class="relative z-10">
+    <main>
+      <WhitepaperHero />
+      <WhitepaperContent />
+      <Newsletter />
+    </main>
+  </div>
+  <Footer />
+</Layout>

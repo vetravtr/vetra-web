@@ -1,0 +1,87 @@
+---
+import Badge from "../Badge.astro";
+import SectionLayout from "../../layouts/SectionLayout.astro";
+import AlignmentLayout from "../../layouts/AlignmentLayout.astro";
+import Title from "../Title.astro";
+import Description from "../Description.astro";
+import ContactForm from "../common/ContactForm.astro";
+
+import BackgroundImage from "../../assets/details/background.png";
+import BackgroundImageMobile from "../../assets/details/background-mobile.png";
+import { cn } from "../../utils/cn";
+import { Image } from "astro:assets";
+import StarsIcon from "../../assets/icons/stars-light-sparkle.svg";
+
+const sectionOuterClasses = cn(
+  "flex items-center w-full relative overflow-hidden",
+  "contact-hero-section",
+);
+
+const sectionInnerClasses = cn(
+  // Layout & Sizing
+  "w-full h-[800px] gap-0",
+  // Responsividade
+  "max-sm:h-[1100px] pt-[168px] max-sm:py-[64px] max-sm:justify-end",
+);
+
+const mainLayoutClasses = cn("w-full items-start gap-12 relative z-10");
+
+const contentSectionClasses = cn("flex flex-col gap-6 flex-1");
+
+const heroTitleClasses = cn(
+  "text-[80px] leading-[88px]",
+  "max-md:text-[56px] max-md:leading-[64px]",
+  "max-sm:text-center",
+);
+
+const heroDescriptionClasses = cn(
+  "max-w-[480px]",
+  "max-sm:text-center max-sm:mx-auto",
+);
+
+const badgeWrapperClasses = cn("w-fit max-sm:mx-auto");
+---
+
+<SectionLayout
+  outerClassName={sectionOuterClasses}
+  innerClassName={sectionInnerClasses}
+  autoMargin={true}
+>
+  <Image
+    src={BackgroundImage}
+    alt="Background"
+    class="absolute inset-0 -z-10 w-full h-full object-cover object-top max-sm:hidden"
+  />
+  <Image
+    src={BackgroundImageMobile}
+    alt="Background"
+    class="absolute inset-0 -z-10 w-full h-full object-cover sm:hidden"
+  />
+
+  <AlignmentLayout
+    direction="horizontal"
+    justify="between"
+    align="center"
+    className={cn(mainLayoutClasses, "max-md:flex-col")}
+  >
+    <div class={contentSectionClasses}>
+      <div class={badgeWrapperClasses}>
+        <Badge text="Contact us">
+          <Image src={StarsIcon} alt="Stars" class="h-full object-contain" />
+        </Badge>
+      </div>
+
+      <div class="flex flex-col gap-4">
+        <Title text="How can we <br />help you?" className={heroTitleClasses} />
+        <Description
+          text="Whether you have a question about our products or are interested in collaborating, get in touch with team here."
+          className={heroDescriptionClasses}
+        />
+      </div>
+    </div>
+
+    <div class="flex-1 flex justify-end max-md:justify-center w-full">
+      <ContactForm />
+    </div>
+  </AlignmentLayout>
+</SectionLayout>

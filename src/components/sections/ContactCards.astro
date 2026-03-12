@@ -1,0 +1,286 @@
+---
+import Badge from "../Badge.astro";
+import SectionLayout from "../../layouts/SectionLayout.astro";
+import AlignmentLayout from "../../layouts/AlignmentLayout.astro";
+import Title from "../Title.astro";
+import Description from "../Description.astro";
+
+import BackgroundImage from "../../assets/details/team-background.png";
+import BackgroundImageMobile from "../../assets/details/team-background-mobile.png";
+import { cn } from "../../utils/cn";
+import { Image } from "astro:assets";
+import StartsIcon from "../../assets/icons/stars-light-sparkle.svg";
+import LinkedinIcon from "../../assets/icons/linkedin.svg";
+import FounderImage from "../../assets/details/team-founder.png";
+import CoFounderImage from "../../assets/details/team-co-founder.png";
+import ReserveCustodianImage from "../../assets/details/team-reserve-custodian.jpeg";
+import PulseGlow from "../effects/PulseGlow.astro";
+
+// Classes organizadas por categoria para melhor legibilidade
+const sectionOuterClasses = cn(
+  // Layout
+  "flex items-center w-full relative",
+);
+
+const sectionInnerClasses = cn(
+  // Layout & Sizing
+  "w-full h-fit py-[88px]",
+);
+
+const mainLayoutClasses = cn(
+  // Spacing & Layout
+  "gap-[80px] h-[-webkit-fill-available] relative z-10",
+);
+
+const contentSectionClasses = cn(
+  // Spacing
+  "gap-4",
+  // Padding
+  "p-4",
+  // Sizing
+  "min-h-[202px]",
+);
+
+const heroTitleClasses = cn(
+  // Typography
+  "text-center",
+);
+
+const cardSectionClasses = cn(
+  // Spacing
+  "gap-8 max-sm:gap-2",
+  // Layout
+  "flex items-center w-full relative",
+  // Responsividade
+  "max-sm:flex-col",
+);
+
+const cardContentSectionClasses = cn(
+  // Colors & Styles
+  "bg-browser-bg max-h-[518px] rounded-[8px]",
+  // Sizing
+  "w-full max-w-[384px]", // Assuming 3 cards fitting in width
+);
+---
+
+<SectionLayout
+  outerClassName={sectionOuterClasses}
+  innerClassName={sectionInnerClasses}
+  autoMargin={true}
+>
+  <Image
+    src={BackgroundImage}
+    alt="Background"
+    class="absolute inset-0 -z-10 w-full h-full object-cover max-sm:hidden"
+  />
+  <Image
+    src={BackgroundImageMobile}
+    alt="Background"
+    class="absolute inset-0 -z-10 w-full h-full object-cover sm:hidden"
+  />
+  <PulseGlow bottom={true} className="-z-10" />
+
+  <AlignmentLayout
+    direction="vertical"
+    justify="center"
+    align="center"
+    className={mainLayoutClasses}
+  >
+    <AlignmentLayout
+      direction="vertical"
+      justify="center"
+      align="center"
+      className="w-full max-w-[656px]"
+      style="gap: 1.5rem;"
+    >
+      <Badge text="Contact our team">
+        <Image
+          src={StartsIcon}
+          alt="Arrow"
+          class="w-full h-full object-contain"
+        />
+      </Badge>
+
+      <AlignmentLayout
+        direction="vertical"
+        justify="center"
+        align="center"
+        className="gap-2"
+      >
+        <Title
+          text="Meet the leadership</br>of our team"
+          className={heroTitleClasses}
+        />
+        <Description
+          text="Always aiming for transparency, we make our entire team available to you."
+          className="max-w-[588px] text-center"
+        />
+      </AlignmentLayout>
+    </AlignmentLayout>
+
+    <AlignmentLayout
+      direction="horizontal"
+      justify="center"
+      align="center"
+      className={cardSectionClasses}
+    >
+      <AlignmentLayout
+        direction="vertical"
+        justify="center"
+        align="center"
+        className={cardContentSectionClasses}
+      >
+        <div
+          class="w-full h-[316px] bg-white/5 rounded-t-[8px] relative bg-cover bg-center bg-no-repeat"
+          style={`background-image: url('${FounderImage.src}')`}
+        >
+          <a
+            href="https://www.linkedin.com/in/pedro-fares-ramos-9b575844/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="absolute bottom-4 right-4 bg-[var(--color-contact-linkedin-background)]/64 rounded-full p-2 transition-transform hover:scale-110 cursor-pointer"
+          >
+            <Image
+              src={LinkedinIcon}
+              width={24}
+              height={24}
+              alt="Linkedin"
+              class="w-[24px] h-[24px] object-cover"
+            />
+          </a>
+        </div>
+
+        <AlignmentLayout
+          direction="vertical"
+          justify="start"
+          align="start"
+          className={contentSectionClasses}
+        >
+          <AlignmentLayout
+            direction="vertical"
+            justify="start"
+            align="start"
+            className="gap-1"
+          >
+            <Title text="Pedro Fares Ramos" variant="secondary" />
+            <Description
+              text="FOUNDER, CHAIRMAN & CEO"
+              className="uppercase"
+              variant="secondary"
+            />
+          </AlignmentLayout>
+
+          <Description
+            text="The visionary behind VETRA, he leads the global strategy and the mission to revolutionize the market for dollar-backed stablecoins. With extensive experience in cryptocurrencies since 2016, he oversees the company’s expansion into new international markets."
+            variant="secondary"
+            className="leading-[18px]"
+          />
+        </AlignmentLayout>
+      </AlignmentLayout>
+
+      <AlignmentLayout
+        direction="vertical"
+        justify="center"
+        align="center"
+        className={cardContentSectionClasses}
+      >
+        <div
+          class="w-full h-[316px] bg-white/5 rounded-t-[8px] relative bg-cover bg-center bg-no-repeat"
+          style={`background-image: url('${CoFounderImage.src}')`}
+        >
+          <a
+            href="https://www.linkedin.com/in/rosemberg-nascimento-573356392/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="absolute bottom-4 right-4 bg-[var(--color-contact-linkedin-background)]/64 rounded-full p-2 transition-transform hover:scale-110 cursor-pointer"
+          >
+            <Image
+              src={LinkedinIcon}
+              width={24}
+              height={24}
+              alt="Linkedin"
+              class="w-[24px] h-[24px] object-cover"
+            />
+          </a>
+        </div>
+
+        <AlignmentLayout
+          direction="vertical"
+          justify="start"
+          align="start"
+          className={contentSectionClasses}
+        >
+          <AlignmentLayout
+            direction="vertical"
+            justify="start"
+            align="start"
+            className="gap-1"
+          >
+            <Title text="Rosemberg Alves Nascimento" variant="secondary" />
+            <Description
+              text="CO-FOUNDER & HEAD OF GLOBAL PARTNERSHIPS"
+              className="uppercase"
+              variant="secondary"
+            />
+          </AlignmentLayout>
+
+          <Description
+            text="Responsible for forging and managing VETRA’s global strategic partnerships, driving our presence and adoption in new markets."
+            variant="secondary"
+          />
+        </AlignmentLayout>
+      </AlignmentLayout><AlignmentLayout
+        direction="vertical"
+        justify="center"
+        align="center"
+        className={cardContentSectionClasses}
+      >
+        <div
+          class="w-full h-[316px] bg-white/5 rounded-t-[8px] relative bg-cover bg-center bg-no-repeat"
+          style={`background-image: url('${ReserveCustodianImage.src}')`}
+        >
+          <a
+            href="https://www.linkedin.com/in/christine-sch%C3%B6berlein-340042140/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="absolute bottom-4 right-4 bg-[var(--color-contact-linkedin-background)]/64 rounded-full p-2 transition-transform hover:scale-110 cursor-pointer"
+          >
+            <Image
+              src={LinkedinIcon}
+              width={24}
+              height={24}
+              alt="Linkedin"
+              class="w-[24px] h-[24px] object-cover"
+            />
+          </a>
+        </div>
+
+        <AlignmentLayout
+          direction="vertical"
+          justify="start"
+          align="start"
+          className={contentSectionClasses}
+        >
+          <AlignmentLayout
+            direction="vertical"
+            justify="start"
+            align="start"
+            className="gap-1"
+          >
+            <Title text="Christine Schöberlein" variant="secondary" />
+            <Description
+              text="EUROPEAN RESERVE CUSTODIAN"
+              className="uppercase"
+              variant="secondary"
+            />
+          </AlignmentLayout>
+
+          <Description
+            text="Managing VETRA's institutional custody relationship with FT Asset Management in Sweden. Ensuring European regulatory standards and transparent reserve management."
+            variant="secondary"
+          />
+        </AlignmentLayout>
+      </AlignmentLayout>
+    </AlignmentLayout>
+  </AlignmentLayout>
+</SectionLayout>

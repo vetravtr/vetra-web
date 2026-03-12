@@ -1,0 +1,31 @@
+---
+import { cn } from "../utils/cn";
+import Description from "./Description.astro";
+
+interface Props {
+	text: string;
+}
+
+const { text }: Props = Astro.props;
+
+// Classes organizadas por categoria
+const badgeContainerClasses = cn(
+	// Layout
+	"flex items-center",
+	// Visual
+	"bg-badge-purple/8 rounded-[200px]",
+	// Spacing
+	"px-4 py-2",
+);
+---
+
+<div class={badgeContainerClasses}>
+	<div class="w-6 h-6 mr-2">
+		<slot />
+	</div>
+	<Description
+		className="text-light-purple leading-[18px]"
+		text={text}
+		variant="secondary"
+	/>
+</div>

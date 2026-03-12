@@ -1,0 +1,104 @@
+---
+import CryptoIcon from "../../assets/partners/crypto.svg";
+import CoinbaseIcon from "../../assets/partners/coinbase.svg";
+import RobinhoodIcon from "../../assets/partners/robinhood.svg";
+
+import { Image } from "astro:assets";
+
+const partners = [
+  { src: CryptoIcon, alt: "Crypto" },
+  { src: CoinbaseIcon, alt: "Coinbase" },
+  { src: RobinhoodIcon, alt: "Robinhood" },
+];
+
+const navigationItems = [...partners, ...partners, ...partners];
+
+// Duplicate items to ensure smooth scrolling loop without JS calculation
+// 3 sets is usually enough for most screens if the content width > viewport width
+const duplicateCount = 3;
+const duplicatedItems = Array(duplicateCount).fill(navigationItems).flat();
+---
+
+<section class="banner">
+  <div class="slide-track">
+    {
+      duplicatedItems.map((item, index) => (
+        <div class="slide">
+          <Image src={item.src} alt={item.alt} class="slide-icon" />
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .banner {
+    overflow: hidden; /* Changed to hidden to clip content */
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  @media (max-width: 640px) {
+    .banner {
+      width: 100vw;
+      position: relative;
+      margin-left: -50vw;
+      margin-right: -50vw;
+      left: auto;
+      right: auto;
+    }
+  }
+
+  .slide-track {
+    display: flex;
+    width: fit-content;
+    /* Move -33.33% because we have 3 sets. Moving 1 set (1/3) creates the loop */
+    animation: scroll 40s linear infinite;
+  }
+
+  .slide {
+    display: flex;
+    align-items: center;
+    margin-right: 40px;
+    width: max-content;
+  }
+
+  .banner::before,
+  .banner::after {
+    content: "";
+    height: 100%;
+    position: absolute;
+    width: 100px;
+    z-index: 2;
+    top: 0;
+    pointer-events: none;
+  }
+
+  .banner::before {
+    left: 0;
+    background: linear-gradient(
+      to right,
+      var(--color-banner-depth) 0%,
+      rgba(14, 4, 24, 0) 100%
+    );
+  }
+
+  .banner::after {
+    right: 0;
+    background: linear-gradient(
+      to left,
+      var(--color-banner-depth) 0%,
+      rgba(14, 4, 24, 0) 100%
+    );
+  }
+
+  @keyframes scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-33.333%);
+    }
+  }
+</style>

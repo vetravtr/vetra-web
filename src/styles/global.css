@@ -1,0 +1,117 @@
+@import "tailwindcss";
+
+@theme {
+  /* Fonts */
+  --font-sans: Urbanist, sans-serif;
+  --font-serif: Libre Franklin, sans-serif;
+  --font-inter: Inter, sans-serif;
+
+  /* Colors */
+  --color-logo: #949DA6;
+  --color-badge-purple: #A55EF4;
+  --color-light-purple: #BA8CF9;
+  --color-glow-to-coin: #701F94;
+
+  /* Backgrounds */
+  --color-background-card: #0D0B2D;
+  --color-background-page: #050109;
+
+  /* Texts */
+  --color-text-secondary: #F4F6F7;
+  --color-text-grey: #A2B1BE;
+  /* Hero description */
+  --color-dark-text-grey: #0F0F11;
+  /* Talk with us button */
+  --color-text-blue: #2BDCE2;
+  --color-dark-text-blue: #050109;
+
+  /* Real Time Reserves Section */
+  --color-browser-bg: #0E0515;
+  --color-browser-toolbar: #13071D;
+  --color-browser-address-bg: #100619;
+  --color-browser-address-text: #C8D2D9;
+  --color-dashboard-card-bg: #180F1E;
+  --color-dashboard-badge-bg: transparent;
+  --color-dashboard-badge-text: #D8B4FE;
+  --color-badge-bg-dark: #3d2b4d;
+
+  /* Section Backgrounds */
+  --color-newsletter-bg: #0F0519;
+  --color-footer-end: #1C092F;
+  --color-footer-border: #1F0A33;
+
+  /* Cards */
+  --color-card-background: #0E0515;
+
+  /* Contact Section */
+  --color-contact-form-bg: #19151D;
+  --color-contact-input-bg: #130A1A;
+  --color-contact-label: #C9CED3;
+  --color-contact-input-text: #CBD1D6;
+  --color-contact-linkedin-background: #5A6F80;
+
+  /* Inputs */
+  --color-text-input-border: #A2A8B3;
+  --color-input-hover-bg: #180F1E;
+  --color-input-text: #CBD1D6;
+
+  /* Features Banner */
+  --color-shine-icon: #705cf6;
+  --color-banner-text: #b2b3c7;
+  --color-banner-depth: #0E0418;
+}
+
+/* Custom Scrollbar Styles */
+/* Webkit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 157, 166, 0.4);
+  border-radius: 10px;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 157, 166, 0.6);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 157, 166, 0.4) transparent;
+}
+
+/* Animação de movimento horizontal para o ícone de seta */
+@keyframes move-horizontal {
+  0% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(8px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.arrow-move {
+  animation: move-horizontal 2s ease-in-out infinite;
+}
+
+/* Scroll offset para compensar header fixo */
+html {
+  scroll-padding-top: 44px;
+}
+
+/* Para navegadores que não suportam scroll-padding-top */
+[id] {
+  scroll-margin-top: 44px;
+}

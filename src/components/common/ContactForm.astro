@@ -1,0 +1,122 @@
+---
+import { cn } from "../../utils/cn";
+import Button from "../Button.astro";
+import EmailIcon from "../../assets/icons/form/email-mail.svg";
+import UserIcon from "../../assets/icons/form/user-rounded.svg";
+import TextIcon from "../../assets/icons/form/text-square.svg";
+import { Image } from "astro:assets";
+
+const formId = import.meta.env.FORM_ID;
+
+const containerClasses = cn(
+  "bg-browser-bg p-8 rounded-[16px] w-full max-w-[584px]",
+  "flex flex-col gap-6",
+);
+
+const labelClasses = cn(
+  "text-contact-label font-inter text-[14px] leading-[18px] font-normal mb-2 block",
+);
+
+const inputWrapperClasses = cn(
+  "relative flex items-center bg-contact-input-bg rounded-[8px] h-12 px-4 gap-3",
+  "focus-within:border-white/20 transition-all",
+);
+
+const textareaWrapperClasses = cn(
+  "relative flex items-start bg-contact-input-bg rounded-[8px] min-h-[120px] p-4 gap-3",
+  "focus-within:border-white/20 transition-all",
+);
+
+const inputClasses = cn(
+  "bg-transparent border-none outline-none text-contact-input-text w-full",
+  "placeholder:font-inter placeholder:text-contact-input-text placeholder:text-[14px] placeholder:leading-[18px]",
+  "text-[14px] leading-[18px] font-normal",
+);
+
+const iconClasses = cn("w-6 h-6 text-text-grey/60 shrink-0");
+---
+
+<div class={containerClasses}>
+  <p
+    class="text-[20px] leading-[24px] font-sans font-medium text-text-secondary"
+  >
+    Contact our team!
+  </p>
+
+  <form
+    class="flex flex-col gap-2"
+    action={formId ? `https://formspree.io/f/${formId}` : undefined}
+    method="POST"
+  >
+    <div class="flex flex-col">
+      <label class={labelClasses} for="first_name">First name</label>
+      <div class={inputWrapperClasses}>
+        <div class={iconClasses}>
+          <Image src={UserIcon} alt="User" class="h-full object-contain" />
+        </div>
+        <input
+          type="text"
+          id="first_name"
+          name="first_name"
+          placeholder="Ex: John"
+          class={inputClasses}
+        />
+      </div>
+    </div>
+
+    <div class="flex flex-col">
+      <label class={labelClasses} for="last_name">Last name</label>
+      <div class={inputWrapperClasses}>
+        <div class={iconClasses}>
+          <Image src={UserIcon} alt="User" class="h-full object-contain" />
+        </div>
+        <input
+          type="text"
+          id="last_name"
+          name="last_name"
+          placeholder="Ex: Doe"
+          class={inputClasses}
+        />
+      </div>
+    </div>
+
+    <div class="flex flex-col">
+      <label class={labelClasses} for="email">Email</label>
+      <div class={inputWrapperClasses}>
+        <div class={iconClasses}>
+          <Image src={EmailIcon} alt="Email" class="h-full object-contain" />
+        </div>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Ex: email@email.com"
+          class={inputClasses}
+        />
+      </div>
+    </div>
+
+    <div class="flex flex-col">
+      <label class={labelClasses} for="message">Description</label>
+      <div class={textareaWrapperClasses}>
+        <div class={cn(iconClasses)}>
+          <Image src={TextIcon} alt="Text" class="h-full object-contain" />
+        </div>
+        <textarea
+          id="message"
+          name="message"
+          placeholder="Type here..."
+          class={cn(inputClasses, "resize-none h-full")}></textarea>
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <Button
+        type="submit"
+        text="Send Email"
+        variant="primary"
+        className="w-[174px] min-w-[174px]"
+      />
+    </div>
+  </form>
+</div>

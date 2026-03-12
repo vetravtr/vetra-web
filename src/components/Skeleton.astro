@@ -1,0 +1,21 @@
+---
+import { cn } from "../utils/cn";
+
+interface Props {
+  className?: string;
+  width?: string;
+  height?: string;
+}
+
+const { className = "", width = "w-full", height = "h-4" }: Props = Astro.props;
+---
+
+<div
+  class={cn(
+    "animate-pulse bg-dashboard-card-bg/50 rounded-[4px]",
+    width,
+    height,
+    className,
+  )}
+>
+</div>

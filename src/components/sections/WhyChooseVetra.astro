@@ -1,0 +1,347 @@
+---
+import SectionLayout from "../../layouts/SectionLayout.astro";
+import AlignmentLayout from "../../layouts/AlignmentLayout.astro";
+import Title from "../Title.astro";
+import Description from "../Description.astro";
+import Badge from "../Badge.astro";
+import { cn } from "../../utils/cn";
+import { Image } from "astro:assets";
+import StarsIcon from "../../assets/icons/stars-light-sparkle.svg";
+import SecurityImage from "../../assets/details/why-choose-security.png";
+import EcosystemImage from "../../assets/details/why-choose-ecosystem.png";
+import TransparencyImage from "../../assets/details/why-choose-transparency.png";
+import ScalabilityImage from "../../assets/details/why-choose-scalability.png";
+
+const sectionOuterClasses = cn(
+  "flex items-center w-full relative",
+  "why-choose-vetra-section",
+);
+
+const sectionInnerClasses = cn(
+  "w-full lg:h-[840px] h-auto max-sm:py-[88px]",
+);
+
+const mainLayoutClasses = cn(
+  "gap-16 relative z-10 lg:h-full h-auto",
+  "max-sm:flex-col",
+);
+
+const headerClasses = cn("gap-4", "max-w-[788px] text-center mx-auto");
+
+const gridClasses = cn(
+  "grid grid-cols-1 gap-6 w-full py-[88px]",
+  "lg:flex lg:flex-col lg:gap-8 lg:w-full",
+  "max-sm:grid-cols-1",
+);
+
+const cardClasses = cn(
+  "bg-card-background rounded-[8px]",
+  "flex flex-col transform-gpu will-change-auto",
+  "lg:w-[592px] lg:shrink-0 lg:h-auto",
+);
+---
+
+<SectionLayout
+  outerClassName={sectionOuterClasses}
+  innerClassName={sectionInnerClasses}
+  autoMargin={true}
+>
+  <AlignmentLayout
+    direction="horizontal"
+    justify="center"
+    align="center"
+    className={mainLayoutClasses}
+  >
+    <AlignmentLayout
+      direction="vertical"
+      justify="center"
+      align="start"
+      className={headerClasses}
+    >
+      <Badge text="Where trust meets stability">
+        <Image
+          src={StarsIcon}
+          alt="Arrow"
+          class="w-full h-full object-contain"
+          width={12}
+          height={12}
+        />
+      </Badge>
+      <Title text="Why choose VETRA?" className="text-start" />
+      <Description
+        text="A stablecoin backed by real assets, powered by secure technology, and built on Polygon for scalability and trust."
+        className="max-w-[588px] text-start"
+      />
+    </AlignmentLayout>
+
+    <div
+      class="min-w-[592px] max-lg:min-w-auto lg:flex-1 lg:overflow-hidden relative custom-scrollbar-hide cards-mask-effect"
+      id="vetra-cards-mask"
+      style="height: 100%;"
+    >
+      <div class={gridClasses} id="vetra-cards-container">
+        <div class={cardClasses}>
+          <div class="w-full h-[282px]">
+            <Image
+              src={SecurityImage}
+              alt="Security"
+              class="w-full h-full rounded-t-[8px] object-cover"
+              width={592}
+              height={282}
+              loading="eager"
+              decoding="async"
+              fetchpriority="high"
+            />
+          </div>
+
+          <AlignmentLayout
+            direction="vertical"
+            justify="center"
+            align="center"
+            className="flex-1 p-4 gap-2"
+          >
+            <Title
+              text="Security"
+              variant="secondary"
+              className="text-center"
+            />
+            <Description
+              text="Built with OpenZeppelin standards ERC-20 upgradeable (UUPS) and role-based controls that restrict mint and burn to 1–2 designated operators. An independent third-party security audit is planned to validate the implementation."
+              className="text-center leading-[18px]"
+              variant="secondary"
+            />
+          </AlignmentLayout>
+        </div>
+
+        <div class={cardClasses}>
+          <div class="w-full h-[282px]">
+            <Image
+              src={EcosystemImage}
+              alt="Ecosystem"
+              class="w-full h-full rounded-t-[8px] object-cover"
+              width={592}
+              height={282}
+              loading="lazy"
+              decoding="async"
+              fetchpriority="low"
+            />
+          </div>
+
+          <AlignmentLayout
+            direction="vertical"
+            justify="center"
+            align="center"
+            className="flex-1 p-4 gap-2"
+          >
+            <Title
+              text="Ecosystem & Adoption"
+              variant="secondary"
+              className="text-center"
+            />
+            <Description
+              text="Deliverables for real use: an upgradeable contract with AccessControl, Hardhat deploy scripts, comprehensive tests, detailed technical documentation, and support for Polygonscan verification."
+              className="text-center"
+              variant="secondary"
+            />
+          </AlignmentLayout>
+        </div>
+
+        <div class={cardClasses}>
+          <div class="w-full h-[282px]">
+            <Image
+              src={TransparencyImage}
+              alt="Transparency"
+              class="w-full h-full rounded-t-[8px] object-cover"
+              width={592}
+              height={282}
+              loading="lazy"
+              decoding="async"
+              fetchpriority="low"
+            />
+          </div>
+
+          <AlignmentLayout
+            direction="vertical"
+            justify="center"
+            align="center"
+            className="flex-1 p-4 gap-2"
+          >
+            <Title
+              text="Transparency"
+              variant="secondary"
+              className="text-center"
+            />
+            <Description
+              text="Chainlink Functions audit the 1:1 backing, and every supply change is emitted as TokensMinted/TokensBurned events. Reserve updates are trackable on-chain, making circulation and backing straightforward to verify."
+              className="text-center"
+              variant="secondary"
+            />
+          </AlignmentLayout>
+        </div>
+
+        <div class={cardClasses}>
+          <div class="w-full h-[282px]">
+            <Image
+              src={ScalabilityImage}
+              alt="Scalability"
+              class="w-full h-full rounded-t-[8px] object-cover"
+              width={592}
+              height={282}
+              loading="lazy"
+              decoding="async"
+              fetchpriority="low"
+            />
+          </div>
+
+          <AlignmentLayout
+            direction="vertical"
+            justify="center"
+            align="center"
+            className="flex-1 p-4 gap-2"
+          >
+            <Title
+              text="Scalability"
+              variant="secondary"
+              className="text-center"
+            />
+            <Description
+              text="Deployed on Polygon PoS for fast confirmations and low fees, while maintaining full EVM compatibility with wallets, bridges, and dApps."
+              className="text-center"
+              variant="secondary"
+            />
+          </AlignmentLayout>
+        </div>
+      </div>
+    </div>
+  </AlignmentLayout>
+</SectionLayout>
+
+<style>
+  @media (min-width: 1024px) {
+    .cards-mask-effect {
+      overflow: hidden;
+      transform: translateZ(0);
+      will-change: transform;
+      -webkit-transform: translateZ(0);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      
+      mask-image: linear-gradient(
+        to bottom,
+        transparent,
+        black 15%,
+        black 85%,
+        transparent
+      );
+      -webkit-mask-image: linear-gradient(
+        to bottom,
+        transparent,
+        black 15%,
+        black 85%,
+        transparent
+      );
+    }
+    
+    #vetra-cards-container {
+      will-change: transform;
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+    }
+  }
+</style>
+
+<script>
+  let scrollTriggerInstance: any = null;
+
+  const initScroll = async () => {
+    // Only load GSAP if screen size allows it (Desktop)
+    if (!window.matchMedia("(min-width: 1024px)").matches) return;
+
+    // Dynamic import GSAP
+    const { gsap } = await import("gsap");
+    const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    if (scrollTriggerInstance) {
+      scrollTriggerInstance.kill();
+      scrollTriggerInstance = null;
+    }
+
+    const mm = gsap.matchMedia();
+
+    mm.add("(min-width: 1024px)", () => {
+      const section = document.querySelector(".why-choose-vetra-section");
+      const mask = document.querySelector("#vetra-cards-mask");
+      const container = document.querySelector("#vetra-cards-container");
+
+      if (!section || !mask || !container) return;
+
+      let scrollAmount = 0;
+      
+      const calculateScrollAmount = () => {
+        scrollAmount = -(container.scrollHeight - mask.clientHeight);
+      };
+      
+      calculateScrollAmount();
+
+      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+      const scrubValue = isSafari ? 0.5 : 1;
+
+      const tween = gsap.to(container, {
+        y: () => scrollAmount,
+        ease: "none",
+        scrollTrigger: {
+          trigger: section,
+          pin: true,
+          start: "top top",
+          end: () => `+=${Math.abs(scrollAmount) + 300}`,
+          scrub: scrubValue,
+          invalidateOnRefresh: true,
+          anticipatePin: 1,
+          fastScrollEnd: true,
+          preventOverlaps: true,
+          onRefresh: calculateScrollAmount,
+          onEnter: (self) => {
+            scrollTriggerInstance = self;
+          }
+        },
+      });
+
+      return () => {
+        tween.kill();
+        if (scrollTriggerInstance) {
+          scrollTriggerInstance.kill();
+        }
+      };
+    });
+  };
+
+  let resizeTimeout: number;
+  const handleResize = async () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(async () => {
+        // If GSAP is loaded, refresh it. If not, try to init (in case resize switched to desktop)
+        if (scrollTriggerInstance || window.matchMedia("(min-width: 1024px)").matches) {
+             // If haven't loaded yet, init will handle import.
+             // If loaded, we just want to refresh, but initScroll handles the setup safely.
+             // Ideally we just re-run initScroll to check media query and setup/teardown.
+             initScroll();
+        }
+    }, 250);
+  };
+
+  initScroll();
+  window.addEventListener('resize', handleResize, { passive: true });
+
+  document.addEventListener("astro:before-preparation", async () => {
+    window.removeEventListener('resize', handleResize);
+    if (scrollTriggerInstance) {
+      scrollTriggerInstance.kill();
+    }
+    const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+    ScrollTrigger.getAll().forEach((st:any) => st.kill());
+  });
+
+  document.addEventListener("astro:page-load", initScroll);
+</script>

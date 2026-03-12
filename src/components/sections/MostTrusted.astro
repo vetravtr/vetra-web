@@ -1,0 +1,168 @@
+---
+import Badge from "../Badge.astro";
+import SectionLayout from "../../layouts/SectionLayout.astro";
+import AlignmentLayout from "../../layouts/AlignmentLayout.astro";
+import Title from "../Title.astro";
+import Description from "../Description.astro";
+
+import BackgroundImage from "../../assets/details/most-trusted-background.png";
+import BackgroundImageMobile from "../../assets/details/most-trusted-background-mobile.png";
+import { cn } from "../../utils/cn";
+import { Image } from "astro:assets";
+import StartsIcon from "../../assets/icons/stars-light-sparkle.svg";
+import PulseGlow from "../effects/PulseGlow.astro";
+import PurposeImage from "../../assets/details/most-trusted-purpose.png";
+import UserImage from "../../assets/details/most-trusted-user.png";
+import ImpactImage from "../../assets/details/most-trusted-impact.png";
+
+// Classes organizadas por categoria para melhor legibilidade
+const sectionOuterClasses = cn(
+	// Layout
+	"flex items-center w-full relative",
+);
+
+const sectionInnerClasses = cn(
+	// Layout & Sizing
+	"w-full h-[840px] py-[88px]",
+	// Responsividade
+	"max-sm:h-fit",
+);
+
+const mainLayoutClasses = cn(
+	// Spacing & Layout
+	"gap-[9.4rem] h-[-webkit-fill-available] relative z-10",
+);
+
+const contentSectionClasses = cn(
+	// Spacing
+	"gap-2",
+	// Padding
+	"p-4",
+);
+
+const heroTitleClasses = cn(
+	// Typography
+	"text-center",
+);
+
+const cardSectionClasses = cn(
+	// Spacing
+	"gap-8 max-sm:gap-2",
+	// Layout
+	"flex items-center w-full relative",
+	// Responsividade
+	"max-sm:flex-col",
+);
+
+const cardContentSectionClasses = cn(
+	// Co
+	"bg-[var(--color-card-background)]/32 backdrop-blur-[80px] max-h-[338px] rounded-[8px]",
+);
+---
+
+<SectionLayout
+	outerClassName={sectionOuterClasses}
+	innerClassName={sectionInnerClasses}
+	autoMargin={true}
+>
+	<Image
+		src={BackgroundImage}
+		alt="Background"
+		class="absolute inset-0 -z-10 w-full h-full object-cover max-sm:hidden opacity-70"
+	/>
+	<Image
+		src={BackgroundImageMobile}
+		alt="Background"
+		class="absolute inset-0 -z-10 w-full h-full object-cover sm:hidden opacity-70"
+	/>
+	<PulseGlow bottom={true} className="-z-10" />
+	<AlignmentLayout
+		direction="vertical"
+		justify="center"
+		align="center"
+		className={mainLayoutClasses}
+	>
+		<AlignmentLayout
+			direction="vertical"
+			justify="center"
+			align="center"
+			className="w-full"
+			style="gap: 1.5rem;"
+		>
+			<Badge text="Audit-ready by design">
+				<Image
+					src={StartsIcon}
+					alt="Arrow"
+					class="w-full h-full object-contain"
+				/>
+			</Badge>
+
+			<AlignmentLayout
+				direction="vertical"
+				justify="center"
+				align="center"
+				className="gap-2"
+			>
+				<Title text="Built for real user" className={heroTitleClasses} />
+				<Description
+					text="Crafted for low-cost transfers, instant finality, and audit-ready transparency making digital value dependable for merchants, treasuries, and builders alike."
+					className="max-w-[588px] text-center"
+				/>
+			</AlignmentLayout>
+		</AlignmentLayout>
+
+		<AlignmentLayout
+			direction="horizontal"
+			justify="center"
+			align="center"
+			className={cardSectionClasses}
+		>
+			{
+				[
+					{
+						title: "Purpose",
+						desc: "In a space crowded with opaque tokens and slow rails, VETRA aims to be the simplest way to hold and move a reliable dollar on Polygon. It’s built to feel boring in the best sense: predictable, auditable, and ready for everyday settlement.",
+						img: PurposeImage,
+					},
+					{
+						title: "User",
+						desc: "Merchants and fintechs that need low-fee payments, treasuries and DAOs seeking a dependable unit of account, and developers who want a drop-in ERC-20 for onboarding users. VETRA fits where speed, clarity, and compatibility matter more than hype.",
+						img: UserImage,
+					},
+					{
+						title: "Impact",
+						desc: "Money moves like messages: near-instant, with costs that don’t break the use case. Clear data and open documentation make integration straightforward, and a public transparency posture turns trust from a promise into something you can actually check",
+						img: ImpactImage,
+					},
+				].map((card) => (
+					<AlignmentLayout
+						direction="vertical"
+						justify="center"
+						align="center"
+						className={cardContentSectionClasses}
+					>
+						<div
+							class="w-full h-[184px] rounded-t-[8px] bg-cover bg-center bg-no-repeat"
+							style={`background-image: url('${card.img.src}')`}
+						/>
+
+						<AlignmentLayout
+							direction="vertical"
+							justify="center"
+							align="center"
+							className={contentSectionClasses}
+						>
+							<Title text={card.title} variant="secondary" />
+
+							<Description
+								text={card.desc}
+								className="max-w-[588px] text-center"
+								variant="secondary"
+							/>
+						</AlignmentLayout>
+					</AlignmentLayout>
+				))
+			}
+		</AlignmentLayout>
+	</AlignmentLayout>
+</SectionLayout>

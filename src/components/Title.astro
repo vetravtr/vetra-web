@@ -1,0 +1,25 @@
+---
+import { cn } from "../utils/cn";
+
+interface Props {
+	text: string;
+	className?: string;
+	variant?: "primary" | "secondary";
+	id?: string;
+}
+
+const { text, className = "", variant = "primary", id }: Props = Astro.props;
+
+// Classes organizadas por categoria
+const titleClasses = cn(
+	// Typography
+	"font-sans font-medium text-text-secondary",
+	// Custom
+	variant === "primary"
+		? "text-[56px] leading-[64px] max-md:text-[32px] max-md:leading-[40px]"
+		: "text-[20px] leading-[24px] max-md:text-[20px] max-md:leading-[24px]",
+	className,
+);
+---
+
+<p id={id} class={titleClasses} set:html={text} />

@@ -1,0 +1,188 @@
+---
+import SectionLayout from "../../layouts/SectionLayout.astro";
+import AlignmentLayout from "../../layouts/AlignmentLayout.astro";
+
+import { Image } from "astro:assets";
+import { cn } from "../../utils/cn";
+
+// Assets
+import logoImage from "../../assets/logo.svg";
+import Title from "../../components/Title.astro";
+import Description from "../Description.astro";
+
+// Social Icons
+import XIcon from "../../assets/icons/social/x.svg";
+import ArrowUpIcon from "../../assets/icons/footer/arrow-up.svg";
+
+// Classes
+const sectionOuterClasses = cn("flex items-center w-full relative");
+
+const backgroundLayerClasses = cn(
+  "absolute inset-y-0 left-1/2 -translate-x-1/2 w-screen -z-10",
+  "bg-[linear-gradient(to_bottom,var(--color-newsletter-bg)_0%,var(--color-footer-end)_100%)]",
+);
+
+const sectionInnerClasses = cn("w-full relative", "py-[88px]", "max-sm:px-6");
+
+const mainLayoutClasses = cn(
+  "gap-[64px] w-full", // Adjusted gap
+);
+
+const contentRowClasses = cn(
+  "flex items-start justify-between w-full",
+  "gap-[120px]",
+  "max-md:flex-col",
+);
+
+// Left Column (Logo + Text)
+const leftColumnClasses = cn(
+  "flex flex-col gap-6",
+  "max-w-[545px]",
+  "max-md:max-w-full",
+);
+
+const logoClasses = cn("w-[115px] h-[40px] object-contain");
+
+// Right Area (Contact + Social)
+const rightAreaClasses = cn(
+  "flex items-start gap-[120px]", // Gap based on visual estimation/pixel measurement
+  "max-md:flex-col max-md:w-full",
+);
+
+// Contact Column
+const contactColumnClasses = cn("flex flex-col gap-6", "min-w-[180px]");
+
+const contactListClasses = cn("flex flex-col gap-6");
+
+const contactItemClasses = cn(
+  "text-text-secondary font-inter font-normal text-[16px] leading-[20px]", // Slightly larger than body? Fetching exact size would be better found in figma data, assuming 16px or 18px. Figma data said Body/Medium/Regular for description.
+  "transition-colors cursor-pointer",
+  "w-fit",
+);
+
+// Social Column
+const socialColumnClasses = cn("flex flex-col gap-6");
+
+const socialIconsClasses = cn("flex items-center gap-2");
+
+const socialIconContainerClasses = cn(
+  "flex justify-center items-center",
+  "w-12 h-12", // 48px circles
+  "rounded-full border border-footer-border", // Circle border
+  "hover:bg-footer-border transition-colors cursor-pointer",
+);
+
+const socialIconClasses = cn(
+  "w-6 h-6 text-text-secondary", // Adjust icon size inside circle
+);
+
+// Bottom Row
+const footerBottomClasses = cn(
+  "flex justify-between items-center border-t border-footer-border",
+  "w-full pt-6",
+  "max-md:items-center max-md:gap-8",
+);
+
+const copyrightClasses = cn(
+  "text-text-grey font-inter font-normal text-[16px] leading-[20px]",
+);
+
+const backToTopClasses = cn(
+  "flex justify-center items-center",
+  "w-[48px] min-w-[48px] h-[48px]",
+  "rounded-full border border-footer-border",
+  "hover:bg-footer-border transition-colors cursor-pointer",
+);
+---
+
+<SectionLayout
+  outerClassName={sectionOuterClasses}
+  innerClassName={sectionInnerClasses}
+>
+  <div class={backgroundLayerClasses}></div>
+  <AlignmentLayout
+    direction="vertical"
+    justify="center"
+    align="center"
+    className={mainLayoutClasses}
+  >
+    <!-- Top Content -->
+    <div class={contentRowClasses}>
+      <!-- Left Column -->
+      <div class={leftColumnClasses}>
+        <Image src={logoImage} alt="Vetra Logo" class={logoClasses} />
+        <Description
+          text="Built to keep value steady and your plans in motion. Blends fast settlement, low fees, and true transparency so money feels simple, dependable, and ready for what’s next"
+          className="font-normal font-inter"
+        />
+      </div>
+
+      <!-- Right Area -->
+      <div class={rightAreaClasses}>
+        <!-- Contact -->
+        <div class={contactColumnClasses}>
+          <Title
+            text="Contact"
+            className="text-[20px] leading-[24px] font-light max-md:text-[20px] max-md:leading-[24px]"
+          />
+          <div class={contactListClasses}>
+            <a href="mailto:contact@vetravtr.com" class={contactItemClasses}
+              >contact@vetravtr.com</a
+            >
+            <button
+              onclick="window.location.href = '/contact-us'"
+              class={contactItemClasses}>Contact us</button
+            >
+          </div>
+        </div>
+
+        <!-- Social -->
+        <div class={socialColumnClasses}>
+          <Title
+            text="Social"
+            className="text-[20px] leading-[24px] font-light max-md:text-[20px] max-md:leading-[24px]"
+          />
+          <div class={socialIconsClasses}>
+            <!-- 
+            TODO: Add LinkedIn link when available 
+           <a
+              href="#"
+              class={socialIconContainerClasses}
+              aria-label="LinkedIn"
+            >
+              <Image
+                src={LinkedinIcon}
+                alt="LinkedIn"
+                class={socialIconClasses}
+              />
+            </a> -->
+            <a
+              href="https://x.com/vetravtr"
+              class={socialIconContainerClasses}
+              aria-label="X"
+              target="_blank"
+            >
+              <Image src={XIcon} alt="X" class={socialIconClasses} />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Row -->
+    <div class={footerBottomClasses}>
+      <p class={copyrightClasses}>2025 Vetra, LLC. All rights reserved</p>
+      <button
+        class={backToTopClasses}
+        aria-label="Back to top"
+        onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+      >
+        <Image
+          src={ArrowUpIcon}
+          alt="Arrow Up"
+          class="w-6 h-6 text-text-secondary"
+        />
+      </button>
+    </div>
+  </AlignmentLayout>
+</SectionLayout>

@@ -1,0 +1,221 @@
+---
+import Badge from "../Badge.astro";
+import Button from "../Button.astro";
+import SectionLayout from "../../layouts/SectionLayout.astro";
+import AlignmentLayout from "../../layouts/AlignmentLayout.astro";
+import Title from "../Title.astro";
+import Description from "../Description.astro";
+import FeaturesBanner from "./FeaturesBanner.astro";
+
+import BackgroundImage from "../../assets/details/background.png";
+import BackgroundImageMobile from "../../assets/details/background-mobile.png";
+import { cn } from "../../utils/cn";
+import { Image } from "astro:assets";
+import VetraCoin from "../../assets/details/vetra-coin.png";
+import StarsIcon from "../../assets/icons/stars-light-sparkle.svg";
+
+// Classes organizadas por categoria para melhor legibilidade
+const sectionOuterClasses = cn(
+	// Layout
+	"flex items-center w-full relative",
+	// Identificador
+	"hero-section",
+);
+
+const sectionInnerClasses = cn(
+	// Layout & Sizing
+	"w-full h-[800px] gap-0",
+	// Responsividade
+	"max-sm:h-[842px]",
+);
+
+const contentSectionClasses = cn(
+	// Spacing
+	"gap-2",
+);
+
+const heroTitleClasses = cn(
+	// Typography
+	"text-[80px] leading-[88px] text-center",
+	// Sizing
+	"max-w-[656px]",
+	// Responsividade
+	"max-sm:text-[56px] max-sm:leading-[64px]",
+);
+
+const buttonsContainerClasses = cn(
+	// Spacing
+	"gap-4",
+	// Responsividade
+	"max-sm:flex-col max-sm:w-full max-sm:gap-2",
+);
+---
+
+<SectionLayout
+	outerClassName={sectionOuterClasses}
+	innerClassName={sectionInnerClasses}
+	autoMargin={true}
+>
+	<Image
+		src={BackgroundImage}
+		alt="Background"
+		class="absolute inset-0 -z-10 w-full h-full object-cover object-top max-sm:hidden"
+		loading="eager"
+		fetchpriority="high"
+	/>
+	<Image
+		src={BackgroundImageMobile}
+		alt="Background"
+		class="absolute inset-0 -z-10 w-full h-full object-cover sm:hidden"
+		loading="eager"
+		fetchpriority="high"
+	/>
+
+	<div
+		class="absolute top-[136px] md:top-[168px] max-md:px-6 left-1/2 -translate-x-1/2 w-[656px] max-sm:w-full gap-12 z-10 flex flex-col items-center justify-center transform-gpu"
+	>
+		<div
+			class="w-[240px] h-[240px] blur-[150px] bg-glow-to-coin absolute z-[-1]"
+		>
+		</div>
+
+		<div
+			class="absolute right-[-280px] max-sm:right-[-60px] top-[-24px] max-sm:top-[-50px] w-[176px] h-[176px] max-sm:w-[120px] max-sm:h-[120px] pointer-events-none"
+		>
+			<Image
+				src={VetraCoin}
+				alt="Vetra Coin"
+				class="w-full h-full object-contain parallax-coin"
+				data-speed-x="0.15"
+				quality="max"
+				loading="eager"
+			/>
+		</div>
+
+		<div
+			class="absolute left-[-280px] max-sm:left-[-60px] bottom-[-56px] max-sm:bottom-[-112px] w-[176px] h-[176px] max-sm:w-[120px] max-sm:h-[120px] rotate-[90deg] pointer-events-none"
+		>
+			<Image
+				src={VetraCoin}
+				alt="Vetra Coin"
+				class="w-full h-full object-contain parallax-coin"
+				data-speed-y="0.1"
+				quality="max"
+				loading="eager"
+			/>
+		</div>
+
+		<AlignmentLayout
+			direction="vertical"
+			justify="center"
+			align="center"
+			className="w-full"
+			style="gap: 2rem;"
+		>
+			<Badge text="Built for stability in the next era of finance">
+				<Image
+					src={StarsIcon}
+					alt="Stars"
+					class="w-full h-full object-contain"
+				/>
+			</Badge>
+
+			<AlignmentLayout
+				direction="vertical"
+				justify="center"
+				align="center"
+				className={contentSectionClasses}
+			>
+				<Title
+					text="Trust the value <br />Trust Vetra."
+					className={heroTitleClasses}
+				/>
+				<Description
+					text="Built to keep value steady and your plans in motion. Blends fast settlement, low fees, and true transparency so money feels simple, dependable, and ready for what’s next"
+					className="max-w-[588px] text-center"
+				/>
+			</AlignmentLayout>
+		</AlignmentLayout>
+
+		<AlignmentLayout
+			direction="horizontal"
+			justify="center"
+			align="center"
+			className={buttonsContainerClasses}
+		>
+			<a
+				href="https://polygonscan.com/address/0x34514180F94903BF8649884bD7e80fcDC1048b9d"
+				target="_blank"
+				class="max-sm:w-full h-[56px]"
+				aria-label="Verify on PolygonScan"
+			>
+				<Button
+					text="Verify on PolygonScan"
+					variant="primary"
+					className="max-sm:w-full w-fit min-w-[250px]"
+				/>
+			</a>
+			<a
+				href="contact-us"
+				aria-label="Contact us"
+				class="max-sm:w-full h-[56px]"
+			>
+				<Button
+					text="Contact us"
+					variant="outline"
+					className="max-sm:w-full w-fit"
+				/>
+			</a>
+		</AlignmentLayout>
+	</div>
+
+<!--
+	Commented because we don't have enough partners for the component to make sense
+<AlignmentLayout
+		direction="vertical"
+		justify="center"
+		align="center"
+		className="w-full max-w-[1216px] absolute bottom-[64px] md:bottom-[44px] left-1/2 -translate-x-1/2"
+		style="gap: 1.5rem;"
+	>
+		<Description
+			text="Our partners"
+			className="text-[14px] leading-[18px] max-w-[588px] text-center"
+		/>
+
+		<FeaturesBanner />
+	</AlignmentLayout> -->
+</SectionLayout>
+
+<script>
+	(function () {
+		"use strict";
+
+		// Parallax Logic
+		const parallaxElements = document.querySelectorAll(".parallax-coin");
+
+		function handleScroll() {
+			const scrollY = window.scrollY;
+
+			// Otimização: se não houver scroll ou elementos, retorna
+			if (parallaxElements.length === 0) return;
+
+			requestAnimationFrame(() => {
+				parallaxElements.forEach((el) => {
+					// Read speeds for each axis (default to 0 to avoid unwanted movement)
+					const speedX = parseFloat(el.getAttribute("data-speed-x") || "0");
+					const speedY = parseFloat(el.getAttribute("data-speed-y") || "0");
+
+					const xPos = scrollY * speedX;
+					const yPos = scrollY * speedY;
+
+					if (speedX !== 0 || speedY !== 0) {
+						(el as HTMLElement).style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
+					}
+				});
+			});
+		}
+
+		window.addEventListener("scroll", handleScroll, { passive: true });
+	})();
+</script>

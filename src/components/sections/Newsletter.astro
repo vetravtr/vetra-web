@@ -1,0 +1,279 @@
+---
+import SectionLayout from "../../layouts/SectionLayout.astro";
+import AlignmentLayout from "../../layouts/AlignmentLayout.astro";
+import Title from "../Title.astro";
+import Description from "../Description.astro";
+import { cn } from "../../utils/cn";
+import { Image } from "astro:assets";
+import EmailIcon from "../../assets/icons/newsletter/email-icon.svg";
+import ArrowIcon from "../../assets/icons/newsletter/arrow-icon.svg";
+import Video from "../../assets/content/6875475.mp4";
+
+import CheckIcon from "../../assets/icons/newsletter/check-icon.svg";
+
+const sectionOuterClasses = cn(
+  "flex items-center w-full relative",
+  "newsletter-section",
+);
+
+const videoClasses = cn(
+  "absolute inset-y-0 left-1/2 -translate-x-1/2 w-screen h-full object-cover -z-10",
+);
+
+const sectionInnerClasses = cn(
+  "w-full py-[188px] max-md:py-[88px] h-[560px]",
+  "flex justify-center items-center",
+);
+
+const containerClasses = cn(
+  "flex flex-col items-center gap-6 w-full max-w-[788px]",
+);
+
+const headerClasses = cn("flex flex-col gap-2 text-center items-center w-full");
+
+// Added transition for border color and failure state
+const inputContainerClasses = cn(
+  "flex items-center gap-4 max-md:w-full max-md:justify-between p-4",
+  "border border-text-input-border rounded-[8px]",
+  "bg-transparent hover:bg-input-hover-bg transition-all duration-300",
+  "focus-within:border-white focus-within:ring-1 focus-within:ring-white",
+  "h-[48px]",
+  "data-[state='error']:border-red-500 data-[state='error']:animate-shake", // Error state
+);
+
+const inputClasses = cn(
+  "bg-transparent border-none outline-none text-input-text max-w-[106px]",
+  "placeholder:text-text-secondary placeholder:font-inter placeholder:text-[14px] placeholder:leading-[24px]",
+  "font-inter text-[14px] leading-[24px]",
+  "disabled:opacity-50 disabled:cursor-not-allowed", // Disabled state
+);
+
+const iconContainerClasses = cn(
+  "flex items-center justify-center w-6 h-6 text-text-secondary",
+);
+
+const submitButtonClasses = cn(
+  "flex items-center justify-center min-w-8 h-8 rounded-full",
+  "bg-transparent hover:bg-white/[0.08] transition-all duration-300",
+  "cursor-pointer",
+  "disabled:cursor-not-allowed",
+  // Success state style
+  "data-[state='success']:bg-green-500 data-[state='success']:hover:bg-green-600",
+);
+---
+
+<SectionLayout
+  outerClassName={sectionOuterClasses}
+  innerClassName={sectionInnerClasses}
+  autoMargin={true}
+>
+  <style>
+    @keyframes shake {
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+      25% {
+        transform: translateX(-5px);
+      }
+      75% {
+        transform: translateX(5px);
+      }
+    }
+
+    .animate-shake {
+      animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    }
+
+    .spinner {
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top: 2px solid #fff;
+      width: 16px;
+      height: 16px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+
+  <video src={Video} class={videoClasses} autoplay loop muted playsinline
+  ></video>
+  <div
+    class="absolute inset-0 w-full h-full -z-[5] pointer-events-none"
+    style={{
+      background:
+        "linear-gradient(270deg, rgba(15, 5, 25, 0.72) 0%, #0F0519 71.04%)",
+    }}
+  >
+  </div>
+  <div class={containerClasses}>
+    <AlignmentLayout
+      direction="vertical"
+      align="center"
+      justify="center"
+      className={headerClasses}
+    >
+      <Title
+        text="Get our newsletter"
+        className="text-[56px] leading-[64px] max-md:text-[32px] max-md:leading-[40px] text-center"
+      />
+      <Description
+        text="Sign up with your email address to receive the latest updates, news, and important information."
+        className="max-w-[680px] text-center text-text-grey"
+      />
+    </AlignmentLayout>
+
+    <form id="newsletter-form" class={inputContainerClasses} novalidate>
+      <div class={iconContainerClasses}>
+        <Image
+          src={EmailIcon}
+          alt="Email"
+          width={24}
+          height={24}
+          class="min-w-6 h-6 object-contain"
+        />
+      </div>
+
+      <input
+        id="newsletter-email"
+        name="email"
+        type="email"
+        placeholder="Enter your email"
+        class={inputClasses}
+        required
+      />
+
+      <button
+        type="submit"
+        id="newsletter-submit"
+        class={submitButtonClasses}
+        aria-label="Subscribe"
+      >
+        <!-- Default State: Arrow -->
+        <Image
+          id="icon-arrow"
+          src={ArrowIcon}
+          alt="Submit"
+          width={24}
+          height={24}
+          class="w-6 h-6 object-contain"
+        />
+
+        <!-- Loading State: Spinner -->
+        <div id="icon-loading" class="spinner hidden"></div>
+
+        <!-- Success State: Checkmark -->
+        <Image
+          id="icon-check"
+          src={CheckIcon}
+          alt="Success"
+          width={24}
+          height={24}
+          class="w-5 h-5 object-contain hidden"
+        />
+      </button>
+    </form>
+  </div>
+</SectionLayout>
+
+<script>
+  const form = document.getElementById("newsletter-form") as HTMLFormElement;
+  const input = document.getElementById("newsletter-email") as HTMLInputElement;
+  const submitBtn = document.getElementById(
+    "newsletter-submit",
+  ) as HTMLButtonElement;
+  const iconArrow = document.getElementById("icon-arrow");
+  const iconLoading = document.getElementById("icon-loading");
+  const iconCheck = document.getElementById("icon-check");
+
+  const updateState = (state: "idle" | "loading" | "success" | "error") => {
+    if (
+      !submitBtn ||
+      !form ||
+      !iconArrow ||
+      !iconLoading ||
+      !iconCheck ||
+      !input
+    )
+      return;
+
+    // Reset basics
+    form.removeAttribute("data-state");
+    submitBtn.removeAttribute("data-state");
+    iconArrow.classList.remove("hidden");
+    iconLoading.classList.add("hidden");
+    iconCheck.classList.add("hidden");
+    input.disabled = false;
+    submitBtn.disabled = false;
+
+    if (state === "loading") {
+      iconArrow.classList.add("hidden");
+      iconLoading.classList.remove("hidden");
+      input.disabled = true;
+      submitBtn.disabled = true;
+    } else if (state === "success") {
+      submitBtn.setAttribute("data-state", "success");
+      iconArrow.classList.add("hidden");
+      iconCheck.classList.remove("hidden");
+      input.value = "Subscribed!";
+      input.disabled = true;
+      submitBtn.disabled = true;
+    } else if (state === "error") {
+      form.setAttribute("data-state", "error");
+      // Auto-remove error state after animation
+      setTimeout(() => form.removeAttribute("data-state"), 2000);
+    }
+  };
+
+  if (form) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = input.value;
+
+      if (!email || !email.includes("@")) {
+        updateState("error");
+        return;
+      }
+
+      updateState("loading");
+
+      try {
+        const response = await fetch("/api/newsletter", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        });
+
+        // Uncomment for simulated delay testing
+        // await new Promise(r => setTimeout(r, 1000));
+
+        if (response.ok) {
+          updateState("success");
+          // Reset after success
+          setTimeout(() => {
+            updateState("idle");
+            input.value = "";
+          }, 3000);
+        } else {
+          updateState("error");
+        }
+      } catch (error) {
+        console.error(error);
+        updateState("error");
+      }
+    });
+
+    // Clear error on input
+    input.addEventListener("input", () => {
+      form.removeAttribute("data-state");
+    });
+  }
+</script>

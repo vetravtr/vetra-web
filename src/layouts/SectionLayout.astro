@@ -1,0 +1,51 @@
+---
+import { cn } from "../utils/cn";
+
+interface Props {
+	outerClassName?: string;
+	innerClassName?: string;
+	autoMargin?: boolean;
+	style?: string;
+	outerStyle?: string;
+	[key: string]: any;
+}
+
+const {
+	outerClassName = "",
+	innerClassName = "",
+	autoMargin = false,
+	style = "",
+	outerStyle = "",
+	...rest
+}: Props = Astro.props;
+
+// Classes do container externo
+const outerClasses = cn(
+	// Layout
+	"w-full",
+	// Responsividade
+	"max-sm:w-full max-sm:overflow-x-hidden",
+	// Conditional
+	autoMargin && "max-sm:mx-0",
+	// Custom
+	outerClassName,
+);
+
+// Classes do container interno
+const innerClasses = cn(
+	// Layout
+	"flex flex-col gap-4 max-w-[1216px] mx-auto",
+	// Responsividade
+	"max-sm:w-full",
+	// Conditional
+	autoMargin && "max-sm:mx-6",
+	// Custom
+	innerClassName,
+);
+---
+
+<div class={outerClasses} style={outerStyle} {...rest}>
+	<div class={innerClasses} style={style}>
+		<slot />
+	</div>
+</div>
