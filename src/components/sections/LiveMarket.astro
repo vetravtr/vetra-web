@@ -1,0 +1,148 @@
+---
+interface Props {
+  className?: string;
+}
+
+import SectionLayout from "../../layouts/SectionLayout.astro";
+import AlignmentLayout from "../../layouts/AlignmentLayout.astro";
+import Title from "../Title.astro";
+import Badge from "../Badge.astro";
+import { Image } from "astro:assets";
+import { cn } from "../../utils/cn";
+import Tooltip from "../common/Tooltip.astro";
+
+import StarsIcon from "../../assets/icons/stars-light-sparkle.svg";
+import geckoIcon from "../../assets/icons/social/geckoterminal.png";
+import logoVetra from "../../assets/logo.svg";
+
+const sectionClasses = cn("py-16 md:py-24 mt-20");
+const headerClasses = cn("max-w-[656px] text-center mx-auto mb-14");
+
+const { className } = Astro.props as Props;
+
+// Pool VTR/USDC no GeckoTerminal
+const GT_URL = "https://www.geckoterminal.com/polygon_pos/pools/0x8478D9B6de3A4c89B4acc904C67F9fD738dE2E4A";
+const DEXSCREENER_API = "https://api.dexscreener.com/latest/dex/pairs/polygon/0x8478D9B6de3A4c89B4acc904C67F9fD738dE2E4A";
+---
+
+<SectionLayout className={cn(sectionClasses, className)}>
+  <AlignmentLayout direction="vertical" justify="center" align="center" className="w-full">
+    
+    <!-- Header -->
+    <div class={headerClasses}>
+      <Badge text="Live Market" class="mb-4">
+        <Image src={StarsIcon} alt="Sparkles" class="w-full h-full object-contain" width={12} height={12} />
+      </Badge>
+      <Title className="text-center mb-3 text-[24px] md:text-[32px] inline-flex items-center justify-center gap-3">
+        <Image src={logoVetra} alt="VTR" class="h-8 w-auto inline" />
+        <span>VTR price in real time</span>
+      </Title>
+    </div>
+
+    <!-- Ticker Cards -->
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 w-full max-w-[1100px] mx-auto mb-8">
+      
+      <!-- Price -->
+      <div class="bg-white/[0.03] border border-white/[0.06] rounded-xl p-5 text-center">
+        <p class="text-text-grey text-xs uppercase tracking-wider mb-1">Price (USD)</p>
+        <p id="ds-price" class="text-2xl font-medium text-white">—</p>
+      </div>
+
+      <!-- 24h Change -->
+      <div class="bg-white/[0.03] border border-white/[0.06] rounded-xl p-5 text-center">
+        <p class="text-text-grey text-xs uppercase tracking-wider mb-1">24h Change</p>
+        <p id="ds-change" class="text-2xl font-medium text-white">—</p>
+      </div>
+
+      <!-- Liquidity -->
+      <div class="bg-white/[0.03] border border-white/[0.06] rounded-xl p-5 text-center">
+        <p class="text-text-grey text-xs uppercase tracking-wider mb-1">Liquidity (USD)</p>
+        <p id="ds-liquidity" class="text-2xl font-medium text-white">—</p>
+      </div>
+
+      <!-- 24h Volume -->
+      <div class="bg-white/[0.03] border border-white/[0.06] rounded-xl p-5 text-center">
+        <p class="text-text-grey text-xs uppercase tracking-wider mb-1">24h Volume</p>
+        <p id="ds-volume" class="text-2xl font-medium text-white">—</p>
+      </div>
+
+      <!-- FDV -->
+      <div class="bg-white/[0.03] border border-white/[0.06] rounded-xl p-5 text-center">
+        <p class="text-text-grey text-xs uppercase tracking-wider mb-1">FDV (USD)</p>
+        <p id="ds-fdv" class="text-2xl font-medium text-white">—</p>
+      </div>
+    </div>
+
+    <!-- View on GeckoTerminal -->
+    <div class="flex items-center justify-center gap-3 flex-wrap">
+      <a
+        href={GT_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-white/[0.12] text-sm font-medium text-white hover:bg-white/[0.05] transition-colors"
+      >
+        <Image src={geckoIcon} alt="" class="h-4 w-auto" />
+        View on GeckoTerminal
+      </a>
+
+      <span class="text-white/20 hidden sm:inline">|</span>
+
+      <Tooltip content="0xAA27bd271B01dd20CcFA079800616335416c95Fd" label="Click to copy" position="top">
+        <span class="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-white/[0.12] text-sm font-mono text-text-grey hover:text-white hover:border-white/30 transition-all cursor-pointer">
+          0xAA27...95Fd
+        </span>
+      </Tooltip>
+    </div>
+
+  </AlignmentLayout>
+</SectionLayout>
+
+<script>
+  (function() {
+    const API = "https://api.dexscreener.com/latest/dex/pairs/polygon/0x8478D9B6de3A4c89B4acc904C67F9fD738dE2E4A";
+    
+    async function fetchData() {
+      try {
+        const res = await fetch(API);
+        const data = await res.json();
+        const pair = data.pair;
+        
+        if (!pair) return;
+
+        const priceEl = document.getElementById("ds-price");
+        if (priceEl && pair.priceUsd) {
+          priceEl.textContent = "$" + parseFloat(pair.priceUsd).toFixed(6);
+        }
+
+        const changeEl = document.getElementById("ds-change");
+        if (changeEl && pair.priceChange?.h24 != null) {
+          const val = parseFloat(pair.priceChange.h24);
+          changeEl.textContent = (val >= 0 ? "+" : "") + val.toFixed(2) + "%";
+          changeEl.style.color = val >= 0 ? "#22c55e" : "#ef4444";
+        }
+
+        const liqEl = document.getElementById("ds-liquidity");
+        if (liqEl && pair.liquidity?.usd) {
+          liqEl.textContent = "$" + parseFloat(pair.liquidity.usd).toLocaleString(undefined, {maximumFractionDigits: 0});
+        }
+
+        const volEl = document.getElementById("ds-volume");
+        if (volEl && pair.volume?.h24) {
+          volEl.textContent = "$" + parseFloat(pair.volume.h24).toLocaleString(undefined, {maximumFractionDigits: 0});
+        }
+
+        // FDV = price * 30M (circulating não é usado, é FDV total)
+        const fdvEl = document.getElementById("ds-fdv");
+        if (fdvEl && pair.priceUsd) {
+          const fdv = parseFloat(pair.priceUsd) * 30_000_000;
+          fdvEl.textContent = "$" + fdv.toLocaleString(undefined, {maximumFractionDigits: 0});
+        }
+
+      } catch (e) {
+        console.log("DexScreener data unavailable", e);
+      }
+    }
+
+    fetchData();
+  })();
+</script>

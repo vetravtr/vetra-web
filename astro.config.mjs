@@ -8,7 +8,7 @@ import vercel from '@astrojs/vercel';
 export default defineConfig({
   output: 'server',
   adapter: vercel(),
-  site: 'https://wwww.vetravtr.com/',
+  site: 'https://www.vetravtr.com/',
   compressHTML: true,
   integrations: [
     sitemap({

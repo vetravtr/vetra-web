@@ -12,6 +12,8 @@ import Description from "../Description.astro";
 
 // Social Icons
 import XIcon from "../../assets/icons/social/x.svg";
+import GithubIcon from "../../assets/icons/social/github2.svg";
+import TelegramIcon from "../../assets/icons/social/telegram2.svg";
 import ArrowUpIcon from "../../assets/icons/footer/arrow-up.svg";
 
 // Classes
@@ -112,7 +114,7 @@ const backToTopClasses = cn(
       <div class={leftColumnClasses}>
         <Image src={logoImage} alt="Vetra Logo" class={logoClasses} />
         <Description
-          text="Built to keep value steady and your plans in motion. Blends fast settlement, low fees, and true transparency so money feels simple, dependable, and ready for what’s next"
+          text="Built to keep value steady and your plans in motion. Blends fast settlement, low fees, and true transparency so money feels simple, dependable, and ready for what's next"
           className="font-normal font-inter"
         />
       </div>
@@ -143,19 +145,6 @@ const backToTopClasses = cn(
             className="text-[20px] leading-[24px] font-light max-md:text-[20px] max-md:leading-[24px]"
           />
           <div class={socialIconsClasses}>
-            <!-- 
-            TODO: Add LinkedIn link when available 
-           <a
-              href="#"
-              class={socialIconContainerClasses}
-              aria-label="LinkedIn"
-            >
-              <Image
-                src={LinkedinIcon}
-                alt="LinkedIn"
-                class={socialIconClasses}
-              />
-            </a> -->
             <a
               href="https://x.com/vetravtr"
               class={socialIconContainerClasses}
@@ -164,6 +153,22 @@ const backToTopClasses = cn(
             >
               <Image src={XIcon} alt="X" class={socialIconClasses} />
             </a>
+            <a
+              href="https://github.com/vetravtr"
+              class={socialIconContainerClasses}
+              aria-label="GitHub"
+              target="_blank"
+            >
+              <Image src={GithubIcon} alt="GitHub" class={socialIconClasses} />
+            </a>
+            <a
+              href="https://t.me/vetravtr"
+              class={socialIconContainerClasses}
+              aria-label="Telegram"
+              target="_blank"
+            >
+              <Image src={TelegramIcon} alt="Telegram" class={socialIconClasses} />
+            </a>
           </div>
         </div>
       </div>
@@ -171,7 +176,7 @@ const backToTopClasses = cn(
 
     <!-- Bottom Row -->
     <div class={footerBottomClasses}>
-      <p class={copyrightClasses}>2025 Vetra, LLC. All rights reserved</p>
+      <p class={copyrightClasses}>2026 Vetra, LLC. All rights reserved</p>
       <button
         class={backToTopClasses}
         aria-label="Back to top"

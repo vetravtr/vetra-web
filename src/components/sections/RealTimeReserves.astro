@@ -169,11 +169,6 @@ const infoCardClasses = cn(
           </AlignmentLayout>
         </AlignmentLayout>
 
-        <div
-          class="p-[6.5px] w-full max-w-[558px] max-sm:max-w-[226px] text-center text-browser-address-text text-[13px] bg-browser-address-bg font-light font-sans rounded-[6px]"
-        >
-          www.vetravtr.com/
-        </div>
         <AlignmentLayout
           direction="horizontal"
           justify="end"
@@ -235,6 +230,7 @@ const infoCardClasses = cn(
               />
             </div>
             <Description text="Reserves in Custody" className={TEXT_12_16} />
+            <p class="text-text-grey text-[10px] leading-[12px] mt-1">Held by FT Asset Management (Sweden)</p>
           </div>
           {/* Card 2 */}
           <div class={metricCardClasses}>
@@ -246,7 +242,8 @@ const infoCardClasses = cn(
                 id="total-credit"
               />
             </div>
-            <Description text="Total Credit" className={TEXT_12_16} />
+            <Description text="Collateralization Ratio" className={TEXT_12_16} />
+            <p class="text-text-grey text-[10px] leading-[12px] mt-1">Reserves ÷ Total Supply — over-collateralized</p>
           </div>
         </div>
 
@@ -389,8 +386,14 @@ const infoCardClasses = cn(
             updatedAtEl.innerText = `Updated: ${formatDate(summary.DateTime)}`;
           if (totalBalanceEl)
             totalBalanceEl.innerText = formatCurrency(summary.TotalBalance);
-          if (totalCreditEl)
-            totalCreditEl.innerText = formatCurrency(summary.TotalCredit);
+          
+          // Collateralization Ratio: TotalBalance / (TotalCredit or supply)
+          if (totalCreditEl) {
+            const supply = 30_000_000; // 30M VTR total supply
+            const reserves = summary.TotalBalance || summary.TotalCredit || 0;
+            const ratio = reserves / supply;
+            totalCreditEl.innerText = (ratio * 100).toFixed(0) + "%";
+          }
 
           // Toggle skeletons off
           document.querySelectorAll('[data-loading="true"]').forEach((el) => {

@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://new-client-site.com/sitemap-index.xml
-
+Sitemap: https://www.vetravtr.com/sitemap-index.xml

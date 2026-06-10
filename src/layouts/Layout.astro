@@ -21,7 +21,7 @@ interface Props {
 }
 
 const {
-  title = "Vetra - The Best Stablecoin of 2026",
+  title = "Vetra VTR",
   description = "Built for real user. Crafted for low-cost transfers, instant finality, and audit-ready transparency making digital value dependable.",
   image = "/favicon.svg",
   type = "website",
@@ -29,7 +29,7 @@ const {
 
 const canonicalURL = new URL(
   Astro.url.pathname,
-  Astro.site || "https://generic-client-base.com",
+  Astro.site || "https://www.vetravtr.com",
 );
 ---
 
@@ -69,6 +69,7 @@ const canonicalURL = new URL(
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={new URL(image, canonicalURL).href} />
+    <meta name="twitter:site" content="@vetravtr" />
 
     <!-- Resource Hints -->
     <!-- Fonts with font-display swap for better performance -->
