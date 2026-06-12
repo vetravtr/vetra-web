@@ -39,6 +39,8 @@ const DEXSCREENER_API = "https://api.dexscreener.com/latest/dex/pairs/polygon/0x
       </Title>
     </div>
 
+    <h2 class="sr-only">Live Market Data</h2>
+
     <!-- Ticker Cards -->
     <div class="grid grid-cols-2 md:grid-cols-5 gap-4 w-full max-w-[1100px] mx-auto mb-8">
       
@@ -131,11 +133,19 @@ const DEXSCREENER_API = "https://api.dexscreener.com/latest/dex/pairs/polygon/0x
           volEl.textContent = "$" + parseFloat(pair.volume.h24).toLocaleString(undefined, {maximumFractionDigits: 0});
         }
 
-        // FDV = price * 30M (circulating não é usado, é FDV total)
+        // FDV = price * 30M — formatado como "6.07M"
         const fdvEl = document.getElementById("ds-fdv");
         if (fdvEl && pair.priceUsd) {
           const fdv = parseFloat(pair.priceUsd) * 30_000_000;
-          fdvEl.textContent = "$" + fdv.toLocaleString(undefined, {maximumFractionDigits: 0});
+          let formatted;
+          if (fdv >= 1_000_000) {
+            formatted = "$" + (fdv / 1_000_000).toFixed(2) + "M";
+          } else if (fdv >= 1_000) {
+            formatted = "$" + (fdv / 1_000).toFixed(2) + "K";
+          } else {
+            formatted = "$" + fdv.toLocaleString(undefined, {maximumFractionDigits: 0});
+          }
+          fdvEl.textContent = formatted;
         }
 
       } catch (e) {

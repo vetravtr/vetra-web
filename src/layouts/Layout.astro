@@ -21,15 +21,15 @@ interface Props {
 }
 
 const {
-  title = "Vetra VTR",
-  description = "Built for real user. Crafted for low-cost transfers, instant finality, and audit-ready transparency making digital value dependable.",
+  title = "VETRA (VTR) — Fully Collateralized Stablecoin on Polygon | $100M Backed",
+  description = "VETRA is a fully backed stablecoin with $100M in reserves held by FT Asset Management (Sweden). Zero-fee transfers, Chainlink Proof-of-Reserves, and concentrated liquidity on Polygon. Built for institutional settlement and everyday payments.",
   image = "/favicon.svg",
   type = "website",
 } = Astro.props;
 
 const canonicalURL = new URL(
   Astro.url.pathname,
-  Astro.site || "https://www.vetravtr.com",
+  Astro.site ?? "https://www.vetravtr.com",
 );
 ---
 
@@ -52,20 +52,20 @@ const canonicalURL = new URL(
     <meta name="author" content="Vetra" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
-    <link rel="canonical" href={canonicalURL} />
+    <link rel="alternate" hreflang="en" href="https://www.vetravtr.com" />
+    <link rel="alternate" hreflang="x-default" href="https://www.vetravtr.com" />
+    <link rel="canonical" href={canonicalURL.href} />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content={type} />
-    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:url" content={canonicalURL.href} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={new URL(image, canonicalURL).href} />
-    <meta property="og:locale" content="en_US" />
-    <meta property="og:site_name" content="Vetra" />
 
     <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:url" content={canonicalURL} />
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={canonicalURL.href} />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={new URL(image, canonicalURL).href} />

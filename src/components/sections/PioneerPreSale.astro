@@ -1,0 +1,360 @@
+---
+interface Props {
+  className?: string;
+}
+
+import SectionLayout from "../../layouts/SectionLayout.astro";
+import AlignmentLayout from "../../layouts/AlignmentLayout.astro";
+import Badge from "../Badge.astro";
+import Title from "../Title.astro";
+import Description from "../Description.astro";
+import { Image } from "astro:assets";
+import { cn } from "../../utils/cn";
+import ConnectWalletBtn from "../common/ConnectWalletBtn.astro";
+import WalletConnect from "../WalletConnect.jsx";
+import StarsIcon from "../../assets/icons/stars-light-sparkle.svg";
+
+const { className } = Astro.props as Props;
+---
+
+<section class={cn("py-16 md:py-24 relative", className)}>
+  <div class="max-w-[1216px] mx-auto px-4">
+    
+    <!-- Header -->
+    <div class="text-center mb-14">
+      <Badge text="NFT Pre-Sale">
+        <Image src={StarsIcon} alt="" class="w-full h-full object-contain" width={12} height={12} />
+      </Badge>
+      <Title className="text-center mt-4 text-[24px] md:text-[32px]">
+        Be one of the pioneers to acquire VTR
+      </Title>
+      <Description
+        text="Buy the NFT today, exchange for 1 VTR when the price reaches $0.40"
+        className="text-center mt-2"
+      />
+    </div>
+
+    <!-- Grid: Buy Block + Referral Block -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <!-- ===== BUY NFT ===== -->
+      <div class="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-8 flex flex-col gap-6">
+        
+        <!-- Price -->
+        <div class="text-center">
+          <p class="text-text-grey text-sm uppercase tracking-wider mb-1">Original Price</p>
+          <p class="text-text-grey line-through text-xl">$0.40 USDC</p>
+          <p class="text-light-purple text-4xl font-bold mt-1">$0.34 USDC</p>
+          <span class="inline-block mt-1 bg-badge-purple/20 text-badge-purple text-xs font-semibold px-3 py-1 rounded-full">15% OFF</span>
+        </div>
+
+        <!-- Progress Bar -->
+        <div>
+          <div class="flex justify-between text-xs text-text-grey mb-1">
+            <span>Current price: <span id="pioneer-current-price">$0.20</span></span>
+            <span>Target: $0.40</span>
+          </div>
+          <div class="w-full h-3 bg-white/[0.06] rounded-full overflow-hidden">
+            <div id="pioneer-progress-bar" class="h-full bg-gradient-to-r from-badge-purple to-light-purple rounded-full transition-all duration-500" style="width: 50%"></div>
+          </div>
+        </div>
+
+        <!-- Connect Button (Bloco 1) -->
+        <WalletConnect client:only="react" />
+
+        <!-- Buy Button -->
+        <button
+          id="pioneer-buy-btn"
+          class="w-full py-4 rounded-full bg-[#643390] hover:bg-[#9A3CEB] text-white font-semibold text-lg transition-all duration-300 flex items-center justify-center gap-2"
+        >
+          🛒 Buy NFT
+        </button>
+
+        <!-- VTR Hash -->
+        <div class="flex items-center justify-between bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-3">
+          <span class="text-text-grey text-sm font-mono">0xAA27...95Fd</span>
+          <button
+            data-copy="0xAA27bd271B01dd20CcFA079800616335416c95Fd"
+            class="text-badge-purple hover:text-light-purple text-sm font-medium transition-colors"
+          >
+            📋 Copy
+          </button>
+        </div>
+
+        <!-- Info -->
+        <div class="bg-badge-purple/5 border border-badge-purple/10 rounded-xl p-4">
+          <p class="text-text-grey text-sm leading-relaxed">
+            ⚡ <strong class="text-white">1 NFT = 1 VTR</strong> at redemption.
+            When the market price reaches $0.40, come back and exchange your NFT for 1 VTR.
+          </p>
+        </div>
+      </div>
+
+      <!-- ===== REFERRAL ===== -->
+      <div class="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-8 flex flex-col gap-6">
+
+        <div class="text-center">
+          <p class="text-2xl font-semibold text-white">👥 Invite friends, earn more</p>
+          <p class="text-text-grey text-sm mt-1">Each friend who buys = <strong class="text-light-purple">+5% VTR bonus</strong> on redemption day</p>
+        </div>
+
+        <!-- How it works -->
+        <div class="space-y-3">
+          <div class="flex items-start gap-3">
+            <span class="text-light-purple text-lg leading-none mt-0.5">1</span>
+            <p class="text-text-grey text-sm">Share your referral link with friends</p>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="text-light-purple text-lg leading-none mt-0.5">2</span>
+            <p class="text-text-grey text-sm">They buy an NFT — you get <strong class="text-white">+5% VTR</strong></p>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="text-light-purple text-lg leading-none mt-0.5">3</span>
+            <p class="text-text-grey text-sm">Bonus accumulates. Claim on redemption day via <span class="font-mono text-xs text-white">claimReferralBonus()</span></p>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="text-light-purple text-lg leading-none mt-0.5">4</span>
+            <p class="text-text-grey text-sm">No limits — refer as many as you want</p>
+          </div>
+        </div>
+
+        <!-- Form -->
+        <div class="flex flex-col gap-4">
+          <input
+            id="ref-name"
+            type="text"
+            placeholder="Your name"
+            class="w-full bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-3 text-white placeholder:text-text-grey text-sm focus:outline-none focus:border-badge-purple transition-colors"
+          />
+          <input
+            id="ref-email"
+            type="email"
+            placeholder="Your email"
+            class="w-full bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-3 text-white placeholder:text-text-grey text-sm focus:outline-none focus:border-badge-purple transition-colors"
+          />
+          <WalletConnect client:only="react" />
+        </div>
+
+        <!-- Generated Link (hidden initially) -->
+        <div id="ref-link-area" class="hidden">
+          <div class="bg-white/[0.03] border border-white/[0.06] rounded-xl p-4">
+            <p class="text-text-grey text-xs mb-2">Your referral link:</p>
+            <div class="flex items-center justify-between gap-2">
+              <span id="ref-link" class="text-sm text-white font-mono truncate">vetravtr.com/r/0x...</span>
+              <button id="ref-copy-link" class="text-badge-purple hover:text-light-purple text-xs font-medium whitespace-nowrap">
+                📋 Copy
+              </button>
+            </div>
+          </div>
+
+          <!-- Dashboard -->
+          <div class="bg-badge-purple/5 border border-badge-purple/10 rounded-xl p-4 flex justify-between items-center">
+            <div>
+              <p class="text-text-grey text-xs">Referred</p>
+              <p id="ref-count" class="text-white text-2xl font-bold">0</p>
+            </div>
+            <div class="text-right">
+              <p class="text-text-grey text-xs">Bonus accrued</p>
+              <p id="ref-bonus" class="text-light-purple text-2xl font-bold">0%</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  (function() {
+    "use strict";
+
+    // === Barra de Progresso ===
+    const PRICE_TARGET = 0.40;
+    async function updatePrice() {
+      try {
+        const res = await fetch("https://api.dexscreener.com/latest/dex/pairs/polygon/0x8478D9B6de3A4c89B4acc904C67F9fD738dE2E4A");
+        const data = await res.json();
+        const pair = data.pair;
+        if (pair?.priceUsd) {
+          const price = parseFloat(pair.priceUsd);
+          const pct = Math.min(100, (price / PRICE_TARGET) * 100);
+          const bar = document.getElementById("pioneer-progress-bar");
+          const label = document.getElementById("pioneer-current-price");
+          if (bar) bar.style.width = pct + "%";
+          if (label) label.textContent = "$" + price.toFixed(6);
+        }
+      } catch (e) {
+        console.log("Price fetch error", e);
+      }
+    }
+    updatePrice();
+    setInterval(updatePrice, 30000);
+
+    // === Copiar Hash VTR ===
+    document.querySelectorAll("[data-copy]").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const text = btn.getAttribute("data-copy");
+        if (text) {
+          await navigator.clipboard.writeText(text);
+          const orig = btn.textContent;
+          btn.textContent = "✅ Copiado!";
+          setTimeout(() => { btn.textContent = orig; }, 2000);
+        }
+      });
+    });
+
+    // === Gerar link quando conectar carteira ===
+    function waitForWallet() {
+      const check = setInterval(() => {
+        const btn = document.querySelector('[data-testid="rk-account-button"]');
+        if (btn) {
+          clearInterval(check);
+          // Pegar endereço do RainbowKit
+          const address = btn.textContent?.trim().match(/0x[a-fA-F0-9]{6,}/)?.[0];
+          if (address) {
+            const linkArea = document.getElementById("ref-link-area");
+            const linkEl = document.getElementById("ref-link");
+            if (linkArea && linkEl) {
+              linkArea.classList.remove("hidden");
+              linkEl.textContent = "vetravtr.com/r/" + address;
+            }
+            // Salvar usuário no Supabase se nome+email estiverem preenchidos
+            saveUserToSupabase(address);
+          }
+        }
+      }, 500);
+    }
+
+    // === Salvar usuário no Supabase ===
+    async function saveUserToSupabase(wallet) {
+      const name = document.getElementById("ref-name")?.value?.trim();
+      const email = document.getElementById("ref-email")?.value?.trim();
+      if (!name || !email) return;
+      try {
+        const url = 'https://qhgxffazypogelvclyjn.supabase.co';
+        const key = 'eyJhbG...e5Fg';
+        await fetch(url + '/rest/v1/users', {
+          method: 'POST',
+          headers: { 'apikey': key, 'Authorization': 'Bearer ' + key, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+          body: JSON.stringify({ wallet_address: wallet.toLowerCase(), name, email, referral_code: 'r/' + wallet.slice(0,8) })
+        });
+      } catch(e) { console.log(e); }
+    }
+
+    // Escutar mudanças nos campos
+    document.getElementById("ref-name")?.addEventListener("change", () => {
+      const btn = document.querySelector('[data-testid="rk-account-button"]');
+      if (btn) {
+        const a = btn.textContent?.trim().match(/0x[a-fA-F0-9]{6,}/)?.[0];
+        if (a) saveUserToSupabase(a);
+      }
+    });
+    document.getElementById("ref-email")?.addEventListener("change", () => {
+      const btn = document.querySelector('[data-testid="rk-account-button"]');
+      if (btn) {
+        const a = btn.textContent?.trim().match(/0x[a-fA-F0-9]{6,}/)?.[0];
+        if (a) saveUserToSupabase(a);
+      }
+    });
+
+    // Observar mudanças na DOM (quando conectar/desconectar)
+    const observer = new MutationObserver(waitForWallet);
+    observer.observe(document.body, { childList: true, subtree: true });
+    waitForWallet();
+
+    // === Comprar NFT ===
+    const buyBtn = document.getElementById("pioneer-buy-btn");
+    if (buyBtn) {
+      buyBtn.addEventListener("click", async () => {
+        // Verificar se o RainbowKit está conectado
+        const walletBtn = document.querySelector('[data-testid="rk-account-button"]');
+        if (!walletBtn) {
+          alert("Please connect your wallet first.");
+          return;
+        }
+        
+        // Pegar endereço da carteira conectada
+        const address = walletBtn.textContent?.trim().match(/0x[a-fA-F0-9]{6,}/)?.[0];
+        if (!address) {
+          alert("Could not detect wallet address. Please reconnect.");
+          return;
+        }
+
+        // Verificar se tem window.ethereum
+        if (typeof window.ethereum === 'undefined') {
+          alert("No wallet detected. Please install MetaMask or Trust Wallet.");
+          return;
+        }
+
+        buyBtn.disabled = true;
+        buyBtn.textContent = "⏳ Approving USDC...";
+
+        try {
+          const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+          
+          // USDC address na Polygon
+          const USDC = '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359';
+          const PIONEER = '0x4c336E0E4Da78156242f90320463F2d8e5A86D8b';
+          const PRICE = '0x000000000000000000000000000000000000000000000000000000000005f5e0'; // 0.34 USDC (340000 em 6 dec)
+          
+          // Verificar allowance
+          const allowanceABI = [{"constant":true,"inputs":[{"name":"_owner","type":"address"},{"name":"_spender","type":"address"}],"name":"allowance","outputs":[{"name":"","type":"uint256"}],"type":"function"}];
+          const allowanceHex = await window.ethereum.request({
+            method: 'eth_call',
+            params: [{ to: USDC, data: '0xdd62ed3e' + address.slice(2).padStart(64,'0') + PIONEER.slice(2).padStart(64,'0') }, 'latest']
+          });
+          const allowance = parseInt(allowanceHex, 16);
+          
+          if (allowance < 340000) {
+            // Aprovar USDC
+            buyBtn.textContent = "⏳ Approving USDC...";
+            const approveData = '0x095ea7b3' + PIONEER.slice(2).padStart(64,'0') + '00000000000000000000000000000000000000000000000000000000000f4240';
+            const approveHash = await window.ethereum.request({
+              method: 'eth_sendTransaction',
+              params: [{ from: accounts[0], to: USDC, data: approveData }]
+            });
+            // Esperar confirmação
+            buyBtn.textContent = "⏳ Waiting for approval...";
+            await new Promise(resolve => setTimeout(resolve, 5000));
+          }
+          
+          // Chamar buy()
+          buyBtn.textContent = "⏳ Buying NFT...";
+          const buyABI = '0xb4797d2c'; // buy(address) selector
+          const buyData = buyABI + '0000000000000000000000000000000000000000000000000000000000000000'; // referrer = 0x0
+          
+          const buyHash = await window.ethereum.request({
+            method: 'eth_sendTransaction',
+            params: [{ from: accounts[0], to: PIONEER, data: buyData }]
+          });
+          
+          buyBtn.textContent = "✅ NFT Purchased!";
+          setTimeout(() => {
+            buyBtn.disabled = false;
+            buyBtn.textContent = "🛒 Buy NFT";
+          }, 5000);
+          
+        } catch (e) {
+          console.error(e);
+          buyBtn.disabled = false;
+          buyBtn.textContent = "🛒 Buy NFT";
+          alert("Transaction failed: " + (e.message || "Unknown error"));
+        }
+      });
+    }
+
+    // === Copiar Link Referral ===
+    const copyLinkBtn = document.getElementById("ref-copy-link");
+    if (copyLinkBtn) {
+      copyLinkBtn.addEventListener("click", async () => {
+        const link = document.getElementById("ref-link")?.textContent;
+        if (link) {
+          await navigator.clipboard.writeText(link);
+          copyLinkBtn.textContent = "✅ Copiado!";
+          setTimeout(() => { copyLinkBtn.textContent = "📋 Copiar"; }, 2000);
+        }
+      });
+    }
+  })();
+</script>
