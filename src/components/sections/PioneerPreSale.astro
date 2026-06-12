@@ -331,51 +331,69 @@ const { className } = Astro.props as Props;
     }
   })();
 
-  // === VANILLA WALLET CONNECTION ===
+  // === WALLET CONNECTION via WalletConnect Web3Modal (CDN) ===
   (function() {
     const btn = document.getElementById('pioneer-connect-btn');
     if (!btn) return;
 
+    let web3modal = null;
+    let provider = null;
+
+    async function initModal() {
+      if (web3modal) return web3modal;
+      const { WalletConnectModal } = await import('https://cdn.jsdelivr.net/npm/@walletconnect/modal@2.6.2/+esm');
+      web3modal = new WalletConnectModal({
+        projectId: 'd4ee97a93dc538bc7c23303cdd30814c',
+        chains: ['eip155:137'],
+      });
+      return web3modal;
+    }
+
     async function connect() {
-      // Method 1: Injected provider (MetaMask, Trust, Brave, etc.)
-      if (window.ethereum) {
-        try {
-          const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-          const addr = accounts[0];
-          window.__vetra_address = addr;
-          btn.textContent = '✅ ' + addr.slice(0,6) + '...' + addr.slice(-4);
-          btn.className = btn.className.replace('border-white/[0.12]', 'border-[#3FB950]/[0.3]');
-          window.dispatchEvent(new CustomEvent('wallet-connected', { detail: { address: addr } }));
-          return;
-        } catch (e) {
-          if (e.code === 4001) { alert('Connection rejected.'); return; }
+      btn.textContent = '⏳ Connecting...';
+      btn.disabled = true;
+      try {
+        // Try injected provider first (MetaMask)
+        if (window.ethereum) {
+          try {
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            if (accounts.length > 0) {
+              setConnected(accounts[0]);
+              return;
+            }
+          } catch(e) { /* fall through to QR */ }
         }
+        // QR Code via WalletConnect
+        await initModal();
+        await web3modal.openModal();
+        // After modal closes, check if wallet connected via ethereum
+        if (window.ethereum && window.ethereum.selectedAddress) {
+          setConnected(window.ethereum.selectedAddress);
+        }
+      } catch (e) {
+        console.error('Connect error:', e);
+        btn.textContent = '🔌 Connect Wallet';
+        btn.disabled = false;
       }
-      
-      // Method 2: WalletConnect deep link (mobile)
-      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-      if (isMobile) {
-        const wcUrl = 'https://metamask.app.link/wc?uri=wc%3A%2F%2F';
-        window.open(wcUrl, '_blank');
-        alert('Opening wallet app. After connecting, return to this page.');
-        return;
-      }
-      
-      // Method 3: No wallet found
-      alert('No wallet detected. Please install MetaMask (desktop) or use a mobile wallet (Trust, SafePal, MetaMask mobile).');
+    }
+
+    function setConnected(addr) {
+      window.__vetra_address = addr;
+      btn.textContent = '✅ ' + addr.slice(0,6) + '...' + addr.slice(-4);
+      btn.className = btn.className.replace('border-white/[0.12]', 'border-[#3FB950]/[0.3]');
+      btn.disabled = false;
+      window.dispatchEvent(new CustomEvent('wallet-connected', { detail: { address: addr } }));
     }
 
     btn.addEventListener('click', connect);
 
-    // Listen for account changes
     if (window.ethereum) {
       window.ethereum.on('accountsChanged', function(accounts) {
         if (accounts.length === 0) {
           window.__vetra_address = null;
           btn.textContent = '🔌 Connect Wallet';
         } else {
-          window.__vetra_address = accounts[0];
-          btn.textContent = '✅ ' + accounts[0].slice(0,6) + '...' + accounts[0].slice(-4);
+          setConnected(accounts[0]);
         }
       });
     }
