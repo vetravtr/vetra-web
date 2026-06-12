@@ -11,7 +11,7 @@ import Description from "../Description.astro";
 import { Image } from "astro:assets";
 import { cn } from "../../utils/cn";
 import ConnectWalletBtn from "../common/ConnectWalletBtn.astro";
-import WalletConnect from "../WalletConnect.jsx";
+
 import StarsIcon from "../../assets/icons/stars-light-sparkle.svg";
 
 const { className } = Astro.props as Props;
@@ -59,8 +59,11 @@ const { className } = Astro.props as Props;
           </div>
         </div>
 
-        <!-- Connect Button (Bloco 1) -->
-        <WalletConnect client:only="react" />
+        <!-- Connect Button -->
+        <button id="pioneer-connect-btn" type="button"
+          class="w-full py-3 rounded-full border border-white/[0.12] text-white font-medium text-sm hover:bg-white/[0.05] transition-all duration-300">
+          🔌 Connect Wallet
+        </button>
 
         <!-- Buy Button -->
         <button
@@ -132,7 +135,6 @@ const { className } = Astro.props as Props;
             placeholder="Your email"
             class="w-full bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-3 text-white placeholder:text-text-grey text-sm focus:outline-none focus:border-badge-purple transition-colors"
           />
-          <WalletConnect client:only="react" />
         </div>
 
         <!-- Generated Link (hidden initially) -->
@@ -324,6 +326,56 @@ const { className } = Astro.props as Props;
           await navigator.clipboard.writeText(link);
           copyLinkBtn.textContent = "✅ Copiado!";
           setTimeout(() => { copyLinkBtn.textContent = "📋 Copiar"; }, 2000);
+        }
+      });
+    }
+  })();
+
+  // === VANILLA WALLET CONNECTION ===
+  (function() {
+    const btn = document.getElementById('pioneer-connect-btn');
+    if (!btn) return;
+
+    async function connect() {
+      // Method 1: Injected provider (MetaMask, Trust, Brave, etc.)
+      if (window.ethereum) {
+        try {
+          const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+          const addr = accounts[0];
+          window.__vetra_address = addr;
+          btn.textContent = '✅ ' + addr.slice(0,6) + '...' + addr.slice(-4);
+          btn.className = btn.className.replace('border-white/[0.12]', 'border-[#3FB950]/[0.3]');
+          window.dispatchEvent(new CustomEvent('wallet-connected', { detail: { address: addr } }));
+          return;
+        } catch (e) {
+          if (e.code === 4001) { alert('Connection rejected.'); return; }
+        }
+      }
+      
+      // Method 2: WalletConnect deep link (mobile)
+      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      if (isMobile) {
+        const wcUrl = 'https://metamask.app.link/wc?uri=wc%3A%2F%2F';
+        window.open(wcUrl, '_blank');
+        alert('Opening wallet app. After connecting, return to this page.');
+        return;
+      }
+      
+      // Method 3: No wallet found
+      alert('No wallet detected. Please install MetaMask (desktop) or use a mobile wallet (Trust, SafePal, MetaMask mobile).');
+    }
+
+    btn.addEventListener('click', connect);
+
+    // Listen for account changes
+    if (window.ethereum) {
+      window.ethereum.on('accountsChanged', function(accounts) {
+        if (accounts.length === 0) {
+          window.__vetra_address = null;
+          btn.textContent = '🔌 Connect Wallet';
+        } else {
+          window.__vetra_address = accounts[0];
+          btn.textContent = '✅ ' + accounts[0].slice(0,6) + '...' + accounts[0].slice(-4);
         }
       });
     }
