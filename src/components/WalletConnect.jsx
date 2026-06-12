@@ -8,7 +8,6 @@ const config = getDefaultConfig({
   appName: 'VETRA',
   projectId: 'd4ee97a93dc538bc7c23303cdd30814c',
   chains: [polygon],
-  ssr: false,
 });
 
 const queryClient = new QueryClient();
