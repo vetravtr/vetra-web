@@ -1,14 +1,21 @@
 import '@rainbow-me/rainbowkit/styles.css';
-import { getDefaultConfig, RainbowKitProvider, ConnectButton, darkTheme, lightTheme } from '@rainbow-me/rainbowkit';
+import { getDefaultConfig, RainbowKitProvider, ConnectButton, darkTheme } from '@rainbow-me/rainbowkit';
 import { polygon } from 'wagmi/chains';
 import { WagmiProvider } from 'wagmi';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { metaMaskWallet, walletConnectWallet } from '@rainbow-me/rainbowkit/wallets';
 
 const config = getDefaultConfig({
   appName: 'VETRA',
   projectId: 'd4ee97a93dc538bc7c23303cdd30814c',
   chains: [polygon],
   ssr: false,
+  wallets: [
+    {
+      groupName: 'Wallets',
+      wallets: [metaMaskWallet, walletConnectWallet],
+    },
+  ],
 });
 
 const queryClient = new QueryClient();
