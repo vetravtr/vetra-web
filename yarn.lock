@@ -874,6 +874,23 @@
     react-remove-scroll "2.7.2"
     ua-parser-js "^2.0.9"
 
+"@reown/appkit-adapter-wagmi@^1.8.20":
+  version "1.8.20"
+  resolved "https://registry.npmjs.org/@reown/appkit-adapter-wagmi/-/appkit-adapter-wagmi-1.8.20.tgz"
+  integrity sha512-HVCOyYrW5NYjj2BtdAaOabrC7q2GkdpsQ9KviwD+dvZhBu0rM0/SdD36WbLVTjezJLKS2/3/WfKbl5rdqvKpZw==
+  dependencies:
+    "@reown/appkit" "1.8.20"
+    "@reown/appkit-common" "1.8.20"
+    "@reown/appkit-controllers" "1.8.20"
+    "@reown/appkit-polyfills" "1.8.20"
+    "@reown/appkit-scaffold-ui" "1.8.20"
+    "@reown/appkit-utils" "1.8.20"
+    "@reown/appkit-wallet" "1.8.20"
+    "@walletconnect/universal-provider" "2.23.7"
+    valtio "2.1.7"
+  optionalDependencies:
+    "@wagmi/connectors" ">=5.9.9"
+
 "@reown/appkit-common@1.7.8":
   version "1.7.8"
   resolved "https://registry.npmjs.org/@reown/appkit-common/-/appkit-common-1.7.8.tgz"
@@ -1054,7 +1071,7 @@
     "@walletconnect/logger" "3.0.2"
     zod "3.22.4"
 
-"@reown/appkit@^1.8.20":
+"@reown/appkit@^1.8.20", "@reown/appkit@1.8.20":
   version "1.8.20"
   resolved "https://registry.npmjs.org/@reown/appkit/-/appkit-1.8.20.tgz"
   integrity sha512-+OI1TWg3XcMRhZ5RGVF0+AjkUvTPpODP6HFIgmxsV8HCf6bfE+jaYYE+JJcaz05TYJJ2TCXSYDyRfRvjSUzMzg==
@@ -2099,7 +2116,7 @@
     "@types/babel__core" "^7.20.5"
     react-refresh "^0.18.0"
 
-"@wagmi/connectors@6.2.0":
+"@wagmi/connectors@>=5.9.9", "@wagmi/connectors@6.2.0":
   version "6.2.0"
   resolved "https://registry.npmjs.org/@wagmi/connectors/-/connectors-6.2.0.tgz"
   integrity sha512-2NfkbqhNWdjfibb4abRMrn7u6rPjEGolMfApXss6HCDVt9AW2oVC6k8Q5FouzpJezElxLJSagWz9FW1zaRlanA==
@@ -2114,7 +2131,7 @@
     cbw-sdk "npm:@coinbase/wallet-sdk@3.9.3"
     porto "0.2.35"
 
-"@wagmi/core@>=2.16.3", "@wagmi/core@2.22.1":
+"@wagmi/core@>=2.16.3", "@wagmi/core@>=2.21.2", "@wagmi/core@2.22.1":
   version "2.22.1"
   resolved "https://registry.npmjs.org/@wagmi/core/-/core-2.22.1.tgz"
   integrity sha512-cG/xwQWsBEcKgRTkQVhH29cbpbs/TdcUJVFXCyri3ZknxhMyGv0YEjTcrNpRgt2SaswL1KrvslSNYKKo+5YEAg==
@@ -6496,7 +6513,7 @@ vitefu@^1.1.1:
   resolved "https://registry.npmjs.org/vitefu/-/vitefu-1.1.1.tgz"
   integrity sha512-B/Fegf3i8zh0yFbpzZ21amWzHmuNlLlmJT6n7bu5e+pCHUKQIfXSYokrqOBGEMMe9UG2sostKQF9mml/vYaWJQ==
 
-wagmi@^2.19.5, wagmi@^2.9.0, wagmi@>=2.0.0:
+wagmi@^2.19.5, wagmi@^2.9.0, wagmi@>=2.0.0, wagmi@>=2.19.5:
   version "2.19.5"
   resolved "https://registry.npmjs.org/wagmi/-/wagmi-2.19.5.tgz"
   integrity sha512-RQUfKMv6U+EcSNNGiPbdkDtJwtuFxZWLmvDiQmjjBgkuPulUwDJsKhi7gjynzJdsx2yDqhHCXkKsbbfbIsHfcQ==
