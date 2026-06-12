@@ -1,32 +1,30 @@
-import '@rainbow-me/rainbowkit/styles.css';
-import { getDefaultConfig, RainbowKitProvider, ConnectButton, darkTheme } from '@rainbow-me/rainbowkit';
-import { polygon } from 'wagmi/chains';
+import '@reown/appkit/wagmi/styles.css';
+import { createAppKit } from '@reown/appkit/wagmi';
 import { WagmiProvider } from 'wagmi';
+import { polygon } from '@reown/appkit/networks';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { metaMaskWallet, walletConnectWallet } from '@rainbow-me/rainbowkit/wallets';
-
-const config = getDefaultConfig({
-  appName: 'VETRA',
-  projectId: 'd4ee97a93dc538bc7c23303cdd30814c',
-  chains: [polygon],
-  ssr: false,
-  wallets: [
-    {
-      groupName: 'Wallets',
-      wallets: [metaMaskWallet, walletConnectWallet],
-    },
-  ],
-});
 
 const queryClient = new QueryClient();
 
+const projectId = 'd4ee97a93dc538bc7c23303cdd30814c';
+
+const wagmiAdapter = createAppKit({
+  adapters: [],
+  networks: [polygon],
+  projectId,
+  metadata: {
+    name: 'VETRA',
+    description: 'VETRA Pioneer NFT',
+    url: 'https://www.vetravtr.com',
+    icons: ['https://www.vetravtr.com/favicon.svg'],
+  },
+});
+
 export default function WalletConnect() {
   return (
-    <WagmiProvider config={config}>
+    <WagmiProvider config={wagmiAdapter.wagmiConfig}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider locale="en" theme={darkTheme()}>
-          <ConnectButton />
-        </RainbowKitProvider>
+        <appkit-button />
       </QueryClientProvider>
     </WagmiProvider>
   );
