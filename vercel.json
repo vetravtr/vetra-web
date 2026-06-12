@@ -1,0 +1,6 @@
+{
+  "env": {
+    "SUPABASE_URL": "https://qhgxffazypogelvclyjn.supabase.co",
+    "SUPABASE_SERVICE_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFoZ3hmZmF6eXBvZ2VsdmNseWpuIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MTI2NTA4NCwiZXhwIjoyMDk2ODQxMDg0fQ.uXUxw-F2qxO3QN-9xQAUGJ7e1eZAWi5m_Z02vxwhqPs"
+  }
+}

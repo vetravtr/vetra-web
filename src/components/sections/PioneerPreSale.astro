@@ -205,25 +205,14 @@ const { className } = Astro.props as Props;
     });
 
     // === Gerar link quando conectar carteira ===
-    function waitForWallet() {
-      const check = setInterval(() => {
-        const btn = document.querySelector('[data-testid="rk-account-button"]');
-        if (btn) {
-          clearInterval(check);
-          // Pegar endereço do RainbowKit
-          const address = btn.textContent?.trim().match(/0x[a-fA-F0-9]{6,}/)?.[0];
-          if (address) {
-            const linkArea = document.getElementById("ref-link-area");
-            const linkEl = document.getElementById("ref-link");
-            if (linkArea && linkEl) {
-              linkArea.classList.remove("hidden");
-              linkEl.textContent = "vetravtr.com/r/" + address;
-            }
-            // Salvar usuário no Supabase se nome+email estiverem preenchidos
-            saveUserToSupabase(address);
-          }
-        }
-      }, 500);
+    function handleWalletConnected(address) {
+      const linkArea = document.getElementById("ref-link-area");
+      const linkEl = document.getElementById("ref-link");
+      if (linkArea && linkEl) {
+        linkArea.classList.remove("hidden");
+        linkEl.textContent = "vetravtr.com/r/" + address;
+      }
+      saveUserToSupabase(address);
     }
 
     // === Salvar usuário no Supabase ===
@@ -232,58 +221,40 @@ const { className } = Astro.props as Props;
       const email = document.getElementById("ref-email")?.value?.trim();
       if (!name || !email) return;
       try {
-        const url = 'https://qhgxffazypogelvclyjn.supabase.co';
-        const key = 'eyJhbG...e5Fg';
-        await fetch(url + '/rest/v1/users', {
+        const resp = await fetch('/api/save-user', {
           method: 'POST',
-          headers: { 'apikey': key, 'Authorization': 'Bearer ' + key, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-          body: JSON.stringify({ wallet_address: wallet.toLowerCase(), name, email, referral_code: 'r/' + wallet.slice(0,8) })
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ wallet_address: wallet.toLowerCase(), name, email })
         });
+        if (!resp.ok) console.error('Supabase save error:', await resp.text());
       } catch(e) { console.log(e); }
+    }
+
+    // Listen for RainbowKit wallet connection
+    window.addEventListener('wallet-connected', (e) => {
+      handleWalletConnected(e.detail.address);
+    });
+    // Also check if already connected (page refresh)
+    if (window.__vetra_address) {
+      handleWalletConnected(window.__vetra_address);
     }
 
     // Escutar mudanças nos campos
     document.getElementById("ref-name")?.addEventListener("change", () => {
-      const btn = document.querySelector('[data-testid="rk-account-button"]');
-      if (btn) {
-        const a = btn.textContent?.trim().match(/0x[a-fA-F0-9]{6,}/)?.[0];
-        if (a) saveUserToSupabase(a);
-      }
+      if (window.__vetra_address) saveUserToSupabase(window.__vetra_address);
     });
     document.getElementById("ref-email")?.addEventListener("change", () => {
-      const btn = document.querySelector('[data-testid="rk-account-button"]');
-      if (btn) {
-        const a = btn.textContent?.trim().match(/0x[a-fA-F0-9]{6,}/)?.[0];
-        if (a) saveUserToSupabase(a);
-      }
+      if (window.__vetra_address) saveUserToSupabase(window.__vetra_address);
     });
-
-    // Observar mudanças na DOM (quando conectar/desconectar)
-    const observer = new MutationObserver(waitForWallet);
-    observer.observe(document.body, { childList: true, subtree: true });
-    waitForWallet();
 
     // === Comprar NFT ===
     const buyBtn = document.getElementById("pioneer-buy-btn");
     if (buyBtn) {
       buyBtn.addEventListener("click", async () => {
-        // Verificar se o RainbowKit está conectado
-        const walletBtn = document.querySelector('[data-testid="rk-account-button"]');
-        if (!walletBtn) {
-          alert("Please connect your wallet first.");
-          return;
-        }
-        
-        // Pegar endereço da carteira conectada
-        const address = walletBtn.textContent?.trim().match(/0x[a-fA-F0-9]{6,}/)?.[0];
+        // Verificar se a carteira está conectada
+        const address = window.__vetra_address;
         if (!address) {
-          alert("Could not detect wallet address. Please reconnect.");
-          return;
-        }
-
-        // Verificar se tem window.ethereum
-        if (typeof window.ethereum === 'undefined') {
-          alert("No wallet detected. Please install MetaMask or Trust Wallet.");
+          alert("Please connect your wallet first.");
           return;
         }
 
