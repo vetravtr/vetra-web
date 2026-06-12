@@ -4,19 +4,12 @@ import { polygon } from 'wagmi/chains';
 import { WagmiProvider, useAccount, useWalletClient } from 'wagmi';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { metaMaskWallet, walletConnectWallet, coinbaseWallet, trustWallet } from '@rainbow-me/rainbowkit/wallets';
 
 const config = getDefaultConfig({
   appName: 'VETRA',
   projectId: 'd4ee97a93dc538bc7c23303cdd30814c',
   chains: [polygon],
   ssr: false,
-  wallets: [
-    {
-      groupName: 'Popular',
-      wallets: [metaMaskWallet, walletConnectWallet, coinbaseWallet, trustWallet],
-    },
-  ],
 });
 
 const queryClient = new QueryClient();
