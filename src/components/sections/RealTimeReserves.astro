@@ -388,12 +388,18 @@ const infoCardClasses = cn(
           if (totalBalanceEl)
             totalBalanceEl.innerText = formatCurrency(summary.TotalBalance);
           
-          // Collateralization Ratio: TotalBalance / (TotalCredit or supply)
+          // Collateralization Ratio: Reserves / Total Supply (on-chain via API)
           if (totalCreditEl) {
-            const supply = 30_000_000; // 30M VTR total supply
-            const reserves = summary.TotalBalance || summary.TotalCredit || 0;
-            const ratio = reserves / supply;
-            totalCreditEl.innerText = (ratio * 100).toFixed(0) + "%";
+            let ratio = 3.33; // fallback 333%
+            try {
+              // Fetch from our own backend that calculates on-chain
+              const ratioRes = await fetch('/api/ratio.json');
+              const ratioData = await ratioRes.json();
+              if (ratioData.ratio) ratio = ratioData.ratio;
+            } catch (e) {
+              console.warn('Ratio API failed, using fallback');
+            }
+            totalCreditEl.innerText = (ratio * 100).toFixed(0) + '%';
           }
 
           // Toggle skeletons off
