@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
+import nodemailer from 'nodemailer';
 
 export const prerender = false;
 
@@ -40,19 +41,28 @@ export const POST: APIRoute = async ({ request }) => {
     });
     await write(data);
 
-    // Disparar email de agradecimento via n8n (não bloquear)
+    // Disparar email de agradecimento direto via SMTP Gmail
     if (email) {
-      fetch('http://localhost:5678/webhook/thank-you-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email,
-          name: name || 'Valued supporter',
-          quantity: body.quantity || 1,
-          txHash,
-          buyer,
-        }),
-      }).catch(e => console.error('n8n email fail:', e));
+      try {
+        const transporter = nodemailer.createTransport({
+          host: 'smtp.gmail.com',
+          port: 587,
+          secure: false,
+          auth: {
+            user: 'vetranft@gmail.com',
+            pass: 'bnwp lxhi npqt prtq',
+          },
+        });
+        await transporter.sendMail({
+          from: '"VETRA NFT" <vetranft@gmail.com>',
+          to: email,
+          subject: 'Thank you for supporting VETRA!',
+          text: `Hi ${name || 'Valued supporter'},\n\nThank you for your purchase of the VETRA Pioneer NFT!\n\nYou now own ${body.quantity || 1} Pioneer NFT(s). When VTR reaches $0.40, come back and redeem each NFT for 1 VTR.\n\nYour support helps build a stronger, more decentralized ecosystem. We truly appreciate it.\n\n---\nVETRA Team\nhttps://vetravtr.com`,
+        });
+        console.log('Email sent to', email);
+      } catch (e) {
+        console.error('Email send failed:', e);
+      }
     }
 
     return new Response(JSON.stringify({ ok: true }), { status: 200 });
