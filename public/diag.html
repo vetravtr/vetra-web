@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>WC Diag</title></head><body>
+<button id="btn" disabled>Loading...</button>
+<pre id="log" style="background:#111;color:#0f0;padding:10px;margin:10px;font:12px monospace;min-height:200px"></pre>
+<script type="module">
+const log = document.getElementById('log');
+function L(m) { log.textContent += m + '\n'; console.log(m); }
+try {
+  L('Importing...');
+  const { EthereumProvider } = await import('@walletconnect/ethereum-provider');
+  L('Imported: ' + typeof EthereumProvider);
+  L('Has init: ' + (typeof EthereumProvider?.init));
+  btn.textContent = 'Connect Wallet'; btn.disabled = false;
+  L('Init started...');
+  const p = await EthereumProvider.init({projectId:'d4ee97a93dc538bc7c23303cdd30814c',chains:[137],showQrModal:false,metadata:{name:'Test',description:'T',url:'http://localhost',icons:[]}});
+  L('Init OK. Provider: ' + typeof p);
+  p.on('display_uri', uri => L('URI: ' + uri));
+  btn.onclick = async () => { L('Connecting...'); await p.connect(); L('Connected! Accounts: ' + JSON.stringify(p.accounts)); };
+} catch(e) { L('ERROR: ' + (e.message || e)); btn.textContent = 'Error'; }
+</script>
+</body></html>

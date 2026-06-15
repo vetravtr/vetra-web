@@ -1,0 +1,18 @@
+[
+  {
+    "buyer": "0xb8da8010784ee5dfb24a8c6c81da380c3b7cf3c7",
+    "txHash": "0xc90421e54c0483309c2e0669b6d3c2f4c2419ca99244bf06a1d7e69669dc28ca",
+    "referrer": "0x0000000000000000000000000000000000000000",
+    "name": null,
+    "email": null,
+    "ts": 1781545163889
+  },
+  {
+    "buyer": "0x056bc225ca913d29b96d0516148fcb99ad1bcedf",
+    "txHash": "0x7a16f51c796516a4c50965ba8f5385b81431db4a6149af749dd5334c77dbf890",
+    "referrer": "0x0000000000000000000000000000000000000000",
+    "name": null,
+    "email": null,
+    "ts": 1781547279790
+  }
+]

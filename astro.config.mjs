@@ -4,6 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
 import vercel from '@astrojs/vercel';
 import react from '@astrojs/react';
+import { nodePolyfills } from 'vite-plugin-node-polyfills';
 
 // https://astro.build/config
 export default defineConfig({
@@ -20,7 +21,13 @@ export default defineConfig({
     })
   ],
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [
+      tailwindcss(),
+      nodePolyfills({
+        globals: { Buffer: true, global: true, process: true },
+        include: ['buffer', 'process', 'util'],
+      }),
+    ],
     build: {
       cssMinify: true,
     }

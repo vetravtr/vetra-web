@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>WC</title><style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a1a;font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh}
+.btn{padding:14px 36px;border-radius:999px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:#fff;font-size:15px;cursor:pointer}
+.btn:hover{background:rgba(255,255,255,0.05)}
+.btn:disabled{opacity:0.5}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:9999;justify-content:center;align-items:center}
+.overlay.show{display:flex}
+.modal{background:#12122a;border-radius:20px;padding:32px 28px 24px;text-align:center;width:380px;max-width:92vw}
+.modal h2{color:#fff;font-size:18px;margin-bottom:6px}
+.modal p{color:#888;font-size:13px;margin-bottom:20px}
+#qr{display:inline-block;background:#fff;padding:12px;border-radius:12px}
+#qr canvas,#qr img{display:block}
+#qr a{display:none}
+.cancel-btn{display:block;margin:20px auto 0;padding:10px 40px;border-radius:999px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:#aaa;font-size:14px;cursor:pointer}
+</style></head><body>
+<button id="btn" class="btn" disabled>Loading...</button>
+<div id="ov" class="overlay"><div class="modal">
+  <h2>Scan with WalletConnect</h2>
+  <p>Open your wallet app and scan the QR code</p>
+  <div id="qr"></div>
+  <button class="cancel-btn" onclick="cancel()">Cancel</button>
+</div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@walletconnect/ethereum-provider@2/dist/index.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1/build/qrcode.min.js"></script>
+<script>
+var btn=document.getElementById('btn'),ov=document.getElementById('ov'),qr=document.getElementById('qr');
+var P=window['@walletconnect/ethereum-provider'],provider=null,connected=false;
+if(!P||!P.default||!P.default.init){btn.textContent='Error';}else{btn.textContent='Connect Wallet';btn.disabled=false}
+
+function cancel(){ov.classList.remove('show');btn.textContent='Connect Wallet';btn.disabled=false}
+
+btn.onclick=async function(){
+  if(connected){if(provider)try{await provider.disconnect()}catch(e){}connected=false;provider=null;btn.textContent='Connect Wallet';return}
+  btn.textContent='Connecting...';btn.disabled=true;
+  try{
+    provider=await P.default.init({
+      projectId:'d4ee97a93dc538bc7c23303cdd30814c',chains:[137],showQrModal:false,
+      methods:['eth_sendTransaction','personal_sign'],events:['chainChanged','accountsChanged'],
+      metadata:{name:'Vetra VTR',description:'VTR Pioneer',url:'https://vetravtr.com',icons:[]}
+    });
+    provider.on('display_uri',function(uri){
+      qr.innerHTML='';ov.classList.add('show');
+      new QRCode(qr,{text:uri,width:256,height:256,colorDark:'#000',colorLight:'#fff'});
+    });
+    var accs=await provider.enable();
+    ov.classList.remove('show');
+    if(accs&&accs.length){connected=true;var a=accs[0];a=a.includes(':')?a.split(':').pop():a;btn.textContent=a.slice(0,6)+'...'+a.slice(-4)}
+  }catch(e){cancel()}
+};
+</script></body></html>

@@ -20,9 +20,9 @@ const headerClasses = cn("max-w-[656px] text-center mx-auto mb-14");
 
 const { className } = Astro.props as Props;
 
-// Pool VTR/USDC no GeckoTerminal
-const GT_URL = "https://www.geckoterminal.com/polygon_pos/pools/0x8478D9B6de3A4c89B4acc904C67F9fD738dE2E4A";
-const DEXSCREENER_API = "https://api.dexscreener.com/latest/dex/pairs/polygon/0x8478D9B6de3A4c89B4acc904C67F9fD738dE2E4A";
+// Dados da GeckoTerminal API
+const GT_API = "https://api.geckoterminal.com/api/v2/networks/polygon_pos/tokens/0xAA27bd271B01dd20CcFA079800616335416c95Fd/pools";
+const GT_URL = "https://www.geckoterminal.com/polygon_pos/pools/0x98Bd9D327b6a3135A58eD6724d1b6170e683eeFa";
 ---
 
 <SectionLayout className={cn(sectionClasses, className)}>
@@ -47,31 +47,31 @@ const DEXSCREENER_API = "https://api.dexscreener.com/latest/dex/pairs/polygon/0x
       <!-- Price -->
       <div class="bg-white/[0.03] border border-white/[0.06] rounded-xl p-5 text-center">
         <p class="text-text-grey text-xs uppercase tracking-wider mb-1">Price (USD)</p>
-        <p id="ds-price" class="text-2xl font-medium text-white">—</p>
+        <p id="gt-price" class="text-2xl font-medium text-white">—</p>
       </div>
 
       <!-- 24h Change -->
       <div class="bg-white/[0.03] border border-white/[0.06] rounded-xl p-5 text-center">
         <p class="text-text-grey text-xs uppercase tracking-wider mb-1">24h Change</p>
-        <p id="ds-change" class="text-2xl font-medium text-white">—</p>
+        <p id="gt-change" class="text-2xl font-medium text-white">—</p>
       </div>
 
       <!-- Liquidity -->
       <div class="bg-white/[0.03] border border-white/[0.06] rounded-xl p-5 text-center">
         <p class="text-text-grey text-xs uppercase tracking-wider mb-1">Liquidity (USD)</p>
-        <p id="ds-liquidity" class="text-2xl font-medium text-white">—</p>
+        <p id="gt-liquidity" class="text-2xl font-medium text-white">—</p>
       </div>
 
       <!-- 24h Volume -->
       <div class="bg-white/[0.03] border border-white/[0.06] rounded-xl p-5 text-center">
         <p class="text-text-grey text-xs uppercase tracking-wider mb-1">24h Volume</p>
-        <p id="ds-volume" class="text-2xl font-medium text-white">—</p>
+        <p id="gt-volume" class="text-2xl font-medium text-white">—</p>
       </div>
 
       <!-- FDV -->
       <div class="bg-white/[0.03] border border-white/[0.06] rounded-xl p-5 text-center">
         <p class="text-text-grey text-xs uppercase tracking-wider mb-1">FDV (USD)</p>
-        <p id="ds-fdv" class="text-2xl font-medium text-white">—</p>
+        <p id="gt-fdv" class="text-2xl font-medium text-white">—</p>
       </div>
     </div>
 
@@ -101,55 +101,64 @@ const DEXSCREENER_API = "https://api.dexscreener.com/latest/dex/pairs/polygon/0x
 
 <script>
   (function() {
-    const API = "https://api.dexscreener.com/latest/dex/pairs/polygon/0x8478D9B6de3A4c89B4acc904C67F9fD738dE2E4A";
+    const API = "https://api.geckoterminal.com/api/v2/networks/polygon_pos/tokens/0xAA27bd271B01dd20CcFA079800616335416c95Fd/pools";
     
     async function fetchData() {
       try {
         const res = await fetch(API);
         const data = await res.json();
-        const pair = data.pair;
+        const pools = data.data;
         
-        if (!pair) return;
+        if (!pools || pools.length === 0) return;
 
-        const priceEl = document.getElementById("ds-price");
-        if (priceEl && pair.priceUsd) {
-          priceEl.textContent = "$" + parseFloat(pair.priceUsd).toFixed(6);
+        // Pegar a primeira pool (principal) - GeckoTerminal ordena por relevância
+        const mainPool = pools[0].attributes;
+        
+        const priceEl = document.getElementById("gt-price");
+        if (priceEl && mainPool.base_token_price_usd) {
+          priceEl.textContent = "$" + parseFloat(mainPool.base_token_price_usd).toFixed(6);
         }
 
-        const changeEl = document.getElementById("ds-change");
-        if (changeEl && pair.priceChange?.h24 != null) {
-          const val = parseFloat(pair.priceChange.h24);
+        const changeEl = document.getElementById("gt-change");
+        if (changeEl && mainPool.price_change_percentage?.h24 != null) {
+          const val = parseFloat(mainPool.price_change_percentage.h24);
           changeEl.textContent = (val >= 0 ? "+" : "") + val.toFixed(2) + "%";
           changeEl.style.color = val >= 0 ? "#22c55e" : "#ef4444";
         }
 
-        const liqEl = document.getElementById("ds-liquidity");
-        if (liqEl && pair.liquidity?.usd) {
-          liqEl.textContent = "$" + parseFloat(pair.liquidity.usd).toLocaleString(undefined, {maximumFractionDigits: 0});
-        }
-
-        const volEl = document.getElementById("ds-volume");
-        if (volEl && pair.volume?.h24) {
-          volEl.textContent = "$" + parseFloat(pair.volume.h24).toLocaleString(undefined, {maximumFractionDigits: 0});
-        }
-
-        // FDV = price * 30M — formatado como "6.07M"
-        const fdvEl = document.getElementById("ds-fdv");
-        if (fdvEl && pair.priceUsd) {
-          const fdv = parseFloat(pair.priceUsd) * 30_000_000;
-          let formatted;
-          if (fdv >= 1_000_000) {
-            formatted = "$" + (fdv / 1_000_000).toFixed(2) + "M";
-          } else if (fdv >= 1_000) {
-            formatted = "$" + (fdv / 1_000).toFixed(2) + "K";
+        const liqEl = document.getElementById("gt-liquidity");
+        if (liqEl && mainPool.reserve_in_usd) {
+          const liq = parseFloat(mainPool.reserve_in_usd);
+          if (liq >= 1000) {
+            liqEl.textContent = "$" + (liq / 1000).toFixed(1) + "K";
           } else {
-            formatted = "$" + fdv.toLocaleString(undefined, {maximumFractionDigits: 0});
+            liqEl.textContent = "$" + liq.toFixed(0);
           }
-          fdvEl.textContent = formatted;
+        }
+
+        const volEl = document.getElementById("gt-volume");
+        if (volEl && mainPool.volume_usd?.h24) {
+          const vol = parseFloat(mainPool.volume_usd.h24);
+          if (vol >= 1000) {
+            volEl.textContent = "$" + (vol / 1000).toFixed(1) + "K";
+          } else {
+            volEl.textContent = "$" + vol.toFixed(0);
+          }
+        }
+
+        // FDV = price * 30M
+        const fdvEl = document.getElementById("gt-fdv");
+        if (fdvEl && mainPool.base_token_price_usd) {
+          const fdv = parseFloat(mainPool.base_token_price_usd) * 30_000_000;
+          if (fdv >= 1_000_000) {
+            fdvEl.textContent = "$" + (fdv / 1_000_000).toFixed(2) + "M";
+          } else {
+            fdvEl.textContent = "$" + fdv.toLocaleString(undefined, {maximumFractionDigits: 0});
+          }
         }
 
       } catch (e) {
-        console.log("DexScreener data unavailable", e);
+        console.log("GeckoTerminal data unavailable", e);
       }
     }
 
