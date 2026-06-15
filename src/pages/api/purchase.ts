@@ -40,6 +40,21 @@ export const POST: APIRoute = async ({ request }) => {
     });
     await write(data);
 
+    // Disparar email de agradecimento via n8n (não bloquear)
+    if (email) {
+      fetch('http://localhost:5678/webhook/thank-you-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          name: name || 'Valued supporter',
+          quantity: body.quantity || 1,
+          txHash,
+          buyer,
+        }),
+      }).catch(e => console.error('n8n email fail:', e));
+    }
+
     return new Response(JSON.stringify({ ok: true }), { status: 200 });
   } catch (e) {
     return new Response(JSON.stringify({ error: 'server error' }), { status: 500 });
