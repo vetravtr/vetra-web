@@ -57,7 +57,22 @@ export const POST: APIRoute = async ({ request }) => {
           from: '"VETRA NFT" <vetranft@gmail.com>',
           to: email,
           subject: 'Thank you for supporting VETRA!',
-          text: `Hi ${name || 'Valued supporter'},\n\nThank you for your purchase of the VETRA Pioneer NFT!\n\nYou now own ${body.quantity || 1} Pioneer NFT(s). When VTR reaches $0.40, come back and redeem each NFT for 1 VTR.\n\nYour support helps build a stronger, more decentralized ecosystem. We truly appreciate it.\n\n---\nVETRA Team\nhttps://vetravtr.com`,
+          text: `Hi ${name || 'Valued supporter'},
+
+Thank you for your purchase of the VETRA Pioneer NFT!
+
+You now own ${body.quantity || 1} Pioneer NFT(s). When VTR reaches $0.40, come back and redeem each NFT for 1 VTR.
+
+Your personal referral link:
+https://vetravtr.com/?ref=${(body.buyer || '').slice(2, 10)}
+
+Share this link with friends. For every friend who buys an NFT using your link, you earn a 5% VTR bonus on redemption day. No limits — refer as many as you want.
+
+Your support helps build a stronger, more decentralized ecosystem. We truly appreciate it.
+
+---
+VETRA Team
+https://vetravtr.com`,
         });
         console.log('Email sent to', email);
       } catch (e) {
