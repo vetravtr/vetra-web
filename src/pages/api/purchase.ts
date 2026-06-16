@@ -26,21 +26,24 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response(JSON.stringify({ error: 'missing fields' }), { status: 400 });
     }
 
-    const data = await read();
-
-    if (data.find((p: any) => p.txHash === txHash)) {
-      return new Response(JSON.stringify({ ok: true, dup: true }), { status: 200 });
+    // Salvar LOCAL sempre — ignorar erro em serverless (Vercel read-only)
+    try {
+      const data = await read();
+      if (data.find((p: any) => p.txHash === txHash)) {
+        return new Response(JSON.stringify({ ok: true, dup: true }), { status: 200 });
+      }
+      data.push({
+        buyer: buyer.toLowerCase(),
+        txHash,
+        referrer: referrer ? referrer.toLowerCase() : null,
+        name: name || null,
+        email: email || null,
+        ts: Date.now()
+      });
+      await write(data);
+    } catch (_) {
+      console.log('[PURCHASE] Local save skipped (read-only fs, likely Vercel)');
     }
-
-    data.push({
-      buyer: buyer.toLowerCase(),
-      txHash,
-      referrer: referrer ? referrer.toLowerCase() : null,
-      name: name || null,
-      email: email || null,
-      ts: Date.now()
-    });
-    await write(data);
 
     // Salvar no Supabase (nft_purchases)
     try {

@@ -23,13 +23,17 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response(JSON.stringify({ error: "wallet_address required" }), { status: 400 });
     }
 
-    // Salvar LOCAL sempre (fallback)
-    const users = await readUsers();
-    const existing = users.findIndex((u: any) => u.wallet_address?.toLowerCase() === wallet_address.toLowerCase());
-    const entry = { wallet_address: wallet_address.toLowerCase(), name, email, referral_code: "r/" + wallet_address.slice(2, 10), ts: Date.now() };
-    if (existing >= 0) users[existing] = entry;
-    else users.push(entry);
-    await writeUsers(users);
+    // Salvar LOCAL sempre (fallback) — ignorar erro em serverless (Vercel read-only)
+    try {
+      const users = await readUsers();
+      const existing = users.findIndex((u: any) => u.wallet_address?.toLowerCase() === wallet_address.toLowerCase());
+      const entry = { wallet_address: wallet_address.toLowerCase(), name, email, referral_code: "r/" + wallet_address.slice(2, 10), ts: Date.now() };
+      if (existing >= 0) users[existing] = entry;
+      else users.push(entry);
+      await writeUsers(users);
+    } catch (_) {
+      console.log('[SAVE-USER] Local save skipped (read-only fs, likely Vercel)');
+    }
 
     // Tentar salvar no Supabase (se falhar, não trava)
     try {
