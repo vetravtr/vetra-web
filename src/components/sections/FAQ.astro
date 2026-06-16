@@ -86,16 +86,17 @@ const TEXT_12_16 = "font-serif text-[12px] leading-[16px] max-md:text-[12px] max
     </AlignmentLayout>
 
     <div class={listClasses}>
-      {faqItems.map((item) => (
-        <details class={`${borderClasses} px-6 py-4 group cursor-pointer ${hoverClasses}`}>
-          <summary class="flex items-center justify-between text-white font-medium text-sm list-none">
+      {faqItems.map((item, i) => (
+        <div class={`${borderClasses} px-6 py-4 ${hoverClasses}`}>
+          <div
+            class="flex items-center justify-between text-white font-medium text-sm cursor-pointer"
+            onclick="this.parentElement.classList.toggle('faq-open')"
+          >
             <span>{item.q}</span>
-            <svg class="w-5 h-5 text-light-purple transition-transform duration-300 group-open:rotate-180 shrink-0 ml-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-            </svg>
-          </summary>
-          <p class="mt-3 text-text-grey text-sm leading-relaxed">{item.a}</p>
-        </details>
+            <span class="text-light-purple text-lg transition-transform duration-300 shrink-0 ml-4 faq-arrow inline-block">&#9660;</span>
+          </div>
+          <p class="mt-3 text-text-grey text-sm leading-relaxed hidden faq-answer">{item.a}</p>
+        </div>
       ))}
     </div>
   </AlignmentLayout>
@@ -103,7 +104,13 @@ const TEXT_12_16 = "font-serif text-[12px] leading-[16px] max-md:text-[12px] max
 </section>
 
 <style>
-  /* FORÇA remoção do marcador padrão do details em TODOS os browsers */
+  .faq-open .faq-arrow {
+    transform: rotate(180deg);
+  }
+  .faq-open .faq-answer {
+    display: block !important;
+  }
+  /* Remove qualquer marcador residual */
   details > summary {
     list-style: none !important;
   }
