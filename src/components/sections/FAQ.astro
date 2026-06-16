@@ -1,0 +1,97 @@
+---
+export interface Props {
+  className?: string;
+}
+const { className } = Astro.props;
+import Badge from "../Badge.astro";
+import SectionLayout from "../../layouts/SectionLayout.astro";
+import AlignmentLayout from "../../layouts/AlignmentLayout.astro";
+import Title from "../Title.astro";
+import Description from "../Description.astro";
+
+const faqItems = [
+  {
+    q: "How much does a Pioneer NFT cost?",
+    a: "Each NFT costs $0.34 USDC. You can buy 1 or multiple in a single transaction — just adjust the quantity before clicking Buy.",
+  },
+  {
+    q: "I tried to buy more than 1 NFT but only 1 was purchased. Why?",
+    a: "If you bought before June 15, you used the old V1 contract which limited 1 NFT per wallet. The new V2 contract (live now) allows unlimited purchases. Try again and you can buy as many as you want in one transaction.",
+  },
+  {
+    q: "What do I get when I redeem an NFT?",
+    a: "Each Pioneer NFT can be redeemed for 1 VTR once the market price reaches $0.40. You can redeem all your NFTs at once using the Redeem All button.",
+  },
+  {
+    q: "Can I transfer or sell my NFT?",
+    a: "No. The Pioneer NFT is soulbound (non-transferable). It cannot be sold on marketplaces. It can only be redeemed for VTR.",
+  },
+  {
+    q: "How does the referral program work?",
+    a: "Share your referral link with friends. When they buy an NFT using your link, you earn a 5% VTR bonus on each NFT they purchase. The bonus accumulates and can be claimed on redemption day.",
+  },
+  {
+    q: "I connected my wallet but nothing happens when I click Buy.",
+    a: "Make sure you have enough USDC on Polygon network. The wallet will ask you to approve the USDC spending first, then confirm the purchase transaction. You need a small amount of POL for gas fees.",
+  },
+  {
+    q: "What is the Collateralization Ratio?",
+    a: "VETRA is over-collateralized at 333%. This means there is $3.33 in reserve backing every 1 VTR in circulation, providing a strong safety buffer.",
+  },
+  {
+    q: "What wallet can I use?",
+    a: "Any WalletConnect-compatible wallet: SafePal, Trust Wallet, Rabby, MetaMask mobile, and others. Click Connect and scan the QR code with your wallet app.",
+  },
+];
+
+const cn = (...args: (string | undefined | false | null)[]) =>
+  args.filter(Boolean).join(' ');
+const outerClasses = cn(
+  "flex items-center w-full relative",
+);
+const innerClasses = cn(
+  "w-full h-fit py-[88px]",
+);
+const layoutClasses = cn(
+  "gap-[80px] h-[-webkit-fill-available] relative z-10",
+);
+const listClasses = cn(
+  "w-full max-w-[768px] mx-auto flex flex-col gap-4",
+);
+const borderClasses =
+  "bg-white/[0.03] border border-white/[0.06] rounded-xl";
+const hoverClasses = "transition-all duration-300";
+const textGrey = "text-text-grey";
+const textWhite = "text-white";
+
+const TEXT_14_18 = "font-sans font-medium text-text-secondary text-[14px] leading-[18px] max-md:text-[14px] max-md:leading-[18px]";
+const TEXT_12_16 = "font-serif text-[12px] leading-[16px] max-md:text-[12px] max-md:leading-[16px]";
+---
+
+<SectionLayout outerClassName={outerClasses} innerClassName={innerClasses} autoMargin={true}>
+  <AlignmentLayout direction="vertical" justify="center" align="center" className={layoutClasses}>
+    <AlignmentLayout direction="vertical" justify="center" align="center" className="w-full max-w-[656px]" style="gap: 1.5rem;">
+      <Badge text="FAQ">
+        <img src="/assets/icons/stars-light-sparkle.svg" alt="Stars" class="w-full h-full object-contain" />
+      </Badge>
+      <AlignmentLayout direction="vertical" justify="center" align="center" className="gap-2">
+        <Title text="Frequently asked questions" className="text-center" />
+        <Description text="Everything you need to know about the Pioneer NFT pre-sale." className="max-w-[588px] text-center" />
+      </AlignmentLayout>
+    </AlignmentLayout>
+
+    <div class={listClasses}>
+      {faqItems.map((item) => (
+        <details class={`${borderClasses} px-6 py-4 group cursor-pointer ${hoverClasses}`}>
+          <summary class="flex items-center justify-between text-white font-medium text-sm list-none">
+            <span>{item.q}</span>
+            <svg class="w-5 h-5 text-light-purple transition-transform duration-300 group-open:rotate-180 shrink-0 ml-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </summary>
+          <p class="mt-3 text-text-grey text-sm leading-relaxed">{item.a}</p>
+        </details>
+      ))}
+    </div>
+  </AlignmentLayout>
+</SectionLayout>
