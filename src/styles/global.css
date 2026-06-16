@@ -115,3 +115,16 @@ html {
 [id] {
   scroll-margin-top: 44px;
 }
+
+/* Remove marcador padrão do details/summary em todos browsers */
+details summary::-webkit-details-marker {
+  display: none;
+}
+details > summary {
+  list-style: none;
+}
+details > summary::marker,
+details > summary::-webkit-details-marker {
+  display: none;
+  content: "";
+}
