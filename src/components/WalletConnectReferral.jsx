@@ -55,6 +55,7 @@ export default function WalletConnectReferral() {
   const [busy, setBusy] = useState(false);
   const [label, setLabel] = useState('Buy NFT');
   const [quantity, setQuantity] = useState(1);
+  const [inputVal, setInputVal] = useState('1');
 
   useEffect(() => {
     listeners.push(setAccount);
@@ -139,10 +140,12 @@ export default function WalletConnectReferral() {
       </button>
 
       <div className="flex items-center gap-3">
-        <input type="number" min={1} defaultValue={1}
-          key={String(quantity)}
+        <input type="number" min={1}
+          value={inputVal}
           onChange={(e) => {
-            const n = parseInt(e.target.value, 10);
+            const v = e.target.value;
+            setInputVal(v);
+            const n = parseInt(v, 10);
             if (!isNaN(n) && n >= 1) setQuantity(n);
           }}
           onFocus={(e) => e.target.select()}

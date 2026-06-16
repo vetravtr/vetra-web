@@ -41,6 +41,7 @@ export default function WalletConnect() {
   const [ownedCount, setOwnedCount] = useState(0);
   const [canRedeem, setCanRedeem] = useState(false);
   const [quantity, setQuantity] = useState(1);
+  const [inputVal, setInputVal] = useState('1');
 
   const ensureProvider = useCallback(async () => {
     if (providerRef.current) return providerRef.current;
@@ -176,10 +177,12 @@ export default function WalletConnect() {
       {ownedCount === 0 && !busy && (
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-3">
-            <input type="number" min={1} defaultValue={1}
-              key={String(quantity)}
+            <input type="number" min={1}
+              value={inputVal}
               onChange={(e) => {
-                const n = parseInt(e.target.value, 10);
+                const v = e.target.value;
+                setInputVal(v);
+                const n = parseInt(v, 10);
                 if (!isNaN(n) && n >= 1) setQuantity(n);
               }}
               onFocus={(e) => e.target.select()}
