@@ -181,10 +181,8 @@ export default function WalletConnect() {
               onChange={(e) => {
                 const n = parseInt(e.target.value, 10);
                 if (!isNaN(n) && n >= 1) setQuantity(n);
-                else if (e.target.value === '') setQuantity(1);
               }}
-              onFocus={(e) => { e.target.value = ''; e.target.style.caretColor = 'transparent'; }}
-              onBlur={(e) => { e.target.style.caretColor = ''; if (!e.target.value || parseInt(e.target.value) < 1) { e.target.value = '1'; setQuantity(1); } }}
+              onFocus={(e) => e.target.select()}
               className="w-20 py-3 px-3 rounded-full bg-white/[0.05] border border-white/[0.12] text-white text-center text-sm
                          [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
