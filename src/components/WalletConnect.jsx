@@ -179,7 +179,7 @@ export default function WalletConnect() {
         {short}
       </button>
 
-      {ownedCount === 0 && !busy && (
+      {!busy && (
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-3">
             <input type="number" min={1}
@@ -203,7 +203,7 @@ export default function WalletConnect() {
         </div>
       )}
 
-      {ownedCount === 0 && busy && (
+      {busy && (
         <button disabled
           className="w-full py-4 rounded-full bg-[#643390] text-white font-semibold text-lg opacity-70 cursor-not-allowed">
           {label}
@@ -211,7 +211,7 @@ export default function WalletConnect() {
       )}
 
       {ownedCount > 0 && (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 mt-2">
           <p className="text-center text-white font-medium">You own {ownedCount} Pioneer NFT{ownedCount > 1 ? 's' : ''}</p>
           {canRedeem && (
             <button onClick={redeemAll} disabled={busy}
