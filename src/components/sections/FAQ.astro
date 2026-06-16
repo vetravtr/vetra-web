@@ -101,3 +101,15 @@ const TEXT_12_16 = "font-serif text-[12px] leading-[16px] max-md:text-[12px] max
   </AlignmentLayout>
 </SectionLayout>
 </section>
+
+<style>
+  /* FORÇA remoção do marcador padrão do details em TODOS os browsers */
+  details > summary {
+    list-style: none !important;
+  }
+  details > summary::marker,
+  details > summary::-webkit-details-marker {
+    display: none !important;
+    content: "" !important;
+  }
+</style>
