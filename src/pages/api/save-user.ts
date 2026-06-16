@@ -33,14 +33,17 @@ export const POST: APIRoute = async ({ request }) => {
 
     // Tentar salvar no Supabase (se falhar, não trava)
     try {
-      const supabaseUrl = import.meta.env.SUPABASE_URL;
-      const supabaseKey = import.meta.env.SUPABASE_SERVICE_KEY;
+      const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+      const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       if (supabaseUrl && supabaseKey) {
         const supabase = createClient(supabaseUrl, supabaseKey);
         await supabase.from("users").upsert(
           { wallet_address: wallet_address.toLowerCase(), name, email, referral_code: "r/" + wallet_address.slice(2, 10) },
           { onConflict: "wallet_address" }
         );
+        console.log('[SAVE-USER] Saved to Supabase:', wallet_address.toLowerCase(), name, email);
+      } else {
+        console.warn('[SAVE-USER] Supabase vars not found in env');
       }
     } catch (e: any) {
       console.error('[SAVE-USER] Supabase error:', e);

@@ -117,7 +117,7 @@ export default function WalletConnectReferral() {
       } else {
         receipt = await (await nft.buyMultiple(referrer, qty)).wait();
       }
-      await fetch('/api/purchase', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ buyer: account, referrer: getReferrer(), quantity: Number(qty), txHash: receipt.hash }) });
+      await fetch('/api/purchase', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ buyer: account, referrer: getReferrer(), quantity: Number(qty), txHash: receipt.hash, name, email }) });
       setLabel('NFT comprado!');
       loadRef(account);
     } catch (e) { console.error(e); alert('Falha: ' + (e?.shortMessage || e?.message || 'erro')); setLabel('Buy NFT'); }

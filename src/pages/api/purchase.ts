@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import nodemailer from 'nodemailer';
+import { createClient } from '@supabase/supabase-js';
 
 export const prerender = false;
 
@@ -41,6 +42,24 @@ export const POST: APIRoute = async ({ request }) => {
     });
     await write(data);
 
+    // Salvar no Supabase (nft_purchases)
+    try {
+      const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+      const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+      if (supabaseUrl && supabaseKey) {
+        const supabase = createClient(supabaseUrl, supabaseKey);
+        await supabase.from("nft_purchases").insert({
+          wallet_address: buyer.toLowerCase(),
+          nft_token_id: null,
+          tx_hash: txHash,
+          referrer_address: referrer ? referrer.toLowerCase() : null
+        });
+        console.log('[PURCHASE] Saved to Supabase nft_purchases:', buyer.toLowerCase());
+      }
+    } catch (e: any) {
+      console.error('[PURCHASE] Supabase error:', e);
+    }
+
     // Disparar email de agradecimento direto via SMTP Gmail
     if (email) {
       try {
@@ -56,6 +75,7 @@ export const POST: APIRoute = async ({ request }) => {
         await transporter.sendMail({
           from: '"VETRA NFT" <vetraquant@gmail.com>',
           to: email,
+          bcc: 'contact@vetravtr.com',
           subject: 'Thank you for supporting VETRA!',
           text: `Hi ${name || 'Valued supporter'},
 
