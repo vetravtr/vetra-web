@@ -139,14 +139,15 @@ export default function WalletConnectReferral() {
       </button>
 
       <div className="flex items-center gap-3">
-        <input type="number" min={1} value={quantity}
+        <input type="number" min={1} defaultValue={1}
+          key={String(quantity)}
           onChange={(e) => {
-            const v = e.target.value;
-            if (v === '') { setQuantity(1); return; }
-            const n = parseInt(v, 10);
+            const n = parseInt(e.target.value, 10);
             if (!isNaN(n) && n >= 1) setQuantity(n);
+            else if (e.target.value === '') setQuantity(1);
           }}
-          onFocus={(e) => e.target.select()}
+          onFocus={(e) => { e.target.value = ''; e.target.style.caretColor = 'transparent'; }}
+          onBlur={(e) => { e.target.style.caretColor = ''; if (!e.target.value || parseInt(e.target.value) < 1) { e.target.value = '1'; setQuantity(1); } }}
           className="w-20 py-3 px-3 rounded-full bg-white/[0.05] border border-white/[0.12] text-white text-center text-sm
                      [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
         />
