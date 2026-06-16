@@ -118,7 +118,10 @@ export default function WalletConnectReferral() {
       } else {
         receipt = await (await nft.buyMultiple(referrer, qty)).wait();
       }
-      await fetch('/api/purchase', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ buyer: account, referrer: getReferrer(), quantity: Number(qty), txHash: receipt.hash, name, email }) });
+      // Registrar compra no backend
+      try {
+        await fetch('/api/purchase', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ buyer: account, referrer: getReferrer(), quantity: Number(qty), txHash: receipt.hash, name, email }) });
+      } catch (e) { console.warn('Purchase registration failed (non-critical):', e); }
       setLabel('NFT comprado!');
       setTimeout(() => alert('Purchase confirmed! Check your email (including spam folder).'), 500);
       loadRef(account);
