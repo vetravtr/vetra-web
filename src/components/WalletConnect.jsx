@@ -134,11 +134,13 @@ export default function WalletConnect() {
 
       // Registrar compra no backend (não crítico - não trava se falhar)
       try {
-        await fetch('/api/purchase', {
+        const resp = await fetch('/api/purchase', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ buyer: account, referrer: getReferrer(), quantity: Number(qty), txHash: receipt.hash }),
         });
-      } catch (e) { console.warn('Purchase registration failed (non-critical):', e); }
+        if (!resp.ok) console.warn('Purchase HTTP', resp.status, await resp.text());
+        else console.log('Purchase registered');
+      } catch (e) { console.warn('Purchase fetch failed:', e); }
 
       setLabel('NFT comprado!');
       checkOwned(account);
