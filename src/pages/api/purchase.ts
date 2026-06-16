@@ -47,17 +47,22 @@ export const POST: APIRoute = async ({ request }) => {
 
     // Salvar no Supabase (nft_purchases)
     try {
-      const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
-      const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+      const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || import.meta.env.SUPABASE_URL;
+      const supabaseKey = import.meta.env.SUPABASE_SERVICE_KEY || import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       if (supabaseUrl && supabaseKey) {
         const supabase = createClient(supabaseUrl, supabaseKey);
-        await supabase.from("nft_purchases").insert({
+        const { error: insertError } = await supabase.from("nft_purchases").insert({
           wallet_address: buyer.toLowerCase(),
           nft_token_id: null,
           tx_hash: txHash,
+          quantity: body.quantity || 1,
           referrer_address: referrer ? referrer.toLowerCase() : null
         });
-        console.log('[PURCHASE] Saved to Supabase nft_purchases:', buyer.toLowerCase());
+        if (insertError) {
+          console.error('[PURCHASE] Supabase insert error:', insertError);
+        } else {
+          console.log('[PURCHASE] Saved to Supabase nft_purchases:', buyer.toLowerCase());
+        }
       }
     } catch (e: any) {
       console.error('[PURCHASE] Supabase error:', e);
