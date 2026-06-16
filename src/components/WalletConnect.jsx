@@ -177,7 +177,14 @@ export default function WalletConnect() {
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-3">
             <input type="number" min={1} value={quantity}
-              onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+              onChange={(e) => {
+                const v = e.target.value;
+                // Permite apagar completamente (vazio) e previne concatenação
+                if (v === '') { setQuantity(1); return; }
+                const n = parseInt(v, 10);
+                if (!isNaN(n) && n >= 1) setQuantity(n);
+              }}
+              onFocus={(e) => e.target.select()}
               className="w-20 py-3 px-3 rounded-full bg-white/[0.05] border border-white/[0.12] text-white text-center text-sm
                          [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
