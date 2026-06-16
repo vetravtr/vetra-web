@@ -120,6 +120,7 @@ export default function WalletConnectReferral() {
       }
       await fetch('/api/purchase', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ buyer: account, referrer: getReferrer(), quantity: Number(qty), txHash: receipt.hash, name, email }) });
       setLabel('NFT comprado!');
+      setTimeout(() => alert('Purchase confirmed! Check your email (including spam folder).'), 500);
       loadRef(account);
     } catch (e) { console.error(e); alert('Falha: ' + (e?.shortMessage || e?.message || 'erro')); setLabel('Buy NFT'); }
     finally { setBusy(false); }
