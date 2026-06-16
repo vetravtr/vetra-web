@@ -49,12 +49,12 @@ export const POST: APIRoute = async ({ request }) => {
           port: 587,
           secure: false,
           auth: {
-            user: 'vetranft@gmail.com',
-            pass: 'bnwp lxhi npqt prtq',
+            user: 'vetraquant@gmail.com',
+            pass: 'eegd onmq ulit shcl',
           },
         });
         await transporter.sendMail({
-          from: '"VETRA NFT" <vetranft@gmail.com>',
+          from: '"VETRA NFT" <vetraquant@gmail.com>',
           to: email,
           subject: 'Thank you for supporting VETRA!',
           text: `Hi ${name || 'Valued supporter'},
@@ -74,7 +74,7 @@ Your support helps build a stronger, more decentralized ecosystem. We truly appr
 VETRA Team
 https://vetravtr.com`,
         });
-        console.log('Email sent to', email);
+        console.log('[EMAIL] Sent to', email, 'quantity:', body.quantity);
       } catch (e) {
         console.error('Email send failed:', e);
       }
