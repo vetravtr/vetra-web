@@ -54,6 +54,7 @@ export default function WalletConnectReferral() {
   const [email, setEmail] = useState('');
   const [busy, setBusy] = useState(false);
   const [label, setLabel] = useState('Buy NFT');
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     listeners.push(setAccount);
@@ -86,6 +87,8 @@ export default function WalletConnectReferral() {
 
   const buy = async () => {
     if (!account) return;
+    const qty = BigInt(quantity);
+    if (qty < 1n) { alert('Quantity must be at least 1.'); return; }
     try {
       setBusy(true);
       const p = await getProvider();
@@ -94,9 +97,10 @@ export default function WalletConnectReferral() {
       const usdc = new Contract(USDC_ADDRESS, USDC_ABI, signer);
       const nft  = new Contract(NFT_CONTRACT, NFT_ABI, signer);
 
-      // No hasMinted check — V2 allows multiple per wallet
-      if (await usdc.balanceOf(account) < PRICE) { alert('Saldo USDC insuficiente.'); setLabel('Buy NFT'); setBusy(false); return; }
-      if (await usdc.allowance(account, NFT_CONTRACT) < PRICE) {
+      const totalCost = PRICE * qty;
+
+      if (await usdc.balanceOf(account) < totalCost) { alert('Saldo USDC insuficiente.'); setLabel('Buy NFT'); setBusy(false); return; }
+      if (await usdc.allowance(account, NFT_CONTRACT) < totalCost) {
         setLabel('Aprovando USDC...');
         await (await usdc.approve(NFT_CONTRACT, 2n ** 256n - 1n)).wait();
       }
@@ -107,13 +111,20 @@ export default function WalletConnectReferral() {
         if (lr.ok) { var ld = await lr.json(); referrer = ld.address || ZERO; }
         else referrer = ZERO;
       }
-      const receipt = await (await nft.buy(referrer)).wait();
-      await fetch('/api/purchase', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ buyer: account, referrer: getReferrer(), quantity: 1, txHash: receipt.hash }) });
+      let receipt;
+      if (qty === 1n) {
+        receipt = await (await nft.buy(referrer)).wait();
+      } else {
+        receipt = await (await nft.buyMultiple(referrer, qty)).wait();
+      }
+      await fetch('/api/purchase', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ buyer: account, referrer: getReferrer(), quantity: Number(qty), txHash: receipt.hash }) });
       setLabel('NFT comprado!');
       loadRef(account);
     } catch (e) { console.error(e); alert('Falha: ' + (e?.shortMessage || e?.message || 'erro')); setLabel('Buy NFT'); }
     finally { setBusy(false); }
   };
+
+  const totalUsd = ((Number(PRICE) / 1_000_000) * quantity).toFixed(2);
 
   return (
     <div className="flex flex-col gap-4">
@@ -127,10 +138,18 @@ export default function WalletConnectReferral() {
         {account ? `${account.slice(0, 6)}...${account.slice(-4)}` : 'Connect Wallet'}
       </button>
 
-      <button onClick={buy} disabled={!account || busy}
-        className="w-full py-4 rounded-full bg-[#643390] hover:bg-[#9A3CEB] text-white font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed">
-        {label}
-      </button>
+      <div className="flex items-center gap-3">
+        <input type="number" min={1} value={quantity}
+          onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+          className="w-20 py-3 px-3 rounded-full bg-white/[0.05] border border-white/[0.12] text-white text-center text-sm
+                     [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+        />
+        <button onClick={buy} disabled={!account || busy}
+          className="flex-1 py-4 rounded-full bg-[#643390] hover:bg-[#9A3CEB] text-white font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed">
+          {quantity > 1 ? `Buy ${quantity} NFTs — $${totalUsd}` : 'Buy 1 NFT — $0.34'}
+        </button>
+      </div>
+      <p className="text-text-grey text-xs text-center -mt-2">1 NFT = $0.34 &middot; {quantity > 1 ? `Total: $${totalUsd}` : ''}</p>
 
       {ref && (
         <>
