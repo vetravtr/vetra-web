@@ -164,6 +164,8 @@ export default function WalletConnect() {
 
   const short = account ? `${account.slice(0, 6)}...${account.slice(-4)}` : 'Connect Wallet';
 
+  const totalUsd = ((Number(PRICE) / 1_000_000) * quantity).toFixed(2);
+
   return (
     <div className="flex flex-col gap-6">
       <button onClick={connect}
@@ -172,16 +174,19 @@ export default function WalletConnect() {
       </button>
 
       {ownedCount === 0 && !busy && (
-        <div className="flex items-center gap-3">
-          <input type="number" min={1} value={quantity}
-            onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-            className="w-20 py-3 px-3 rounded-full bg-white/[0.05] border border-white/[0.12] text-white text-center text-sm
-                       [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-          />
-          <button onClick={buy} disabled={!account || busy}
-            className="flex-1 py-4 rounded-full bg-[#643390] hover:bg-[#9A3CEB] text-white font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed">
-            {label}
-          </button>
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-3">
+            <input type="number" min={1} value={quantity}
+              onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+              className="w-20 py-3 px-3 rounded-full bg-white/[0.05] border border-white/[0.12] text-white text-center text-sm
+                         [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            />
+            <button onClick={buy} disabled={!account || busy}
+              className="flex-1 py-4 rounded-full bg-[#643390] hover:bg-[#9A3CEB] text-white font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed">
+              {quantity > 1 ? `Buy ${quantity} NFTs — $${totalUsd}` : 'Buy 1 NFT — $0.34'}
+            </button>
+          </div>
+          <p className="text-text-grey text-xs text-center">1 NFT = $0.34 &middot; {quantity > 1 ? `Total: $${totalUsd}` : ''}</p>
         </div>
       )}
 
