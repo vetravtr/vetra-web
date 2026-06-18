@@ -52,8 +52,8 @@ function getOrCreateRoot() {
         margin: 0 0 24px 0;
       "></p>
       <button id="vetra-toast-btn" style="
-        background: #643390;
-        color: #ffffff;
+        background: #643390 !important;
+        color: #ffffff !important;
         border: none;
         border-radius: 999px;
         padding: 12px 32px;
