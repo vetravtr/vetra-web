@@ -1,0 +1,91 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import GenericHeader from "../../components/common/GenericHeader.astro";
+import Footer from "../../components/sections/Footer.astro";
+import "../../styles/global.css";
+export async function getStaticPaths() { return []; }
+const { slug } = Astro.params;
+---
+
+<style>
+.post-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 120px 24px 80px;
+  color: #fff;
+  min-height: 60vh;
+}
+.back-link {
+  color: #b388ff;
+  text-decoration: none;
+  font-size: 0.9rem;
+  margin-bottom: 32px;
+  display: inline-block;
+  font-family: 'Libre Franklin', sans-serif;
+}
+.back-link:hover { color: #9A3CEB; }
+.post-content {
+  font-family: 'Libre Franklin', sans-serif;
+  line-height: 1.8;
+  font-size: 1.05rem;
+}
+.post-content h2 { font-size: 1.5rem; margin: 32px 0 16px; color: #fff; font-family: 'Urbanist', sans-serif; }
+.post-content h3 { font-size: 1.2rem; margin: 24px 0 12px; color: #b388ff; }
+.post-content p { margin-bottom: 16px; color: #ccc; }
+.post-content ul, .post-content ol { margin-bottom: 16px; padding-left: 24px; color: #ccc; }
+.post-content li { margin-bottom: 8px; }
+.post-content strong { color: #fff; }
+.post-content a { color: #b388ff; }
+.post-content table { width: 100%; border-collapse: collapse; margin: 24px 0; }
+.post-content td, .post-content th { border: 1px solid rgba(255,255,255,0.1); padding: 12px; text-align: left; }
+.post-content th { background: rgba(100,51,144,0.2); color: #fff; }
+.post-content td { color: #ccc; }
+.loading { text-align: center; padding: 80px 20px; color: #9B9B9B; font-size: 1.1rem; }
+</style>
+
+<Layout title="VETRA Blog">
+  <div class="relative">
+    <GenericHeader />
+    <main>
+      <div class="post-page">
+        <a href="/blog" class="back-link">← Back to Blog</a>
+        <div id="post-container">
+          <div class="loading">Loading...</div>
+        </div>
+      </div>
+    </main>
+    <Footer />
+  </div>
+</Layout>
+
+<script>
+(async function() {
+  const container = document.getElementById("post-container");
+  const slug = window.location.pathname.split("/").pop();
+  
+  try {
+    const resp = await fetch(`/api/blog?slug=${slug}`);
+    const post = await resp.json();
+
+    if (!post || post.error) {
+      container.innerHTML = `<div class="loading">Post not found</div>`;
+      return;
+    }
+
+    const date = new Date(post.created_at).toLocaleDateString("en-US", {
+      year: "numeric", month: "long", day: "numeric"
+    });
+
+    document.title = `${post.title} — VETRA Blog`;
+
+    container.innerHTML = `
+      <div class="post-cat" style="color:#b388ff;font-size:0.8rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">${post.category}</div>
+      <h1 style="font-size:2rem;font-weight:700;margin-bottom:8px;">${post.title}</h1>
+      <div style="color:#666;font-size:0.85rem;margin-bottom:32px;font-family:'Libre Franklin',sans-serif;">${date} · ${post.author}</div>
+      <div class="post-content">${post.content.replace(/\\n/g, '<br>')}</div>
+    `;
+  } catch (e) {
+    container.innerHTML = `<div class="loading">Error loading post</div>`;
+  }
+})();
+</script>

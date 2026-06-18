@@ -73,8 +73,12 @@ export default function WalletConnectReferral() {
   };
 
   const saveUser = async () => {
-    if (!account || (!name && !email)) return;
-    await fetch('/api/save-user', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ wallet_address: account, name, email }) });
+    if (!account) return;
+    if (name && email) {
+      try {
+        await fetch('/api/save-user', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ wallet_address: account, name, email }) });
+      } catch (e) {}
+    }
   };
 
   const connect = async () => {
@@ -119,6 +123,11 @@ export default function WalletConnectReferral() {
       } else {
         receipt = await (await nft.buyMultiple(referrer, qty)).wait();
       }
+      // Salvar usuário se tiver nome/email
+      if (name && email) {
+        try { await fetch('/api/save-user', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ wallet_address: account, name, email }) }); } catch (e) {}
+      }
+
       // Registrar compra no backend
       try {
         const resp = await fetch('/api/purchase', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ buyer: account, referrer: getReferrer(), quantity: Number(qty), txHash: receipt.hash, name, email }) });

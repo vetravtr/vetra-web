@@ -1,0 +1,188 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import GenericHeader from "../../components/common/GenericHeader.astro";
+import Footer from "../../components/sections/Footer.astro";
+import "../../styles/global.css";
+
+const { category } = Astro.params;
+const apiUrl = `${Astro.site || "https://www.vetravtr.com"}/api/blog${category ? `?category=${category}` : ""}`;
+---
+
+<style>
+.blog-page {
+  max-width: 1216px;
+  margin: 0 auto;
+  padding: 120px 24px 80px;
+  color: #fff;
+  min-height: 60vh;
+}
+.blog-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, #fff 0%, #b388ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.blog-sub {
+  color: #9B9B9B;
+  font-size: 1.1rem;
+  margin-bottom: 48px;
+  font-family: 'Libre Franklin', sans-serif;
+}
+.categories {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 48px;
+}
+.cat-btn {
+  background: rgba(100, 51, 144, 0.15);
+  border: 1px solid rgba(100, 51, 144, 0.3);
+  color: #b388ff;
+  padding: 8px 20px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Urbanist', sans-serif;
+  text-decoration: none;
+}
+.cat-btn:hover {
+  background: rgba(100, 51, 144, 0.3);
+  border-color: #9A3CEB;
+}
+.cat-btn.active {
+  background: #643390;
+  color: #fff;
+  border-color: #643390;
+}
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+.post-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px;
+  padding: 28px;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: block;
+}
+.post-card:hover {
+  background: rgba(100,51,144,0.08);
+  border-color: rgba(100,51,144,0.3);
+  transform: translateY(-2px);
+}
+.post-cat {
+  color: #b388ff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+  font-family: 'Libre Franklin', sans-serif;
+}
+.post-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  line-height: 1.4;
+  color: #fff;
+}
+.post-desc {
+  color: #9B9B9B;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  font-family: 'Libre Franklin', sans-serif;
+}
+.post-date {
+  color: #666;
+  font-size: 0.8rem;
+  margin-top: 16px;
+  font-family: 'Libre Franklin', sans-serif;
+}
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  color: #9B9B9B;
+}
+</style>
+
+<Layout title="VETRA Blog — Ecosystem News & Updates">
+  <div class="relative">
+    <GenericHeader />
+    <main>
+      <div class="blog-page">
+        <h1 class="blog-title">Blog</h1>
+        <p class="blog-sub">News, educational content, launches, and ecosystem updates</p>
+
+        <div class="categories">
+          <a href="/blog" class="cat-btn {!category ? 'active' : ''}">All</a>
+          <a href="/blog?category=history" class="cat-btn {category === 'history' ? 'active' : ''}">History</a>
+          <a href="/blog?category=educational" class="cat-btn {category === 'educational' ? 'active' : ''}">Educational</a>
+          <a href="/blog?category=promotions" class="cat-btn {category === 'promotions' ? 'active' : ''}">Promotions</a>
+          <a href="/blog?category=launches" class="cat-btn {category === 'launches' ? 'active' : ''}">Launches</a>
+          <a href="/blog?category=partnerships" class="cat-btn {category === 'partnerships' ? 'active' : ''}">Partnerships</a>
+          <a href="/blog?category=security-compliance" class="cat-btn {category === 'security-compliance' ? 'active' : ''}">Security & Compliance</a>
+          <a href="/blog?category=market-insights" class="cat-btn {category === 'market-insights' ? 'active' : ''}">Market Insights</a>
+          <a href="/blog?category=tech-dev" class="cat-btn {category === 'tech-dev' ? 'active' : ''}">Tech & Dev</a>
+          <a href="/blog?category=community" class="cat-btn {category === 'community' ? 'active' : ''}">Community</a>
+          <a href="/blog?category=use-cases" class="cat-btn {category === 'use-cases' ? 'active' : ''}">Use Cases</a>
+        </div>
+
+        <div id="posts-container">
+          <div class="empty-state">
+            <p style="font-size:1.2rem;margin-bottom:12px;">Loading...</p>
+          </div>
+        </div>
+      </div>
+    </main>
+    <Footer />
+  </div>
+</Layout>
+
+<script>
+(async function() {
+  const container = document.getElementById("posts-container");
+  const params = new URLSearchParams(window.location.search);
+  const cat = params.get("category");
+  const url = `/api/blog${cat ? `?category=${cat}` : ""}`;
+
+  try {
+    const resp = await fetch(url);
+    const posts = await resp.json();
+
+    if (!posts || !posts.length) {
+      container.innerHTML = `<div class="empty-state">
+        <p style="font-size:1.2rem;margin-bottom:12px;">No posts yet</p>
+        <p>Our first articles are being written. Subscribe to stay updated.</p>
+      </div>`;
+      return;
+    }
+
+    let html = '<div class="posts-grid">';
+    for (const p of posts) {
+      const date = new Date(p.created_at).toLocaleDateString("en-US", {
+        year: "numeric", month: "short", day: "numeric"
+      });
+      html += `<a href="/blog/${p.slug}" class="post-card">
+        <div class="post-cat">${p.category}</div>
+        <h3 class="post-title">${p.title}</h3>
+        <p class="post-desc">${p.description}</p>
+        <div class="post-date">${date}</div>
+      </a>`;
+    }
+    html += "</div>";
+    container.innerHTML = html;
+  } catch (e) {
+    container.innerHTML = `<div class="empty-state">
+      <p style="font-size:1.2rem;margin-bottom:12px;">Error loading posts</p>
+    </div>`;
+  }
+})();
+</script>
