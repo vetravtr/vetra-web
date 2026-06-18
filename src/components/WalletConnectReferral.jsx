@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { BrowserProvider, Contract } from 'ethers';
+import { vetraToast } from './VetraToast';
 
 const NFT_CONTRACT = '0x1D8Af48277CbC0Fa35B6EAFdE76b17ee1B44d74e';
 const USDC_ADDRESS = '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359';
@@ -89,7 +90,7 @@ export default function WalletConnectReferral() {
   const buy = async () => {
     if (!account) return;
     const qty = BigInt(quantity);
-    if (qty < 1n) { alert('Quantity must be at least 1.'); return; }
+    if (qty < 1n) { vetraToast('Quantity must be at least 1.'); return; }
     try {
       setBusy(true);
       const p = await getProvider();
@@ -100,7 +101,7 @@ export default function WalletConnectReferral() {
 
       const totalCost = PRICE * qty;
 
-      if (await usdc.balanceOf(account) < totalCost) { alert('Saldo USDC insuficiente.'); setLabel('Buy NFT'); setBusy(false); return; }
+      if (await usdc.balanceOf(account) < totalCost) { vetraToast('Insufficient USDC balance.'); setLabel('Buy NFT'); setBusy(false); return; }
       if (await usdc.allowance(account, NFT_CONTRACT) < totalCost) {
         setLabel('Aprovando USDC...');
         await (await usdc.approve(NFT_CONTRACT, 2n ** 256n - 1n)).wait();
@@ -125,9 +126,9 @@ export default function WalletConnectReferral() {
         else console.log('Purchase registered OK');
       } catch (e) { console.warn('Purchase registration failed:', e); }
       setLabel('NFT comprado!');
-      setTimeout(() => alert('Purchase confirmed! Check your email (including spam folder).'), 500);
+      vetraToast('Purchase confirmed! Check your email (including spam).');
       loadRef(account);
-    } catch (e) { console.error(e); alert('Falha: ' + (e?.shortMessage || e?.message || 'erro')); setLabel('Buy NFT'); }
+    } catch (e) { console.error(e); vetraToast('Failed: ' + (e?.shortMessage || e?.message || 'error')); setLabel('Buy NFT'); }
     finally { setBusy(false); }
   };
 

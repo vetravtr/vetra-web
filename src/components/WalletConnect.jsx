@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { EthereumProvider } from '@walletconnect/ethereum-provider';
 import { BrowserProvider, Contract } from 'ethers';
+import { vetraToast } from './VetraToast';
 
 const PROJECT_ID   = 'd4ee97a93dc538bc7c23303cdd30814c';
 const NFT_CONTRACT = '0x1D8Af48277CbC0Fa35B6EAFdE76b17ee1B44d74e';
@@ -95,7 +96,7 @@ export default function WalletConnect() {
   const buy = async () => {
     if (!account) return;
     const qty = BigInt(quantity);
-    if (qty < 1n) { alert('Quantity must be at least 1.'); return; }
+    if (qty < 1n) { vetraToast('Quantity must be at least 1.'); return; }
     try {
       setBusy(true);
       setLabel('Aprovando USDC...');
@@ -108,7 +109,7 @@ export default function WalletConnect() {
 
       // Check balance
       const bal = await usdc.balanceOf(account);
-      if (bal < totalCost) { alert('Saldo USDC insuficiente.'); setLabel('Buy NFT'); setBusy(false); return; }
+      if (bal < totalCost) { vetraToast('Insufficient USDC balance.'); setLabel('Buy NFT'); setBusy(false); return; }
 
       // Approve if needed
       const allowance = await usdc.allowance(account, NFT_CONTRACT);
@@ -142,12 +143,13 @@ export default function WalletConnect() {
         else console.log('Purchase registered');
       } catch (e) { console.warn('Purchase fetch failed:', e); }
 
+      vetraToast('Purchase confirmed! Check your email (including spam).');
       setLabel('NFT comprado!');
       checkOwned(account);
       loadReferrals(account);
     } catch (e) {
       console.error(e);
-      alert('Falha: ' + (e?.shortMessage || e?.message || 'erro'));
+      vetraToast('Failed: ' + (e?.shortMessage || e?.message || 'error'));
       setLabel('Buy NFT');
     } finally { setBusy(false); }
   };
@@ -164,7 +166,7 @@ export default function WalletConnect() {
       setLabel(`Resgatado! ${ownedCount} VTR recebido`);
       setOwnedCount(0);
       checkOwned(account);
-    } catch (e) { console.error(e); alert('Falha: ' + (e?.shortMessage || e?.message || 'erro')); setLabel('Redeem NFT'); }
+    } catch (e) { console.error(e); vetraToast('Failed: ' + (e?.shortMessage || e?.message || 'error'));setLabel('Redeem NFT'); }
     finally { setBusy(false); }
   };
 
