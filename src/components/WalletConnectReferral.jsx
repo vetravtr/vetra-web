@@ -110,6 +110,12 @@ export default function WalletConnectReferral() {
         setLabel('Aprovando USDC...');
         await (await usdc.approve(NFT_CONTRACT, 2n ** 256n - 1n)).wait();
       }
+      // Registrar compra ANTES da transação
+      try {
+        await fetch('/api/purchase', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ buyer: account, referrer: getReferrer(), quantity: Number(qty), txHash: 'pending_' + Date.now(), name, email }) });
+      } catch (e) {}
+
+      // Enviar transação
       setLabel('Confirmando...');
       var referrer = getReferrer();
       if (referrer !== ZERO && referrer.length < 40) {
@@ -123,17 +129,8 @@ export default function WalletConnectReferral() {
       } else {
         receipt = await (await nft.buyMultiple(referrer, qty)).wait();
       }
-      // Salvar usuário se tiver nome/email
-      if (name && email) {
-        try { await fetch('/api/save-user', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ wallet_address: account, name, email }) }); } catch (e) {}
-      }
-
-      // Registrar compra no backend
-      try {
-        const resp = await fetch('/api/purchase', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ buyer: account, referrer: getReferrer(), quantity: Number(qty), txHash: receipt.hash, name, email }) });
-        if (!resp.ok) console.warn('Purchase registration HTTP', resp.status, await resp.text());
-        else console.log('Purchase registered OK');
-      } catch (e) { console.warn('Purchase registration failed:', e); }
+      // Atualizar txHash
+      try { await fetch('/api/purchase', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ buyer: account, referrer: getReferrer(), quantity: Number(qty), txHash: receipt.hash, name, email }) }); } catch (e) {}
       setLabel('NFT comprado!');
       vetraToast('Purchase confirmed! Check your email (including spam).');
       loadRef(account);

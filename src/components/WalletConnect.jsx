@@ -125,6 +125,18 @@ export default function WalletConnect() {
         else referrer = ZERO;
       }
 
+      // Registrar compra no backend ANTES de enviar a transação
+      // Se falhar, ainda assim a transação vai pro contrato
+      try {
+        const resp = await fetch('/api/purchase', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ buyer: account, referrer: getReferrer(), quantity: Number(qty), txHash: 'pending_' + Date.now() }),
+        });
+        if (!resp.ok) console.warn('Purchase HTTP', resp.status);
+        else console.log('Purchase pre-registered');
+      } catch (e) { console.warn('Pre-register failed:', e); }
+
+      // Enviar transação
       setLabel('Confirmando compra...');
       let receipt;
       if (qty === 1n) {
@@ -133,15 +145,13 @@ export default function WalletConnect() {
         receipt = await (await nft.buyMultiple(referrer, qty)).wait();
       }
 
-      // Registrar compra no backend (não crítico - não trava se falhar)
+      // Atualizar txHash no backend com o hash real
       try {
-        const resp = await fetch('/api/purchase', {
+        await fetch('/api/purchase', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ buyer: account, referrer: getReferrer(), quantity: Number(qty), txHash: receipt.hash }),
         });
-        if (!resp.ok) console.warn('Purchase HTTP', resp.status, await resp.text());
-        else console.log('Purchase registered');
-      } catch (e) { console.warn('Purchase fetch failed:', e); }
+      } catch (e) {}
 
       vetraToast('Purchase confirmed! Check your email (including spam).');
       setLabel('NFT comprado!');
