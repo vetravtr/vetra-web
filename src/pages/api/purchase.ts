@@ -55,6 +55,7 @@ export const POST: APIRoute = async ({ request }) => {
           wallet_address: buyer.toLowerCase(),
           nft_token_id: null,
           tx_hash: txHash,
+          quantity: body.quantity || 1,
           referrer_address: referrer ? referrer.toLowerCase() : null
         });
         if (insertError) {
