@@ -149,8 +149,15 @@ export default function WalletConnect() {
       loadReferrals(account);
     } catch (e) {
       console.error(e);
-      vetraToast('Failed: ' + (e?.shortMessage || e?.message || 'error'));
-      setLabel('Buy NFT');
+      const msg = e?.shortMessage || e?.message || 'error';
+      vetraToast('Failed: ' + msg);
+      // Se for erro de carteira desconectada
+      if (msg.includes('user rejected') || msg.includes('disconnect') || msg.includes('not connected')) {
+        setAccount(null);
+        setLabel('Connect Wallet');
+      } else {
+        setLabel('Buy NFT');
+      }
     } finally { setBusy(false); }
   };
 
@@ -198,10 +205,11 @@ export default function WalletConnect() {
             />
             <button onClick={buy} disabled={!account || busy}
               className="flex-1 py-4 rounded-full bg-[#643390] hover:bg-[#9A3CEB] text-white font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed">
-              {quantity > 1 ? `Buy ${quantity} NFTs — $${totalUsd}` : 'Buy 1 NFT — $0.34'}
+              {!account ? 'Connect Wallet First' : (quantity > 1 ? `Buy ${quantity} NFTs — $${totalUsd}` : 'Buy 1 NFT — $0.34')}
             </button>
           </div>
           <p className="text-text-grey text-xs text-center">1 NFT = $0.34 &middot; {quantity > 1 ? `Total: $${totalUsd}` : ''}</p>
+          <p className="text-text-grey text-[11px] text-center opacity-60">Make sure you have enough POL for gas fees</p>
         </div>
       )}
 

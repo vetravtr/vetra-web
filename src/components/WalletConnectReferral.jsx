@@ -137,7 +137,16 @@ export default function WalletConnectReferral() {
       setLabel('NFT comprado!');
       vetraToast('Purchase confirmed! Check your email (including spam).');
       loadRef(account);
-    } catch (e) { console.error(e); vetraToast('Failed: ' + (e?.shortMessage || e?.message || 'error')); setLabel('Buy NFT'); }
+    } catch (e) { console.error(e); 
+      const msg = e?.shortMessage || e?.message || 'error';
+      vetraToast('Failed: ' + msg);
+      if (msg.includes('user rejected') || msg.includes('disconnect') || msg.includes('not connected')) {
+        setAccount(null);
+        setLabel('Connect Wallet');
+      } else {
+        setLabel('Buy NFT');
+      }
+    }
     finally { setBusy(false); }
   };
 
@@ -174,6 +183,7 @@ export default function WalletConnectReferral() {
         </button>
       </div>
       <p className="text-text-grey text-xs text-center -mt-2">1 NFT = $0.34 &middot; {quantity > 1 ? `Total: $${totalUsd}` : ''}</p>
+      <p className="text-text-grey text-[11px] text-center -mt-1 opacity-60">Make sure you have enough POL for gas fees</p>
 
       {ref && (
         <>
