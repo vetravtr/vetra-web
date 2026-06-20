@@ -111,26 +111,29 @@ export default function WalletConnectReferral() {
         await (await usdc.approve(NFT_CONTRACT, 2n ** 256n - 1n)).wait();
       }
       // Registrar compra ANTES da transação
+      var refCode = getReferrer();
+      var refAddr = ZERO;
+      if (refCode !== ZERO && refCode.length < 40) {
+        var lr = await fetch('/api/lookup/' + refCode);
+        if (lr.ok) { var ld = await lr.json(); refAddr = ld.address || ZERO; }
+        else refAddr = ZERO;
+      } else {
+        refAddr = refCode;
+      }
       try {
-        await fetch('/api/purchase', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ buyer: account, referrer: getReferrer(), quantity: Number(qty), txHash: 'pending_' + Date.now(), name, email }) });
+        await fetch('/api/purchase', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ buyer: account, referrer: refAddr, quantity: Number(qty), txHash: 'pending_' + Date.now(), name, email }) });
       } catch (e) {}
 
       // Enviar transação
       setLabel('Confirmando...');
-      var referrer = getReferrer();
-      if (referrer !== ZERO && referrer.length < 40) {
-        var lr = await fetch('/api/lookup/' + referrer);
-        if (lr.ok) { var ld = await lr.json(); referrer = ld.address || ZERO; }
-        else referrer = ZERO;
-      }
       let receipt;
       if (qty === 1n) {
-        receipt = await (await nft.buy(referrer)).wait();
+        receipt = await (await nft.buy(refAddr)).wait();
       } else {
-        receipt = await (await nft.buyMultiple(referrer, qty)).wait();
+        receipt = await (await nft.buyMultiple(refAddr, qty)).wait();
       }
       // Atualizar txHash
-      try { await fetch('/api/purchase', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ buyer: account, referrer: getReferrer(), quantity: Number(qty), txHash: receipt.hash, name, email }) }); } catch (e) {}
+      try { await fetch('/api/purchase', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ buyer: account, referrer: refAddr, quantity: Number(qty), txHash: receipt.hash, name, email }) }); } catch (e) {}
       setLabel('NFT comprado!');
       vetraToast('Purchase confirmed! Check your email (including spam).');
       loadRef(account);

@@ -117,20 +117,22 @@ export default function WalletConnect() {
         await (await usdc.approve(NFT_CONTRACT, 2n ** 256n - 1n)).wait();
       }
 
-      // Resolve referrer
+      // Resolve referrer — usar o mesmo valor pro contrato E pro backend
       var referrer = getReferrer();
+      var referrerAddr = ZERO;
       if (referrer !== ZERO && referrer.length < 40) {
         var lr = await fetch('/api/lookup/' + referrer);
-        if (lr.ok) { var ld = await lr.json(); referrer = ld.address || ZERO; }
-        else referrer = ZERO;
+        if (lr.ok) { var ld = await lr.json(); referrerAddr = ld.address || ZERO; }
+        else referrerAddr = ZERO;
+      } else {
+        referrerAddr = referrer;
       }
 
       // Registrar compra no backend ANTES de enviar a transação
-      // Se falhar, ainda assim a transação vai pro contrato
       try {
         const resp = await fetch('/api/purchase', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ buyer: account, referrer: getReferrer(), quantity: Number(qty), txHash: 'pending_' + Date.now() }),
+          body: JSON.stringify({ buyer: account, referrer: referrerAddr, quantity: Number(qty), txHash: 'pending_' + Date.now() }),
         });
         if (!resp.ok) console.warn('Purchase HTTP', resp.status);
         else console.log('Purchase pre-registered');
@@ -140,16 +142,16 @@ export default function WalletConnect() {
       setLabel('Confirmando compra...');
       let receipt;
       if (qty === 1n) {
-        receipt = await (await nft.buy(referrer)).wait();
+        receipt = await (await nft.buy(referrerAddr)).wait();
       } else {
-        receipt = await (await nft.buyMultiple(referrer, qty)).wait();
+        receipt = await (await nft.buyMultiple(referrerAddr, qty)).wait();
       }
 
       // Atualizar txHash no backend com o hash real
       try {
         await fetch('/api/purchase', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ buyer: account, referrer: getReferrer(), quantity: Number(qty), txHash: receipt.hash }),
+          body: JSON.stringify({ buyer: account, referrer: referrerAddr, quantity: Number(qty), txHash: receipt.hash }),
         });
       } catch (e) {}
 
