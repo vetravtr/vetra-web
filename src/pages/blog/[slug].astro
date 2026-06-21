@@ -184,61 +184,6 @@ if (post) {
   font-size: 1.1rem;
 }
 
-/* Partners Section */
-.partners-section {
-  margin-top: 48px;
-  padding: 24px;
-  background: rgba(255,255,255,0.02);
-  border: 1px solid rgba(100,51,144,0.2);
-  border-radius: 16px;
-}
-.partners-title {
-  font-size: 0.85rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: #fff;
-  margin-bottom: 16px;
-  font-family: 'Urbanist', sans-serif;
-}
-.partners-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-}
-.partner-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  padding: 16px;
-  background: rgba(255,255,255,0.02);
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 12px;
-  text-decoration: none;
-  transition: all 0.2s;
-}
-.partner-item:hover {
-  background: rgba(100,51,144,0.08);
-  border-color: rgba(100,51,144,0.3);
-}
-.partner-logo {
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
-}
-.partner-name {
-  font-size: 0.72rem;
-  color: #b388ff;
-  font-weight: 600;
-  font-family: 'Urbanist', sans-serif;
-}
-@media (max-width: 640px) {
-  .partners-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
 /* Share Tools */
 .share-tools {
   margin-top: 48px;
@@ -356,31 +301,6 @@ if (post) {
               {dateStr} · {post.author}
             </div>
             <div class="post-content" set:html={htmlContent} />
-
-            {/* Partners Section */}
-            {(post.category === 'partnerships' || post.category === 'tech-dev' || post.category === 'market-insights' || post.category === 'history' || post.category === 'launches') && (
-              <div class="partners-section">
-                <h3 class="partners-title">Ecosystem Partners</h3>
-                <div class="partners-grid">
-                  <a href="https://polygonscan.com/token/0xAA27bd271B01dd20CcFA079800616335416c95Fd" target="_blank" rel="noopener" class="partner-item">
-                    <img src="/images/partners/polygon.svg" alt="Polygon" class="partner-logo" />
-                    <span class="partner-name">Polygon</span>
-                  </a>
-                  <a href="https://www.coingecko.com/en/coins/vetra" target="_blank" rel="noopener" class="partner-item">
-                    <img src="/images/partners/coingecko.png" alt="CoinGecko" class="partner-logo" />
-                    <span class="partner-name">CoinGecko</span>
-                  </a>
-                  <a href="https://www.sushi.com/polygon" target="_blank" rel="noopener" class="partner-item">
-                    <img src="/images/partners/sushi.png" alt="SushiSwap" class="partner-logo" />
-                    <span class="partner-name">SushiSwap</span>
-                  </a>
-                  <a href="https://chain.link/" target="_blank" rel="noopener" class="partner-item">
-                    <img src="/images/partners/chainlink.svg" alt="Chainlink" class="partner-logo" />
-                    <span class="partner-name">Chainlink</span>
-                  </a>
-                </div>
-              </div>
-            )}
 
             {/* Share tools for promotions */}
             {(post.category === 'promotions' || post.category === 'launches') && (
