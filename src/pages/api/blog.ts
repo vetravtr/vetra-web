@@ -19,8 +19,12 @@ export const GET: APIRoute = async ({ url }) => {
     let query = supabase
       .from("blog_posts")
       .select("*")
-      .eq("published", true)
       .order("created_at", { ascending: false });
+
+    // Em dev, mostrar todos (rascunhos inclusive)
+    if (url.searchParams.get("dev") !== "true") {
+      query = query.eq("published", true);
+    }
 
     if (category) {
       query = query.eq("category", category);

@@ -8,6 +8,14 @@ const NFT_CONTRACT = '0x1D8Af48277CbC0Fa35B6EAFdE76b17ee1B44d74e';
 const USDC_ADDRESS = '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359';
 const PRICE = 340000n;
 const ZERO  = '0x0000000000000000000000000000000000000000';
+const V1_CONTRACT = '0xdb9B1e94B5b69Df7e401DDbedE43491141047dB3'; // desativado - só pra warn
+
+// Alertar se estiver usando contrato V1
+if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+  console.log('Dev mode - usando V2');
+} else if (NFT_CONTRACT.toLowerCase() === V1_CONTRACT.toLowerCase()) {
+  console.error('ERRO CRÍTICO: Site apontando para contrato V1 desativado!');
+}
 
 const NFT_ABI = [
   'function buy(address referrer) external',

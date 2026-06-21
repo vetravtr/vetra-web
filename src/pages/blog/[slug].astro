@@ -2,9 +2,45 @@
 import Layout from "../../layouts/Layout.astro";
 import GenericHeader from "../../components/common/GenericHeader.astro";
 import Footer from "../../components/sections/Footer.astro";
+import { marked } from 'marked';
+import { createClient } from "@supabase/supabase-js";
 import "../../styles/global.css";
+
 export async function getStaticPaths() { return []; }
+
 const { slug } = Astro.params;
+
+// Buscar post no Supabase (server-side)
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+const supabaseKey = import.meta.env.SUPABASE_SERVICE_KEY || import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+
+let post = null;
+let errorMsg = null;
+
+if (supabaseUrl && supabaseKey && slug) {
+  try {
+    const supabase = createClient(supabaseUrl, supabaseKey);
+    const { data } = await supabase
+      .from("blog_posts")
+      .select("*")
+      .eq("slug", slug)
+      .single();
+    post = data;
+  } catch (e) {
+    errorMsg = "Failed to load post";
+  }
+}
+
+let htmlContent = "";
+let title = "VETRA Blog";
+let dateStr = "";
+
+if (post) {
+  title = `${post.title} — VETRA Blog`;
+  htmlContent = marked.parse(post.content);
+  const d = new Date(post.created_at);
+  dateStr = d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+}
 ---
 
 <style>
@@ -25,33 +61,268 @@ const { slug } = Astro.params;
 }
 .back-link:hover { color: #9A3CEB; }
 .post-content {
-  font-family: 'Libre Franklin', sans-serif;
+  font-family: 'Libre Franklin', 'Georgia', serif;
   line-height: 1.8;
   font-size: 1.05rem;
+  max-width: 720px;
 }
-.post-content h2 { font-size: 1.5rem; margin: 32px 0 16px; color: #fff; font-family: 'Urbanist', sans-serif; }
-.post-content h3 { font-size: 1.2rem; margin: 24px 0 12px; color: #b388ff; }
-.post-content p { margin-bottom: 16px; color: #ccc; }
-.post-content ul, .post-content ol { margin-bottom: 16px; padding-left: 24px; color: #ccc; }
-.post-content li { margin-bottom: 8px; }
-.post-content strong { color: #fff; }
-.post-content a { color: #b388ff; }
-.post-content table { width: 100%; border-collapse: collapse; margin: 24px 0; }
-.post-content td, .post-content th { border: 1px solid rgba(255,255,255,0.1); padding: 12px; text-align: left; }
-.post-content th { background: rgba(100,51,144,0.2); color: #fff; }
-.post-content td { color: #ccc; }
-.loading { text-align: center; padding: 80px 20px; color: #9B9B9B; font-size: 1.1rem; }
+.post-content h2 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin: 40px 0 16px;
+  color: #fff;
+  font-family: 'Urbanist', sans-serif;
+  letter-spacing: -0.01em;
+}
+.post-content h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 28px 0 12px;
+  color: #d4aaff;
+  font-family: 'Urbanist', sans-serif;
+}
+.post-content p {
+  margin-bottom: 20px;
+  color: #c8c8c8;
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+.post-content a {
+  color: #b388ff;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.post-content a:hover { color: #9A3CEB; }
+.post-content strong { color: #fff; font-weight: 600; }
+.post-content ul, .post-content ol {
+  margin-bottom: 20px;
+  padding-left: 24px;
+  color: #c8c8c8;
+}
+.post-content li { margin-bottom: 8px; line-height: 1.7; }
+
+/* Tabelas GFM renderizadas pelo marked */
+.post-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 28px 0;
+  font-size: 0.9rem;
+}
+.post-content th {
+  background: rgba(100,51,144,0.15);
+  color: #fff;
+  font-weight: 600;
+  font-family: 'Urbanist', sans-serif;
+  font-size: 0.75rem;
+  padding: 12px 16px;
+  text-align: left;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.post-content td {
+  padding: 12px 16px;
+  color: #c0c0c0;
+  border: 1px solid rgba(255,255,255,0.06);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  vertical-align: top;
+}
+.post-content td:first-child {
+  color: #b388ff;
+  font-weight: 500;
+  width: 28%;
+}
+
+/* Blockquotes */
+.post-content blockquote {
+  background: rgba(100,51,144,0.08);
+  border-left: 3px solid #643390;
+  padding: 16px 20px;
+  margin: 24px 0;
+  border-radius: 0 8px 8px 0;
+  color: #c0c0c0;
+}
+
+.not-found {
+  text-align: center;
+  padding: 80px 20px;
+  color: #9B9B9B;
+  font-size: 1.1rem;
+}
+
+/* Share Tools */
+.share-tools {
+  margin-top: 48px;
+  padding: 32px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(100,51,144,0.2);
+  border-radius: 16px;
+}
+.share-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #fff;
+  font-family: 'Urbanist', sans-serif;
+}
+.share-desc {
+  color: #9B9B9B;
+  font-size: 0.9rem;
+  margin-bottom: 24px;
+  font-family: 'Libre Franklin', sans-serif;
+}
+.share-box {
+  margin-bottom: 20px;
+  padding: 16px;
+  background: rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+}
+.share-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.share-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #b388ff;
+  font-family: 'Urbanist', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.share-buttons {
+  display: flex;
+  gap: 8px;
+}
+.share-btn {
+  padding: 6px 14px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-decoration: none;
+  display: inline-block;
+  font-family: 'Urbanist', sans-serif;
+}
+.copy-btn {
+  background: rgba(100,51,144,0.3);
+  color: #b388ff;
+}
+.copy-btn:hover {
+  background: rgba(100,51,144,0.5);
+}
+.x-btn {
+  background: #b388ff;
+  color: #fff;
+}
+.x-btn:hover {
+  background: #9A3CEB;
+}
+.tg-btn {
+  background: #b388ff;
+  color: #fff;
+}
+.tg-btn:hover {
+  background: #9A3CEB;
+}
+.share-textarea {
+  width: 100%;
+  background: rgba(0,0,0,0.3);
+  border: none;
+  color: #c0c0c0;
+  font-size: 0.85rem;
+  font-family: 'Libre Franklin', monospace;
+  line-height: 1.6;
+  padding: 12px;
+  border-radius: 8px;
+  resize: none;
+  outline: none;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(100,51,144,0.4) transparent;
+}
+.share-textarea:focus {
+  border: 1px solid rgba(100,51,144,0.3);
+}
+
 </style>
 
-<Layout title="VETRA Blog">
+<Layout title={title}>
   <div class="relative">
     <GenericHeader />
     <main>
       <div class="post-page">
         <a href="/blog" class="back-link">← Back to Blog</a>
-        <div id="post-container">
-          <div class="loading">Loading...</div>
-        </div>
+        
+        {post ? (
+          <div>
+            <div style="color:#b388ff;font-size:0.8rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">
+              {post.category}
+            </div>
+            <h1 style="font-size:2rem;font-weight:700;margin-bottom:8px;">{post.title}</h1>
+            <div style="color:#666;font-size:0.85rem;margin-bottom:32px;font-family:'Libre Franklin',sans-serif;">
+              {dateStr} · {post.author}
+            </div>
+            <div class="post-content" set:html={htmlContent} />
+
+            {/* Share tools for promotions */}
+            {(post.category === 'promotions' || post.category === 'launches') && (
+              <div class="share-tools">
+                <h3 class="share-title">Share This Campaign</h3>
+                <p class="share-desc">Click to copy the templates below or share them directly with your audience.</p>
+
+                <div class="share-box">
+                  <div class="share-header">
+                    <span class="share-label">Twitter / X Template</span>
+                    <div class="share-buttons">
+                      <button onclick="copyText('tweet-text', this)" class="share-btn copy-btn">Copy Text</button>
+                      <a href="https://twitter.com/intent/tweet?text=The%20VETRA%20Pioneer%20NFT%20presale%20is%20live.%0A%240.34%20USDC%20per%20NFT.%2015%25%20off.%0ABuy%20now%3A%20https%3A%2F%2Fwww.vetravtr.com" target="_blank" rel="noopener" class="share-btn x-btn">Share on X</a>
+                    </div>
+                  </div>
+                  <textarea id="tweet-text" readonly rows="6" class="share-textarea">The VETRA Pioneer NFT presale is live.
+$0.34 USDC per NFT. 15% off the target price.
+1:1 conversion to VTR at $0.40.
+Earn 5% uncapped referral bonus.
+Polygon network.
+Buy now: https://www.vetravtr.com</textarea>
+                </div>
+
+                <div class="share-box">
+                  <div class="share-header">
+                    <span class="share-label">Telegram Template</span>
+                    <div class="share-buttons">
+                      <button onclick="copyText('telegram-text', this)" class="share-btn copy-btn">Copy Text</button>
+                      <a href="https://t.me/share/url?url=https://www.vetravtr.com&text=VETRA%20Pioneer%20NFT%20Pre-Sale%20is%20LIVE!%20Each%20NFT%20at%20%240.34%20USDC%20(15%25%20OFF)." target="_blank" rel="noopener" class="share-btn tg-btn">Send to Telegram</a>
+                    </div>
+                  </div>
+                  <textarea id="telegram-text" readonly rows="6" class="share-textarea">VETRA Pioneer NFT Pre-Sale is LIVE!
+Each NFT at $0.34 USDC (15% OFF). Redeem for 1 VTR when the price reaches $0.40.
+Two ways to buy:
+Anonymous: https://www.vetravtr.com
+With referral link and 5% bonus: https://www.vetravtr.com
+806 NFTs already minted. Powered by Polygon.</textarea>
+                </div>
+
+                <div class="share-box">
+                  <div class="share-header">
+                    <span class="share-label">Short Link for Bios</span>
+                    <div class="share-buttons">
+                      <button onclick="copyText('bio-link', this)" class="share-btn copy-btn">Copy Link</button>
+                    </div>
+                  </div>
+                  <textarea id="bio-link" readonly rows="1" class="share-textarea">https://www.vetravtr.com</textarea>
+                </div>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div class="not-found">
+            <p style="font-size:1.2rem;margin-bottom:12px;">Post not found</p>
+            <p>The article you're looking for doesn't exist or has been removed.</p>
+          </div>
+        )}
       </div>
     </main>
     <Footer />
@@ -59,33 +330,22 @@ const { slug } = Astro.params;
 </Layout>
 
 <script>
-(async function() {
-  const container = document.getElementById("post-container");
-  const slug = window.location.pathname.split("/").pop();
-  
-  try {
-    const resp = await fetch(`/api/blog?slug=${slug}`);
-    const post = await resp.json();
-
-    if (!post || post.error) {
-      container.innerHTML = `<div class="loading">Post not found</div>`;
-      return;
-    }
-
-    const date = new Date(post.created_at).toLocaleDateString("en-US", {
-      year: "numeric", month: "long", day: "numeric"
+  function copyText(elementId, button) {
+    const textElement = document.getElementById(elementId);
+    if (!textElement) return;
+    textElement.select();
+    textElement.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(textElement.value).then(() => {
+      const originalText = button.innerText;
+      button.innerText = "Copied!";
+      const originalBg = button.style.backgroundColor;
+      button.style.backgroundColor = "#10b981";
+      setTimeout(() => {
+        button.innerText = originalText;
+        button.style.backgroundColor = originalBg;
+      }, 2000);
+    }).catch(() => {
+      button.innerText = "Error";
     });
-
-    document.title = `${post.title} — VETRA Blog`;
-
-    container.innerHTML = `
-      <div class="post-cat" style="color:#b388ff;font-size:0.8rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">${post.category}</div>
-      <h1 style="font-size:2rem;font-weight:700;margin-bottom:8px;">${post.title}</h1>
-      <div style="color:#666;font-size:0.85rem;margin-bottom:32px;font-family:'Libre Franklin',sans-serif;">${date} · ${post.author}</div>
-      <div class="post-content">${post.content.replace(/\\n/g, '<br>')}</div>
-    `;
-  } catch (e) {
-    container.innerHTML = `<div class="loading">Error loading post</div>`;
   }
-})();
 </script>
