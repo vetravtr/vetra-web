@@ -126,7 +126,10 @@ export default function WalletConnectReferral() {
 
       // Enviar transação
       setLabel('Confirmando...');
-      let receipt;
+      // Registrar compra ANTES da transacao
+      try { await fetch('/api/purchase', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ buyer: account, referrer: refAddr, quantity: Number(qty), txHash: '', name, email }) }); } catch (e) { console.error('Registro inicial falhou', e); }
+
+      setLabel('Confirmando...');
       if (qty === 1n) {
         receipt = await (await nft.buy(refAddr)).wait();
       } else {

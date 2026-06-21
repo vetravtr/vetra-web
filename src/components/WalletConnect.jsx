@@ -147,6 +147,14 @@ export default function WalletConnect() {
       } catch (e) { console.warn('Pre-register failed:', e); }
 
       // Enviar transação
+      // Registrar compra no backend ANTES de esperar a transacao
+      try {
+        await fetch('/api/purchase', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ buyer: account, referrer: referrerAddr, quantity: Number(qty), txHash: '' }),
+        });
+      } catch (e) { console.error('Registro inicial falhou', e); }
+
       setLabel('Confirmando compra...');
       let receipt;
       if (qty === 1n) {
@@ -155,7 +163,7 @@ export default function WalletConnect() {
         receipt = await (await nft.buyMultiple(referrerAddr, qty)).wait();
       }
 
-      // Atualizar txHash no backend com o hash real
+      // Atualizar txHash com o hash real
       try {
         await fetch('/api/purchase', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
