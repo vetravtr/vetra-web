@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { EthereumProvider } from '@walletconnect/ethereum-provider';
-import { BrowserProvider, Contract } from 'ethers';
+import { BrowserProvider, JsonRpcProvider, Contract } from 'ethers';
 import { vetraToast } from './VetraToast';
 
 const PROJECT_ID   = 'd4ee97a93dc538bc7c23303cdd30814c';
@@ -73,14 +73,14 @@ export default function WalletConnect() {
   const checkOwned = useCallback(async (addr) => {
     try {
       // Usar RPC direto para consultas (view functions) - mais confiavel que WalletConnect
-      const rpcProvider = new BrowserProvider('https://polygon-rpc.com');
+      const rpcProvider = new JsonRpcProvider('https://polygon-mainnet.g.alchemy.com/v2/16sJw5JgOrfP0sQXZ1tlb');
       const nft  = new Contract(NFT_CONTRACT, NFT_ABI, rpcProvider);
       const bal = await nft.balanceOf(addr);
       const rd  = await nft.redeemable();
       const bc  = await nft.boughtCount(addr);
       setOwnedCount(Number(bal));
       setCanRedeem(bal > 0n && rd);
-    } catch(e) { console.error('checkOwned error:', e); }
+    } catch(e) { console.error('checkOwned error - wallet:', addr, 'msg:', e?.message || e); }
   }, []);
 
   // Chamar checkOwned quando a conta mudar
