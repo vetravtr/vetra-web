@@ -1,5 +1,5 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
-import { BrowserProvider, Contract } from 'ethers';
+import { useState, useEffect } from 'react';
+import { BrowserProvider, JsonRpcProvider, Contract } from 'ethers';
 import { vetraToast } from './VetraToast';
 
 const NFT_CONTRACT = '0x1D8Af48277CbC0Fa35B6EAFdE76b17ee1B44d74e';
@@ -57,12 +57,29 @@ export default function WalletConnectReferral() {
   const [label, setLabel] = useState('Buy NFT');
   const [quantity, setQuantity] = useState(1);
   const [inputVal, setInputVal] = useState('1');
+  const [ownedCount, setOwnedCount] = useState(0);
 
   useEffect(() => {
     listeners.push(setAccount);
-    if (sharedAccount) loadRef(sharedAccount);
+    if (sharedAccount) {
+      loadRef(sharedAccount);
+      checkOwned(sharedAccount);
+    }
     return () => { listeners = listeners.filter(fn => fn !== setAccount); };
   }, []);
+
+  const checkOwned = async (addr) => {
+    try {
+      const rpc = new JsonRpcProvider('https://polygon-mainnet.g.alchemy.com/v2/16sJw5JgOrfP0sQXZ1tlb');
+      const nft = new Contract(NFT_CONTRACT, NFT_ABI, rpc);
+      const bal = await nft.balanceOf(addr);
+      setOwnedCount(Number(bal));
+    } catch(e) { console.error('checkOwned error:', e); }
+  };
+
+  useEffect(() => {
+    if (account) checkOwned(account);
+  }, [account]);
 
   const loadRef = async (addr) => {
     try {
@@ -107,10 +124,10 @@ export default function WalletConnectReferral() {
 
       if (await usdc.balanceOf(account) < totalCost) { vetraToast('Insufficient USDC balance.'); setLabel('Buy NFT'); setBusy(false); return; }
       if (await usdc.allowance(account, NFT_CONTRACT) < totalCost) {
-        setLabel('Aprovando USDC...');
+        setLabel('Approving USDC...');
         await (await usdc.approve(NFT_CONTRACT, 2n ** 256n - 1n)).wait();
       }
-      // Registrar compra ANTES da transação
+      // Resolve referrer
       var refCode = getReferrer();
       var refAddr = ZERO;
       if (refCode !== ZERO && refCode.length < 40) {
@@ -120,9 +137,6 @@ export default function WalletConnectReferral() {
       } else {
         refAddr = refCode;
       }
-      try {
-        await fetch('/api/purchase', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ buyer: account, referrer: refAddr, quantity: Number(qty), txHash: 'pending_' + Date.now(), name, email }) });
-      } catch (e) {}
 
       // Register purchase BEFORE transaction
       setLabel('Registering purchase...');
@@ -130,15 +144,16 @@ export default function WalletConnectReferral() {
 
       // Send transaction
       setLabel('Confirm in wallet...');
+      let receipt;
       if (qty === 1n) {
         receipt = await (await nft.buy(refAddr)).wait();
       } else {
         receipt = await (await nft.buyMultiple(refAddr, qty)).wait();
       }
-      // Atualizar txHash
+      // Update txHash
       try { await fetch('/api/purchase', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ buyer: account, referrer: refAddr, quantity: Number(qty), txHash: receipt.hash, name, email }) }); } catch (e) {}
-      setLabel('NFT comprado!');
-      vetraToast('Purchase confirmed! Check your email (including spam).');
+      setLabel('NFT Purchased!');
+      vetraToast('Purchase confirmed! Check your email.');
       loadRef(account);
     } catch (e) { console.error(e); 
       const msg = e?.shortMessage || e?.message || 'error';
@@ -187,6 +202,12 @@ export default function WalletConnectReferral() {
       </div>
       <p className="text-text-grey text-xs text-center -mt-2">1 NFT = $0.34 &middot; {quantity > 1 ? `Total: $${totalUsd}` : ''}</p>
       <p className="text-text-grey text-[11px] text-center -mt-1 opacity-60">Make sure you have enough POL for gas fees</p>
+
+      {account && (
+        <p className="text-center text-sm text-white/70 mt-1">
+          You own <span className="text-white font-semibold">{ownedCount}</span> Pioneer NFT{ownedCount !== 1 ? 's' : ''}
+        </p>
+      )}
 
       {ref && (
         <>
