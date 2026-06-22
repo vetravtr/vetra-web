@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { BrowserProvider, Contract } from 'ethers';
 import { vetraToast } from './VetraToast';
 

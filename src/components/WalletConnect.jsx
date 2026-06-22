@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { EthereumProvider } from '@walletconnect/ethereum-provider';
 import { BrowserProvider, Contract } from 'ethers';
 import { vetraToast } from './VetraToast';
@@ -80,8 +80,13 @@ export default function WalletConnect() {
       const bc  = await nft.boughtCount(addr);
       setOwnedCount(Number(bal));
       setCanRedeem(bal > 0n && rd);
-    } catch(e) { console.error(e); }
+    } catch(e) { console.error('checkOwned error:', e); }
   }, [ensureProvider]);
+
+  // Chamar checkOwned quando a conta mudar
+  useEffect(() => {
+    if (account) checkOwned(account);
+  }, [account]);
 
   const loadReferrals = useCallback(async (addr) => {
     try {
