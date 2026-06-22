@@ -73,7 +73,7 @@ export default function WalletConnect() {
   const checkOwned = useCallback(async (addr) => {
     try {
       // Usar RPC direto para consultas (view functions) - mais confiavel que WalletConnect
-      const rpcProvider = new BrowserProvider('https://polygon-mainnet.g.alchemy.com/v2/16sJw5JgOrfP0sQXZ1tlb');
+      const rpcProvider = new BrowserProvider('https://polygon-rpc.com');
       const nft  = new Contract(NFT_CONTRACT, NFT_ABI, rpcProvider);
       const bal = await nft.balanceOf(addr);
       const rd  = await nft.redeemable();
