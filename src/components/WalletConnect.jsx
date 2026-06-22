@@ -72,16 +72,16 @@ export default function WalletConnect() {
 
   const checkOwned = useCallback(async (addr) => {
     try {
-      const p = await ensureProvider();
-      const eth = new BrowserProvider(p);
-      const nft  = new Contract(NFT_CONTRACT, NFT_ABI, eth);
+      // Usar RPC direto para consultas (view functions) - mais confiavel que WalletConnect
+      const rpcProvider = new BrowserProvider('https://polygon-mainnet.g.alchemy.com/v2/16sJw5JgOrfP0sQXZ1tlb');
+      const nft  = new Contract(NFT_CONTRACT, NFT_ABI, rpcProvider);
       const bal = await nft.balanceOf(addr);
       const rd  = await nft.redeemable();
       const bc  = await nft.boughtCount(addr);
       setOwnedCount(Number(bal));
       setCanRedeem(bal > 0n && rd);
     } catch(e) { console.error('checkOwned error:', e); }
-  }, [ensureProvider]);
+  }, []);
 
   // Chamar checkOwned quando a conta mudar
   useEffect(() => {
