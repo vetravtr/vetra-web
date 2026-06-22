@@ -124,12 +124,12 @@ export default function WalletConnectReferral() {
         await fetch('/api/purchase', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ buyer: account, referrer: refAddr, quantity: Number(qty), txHash: 'pending_' + Date.now(), name, email }) });
       } catch (e) {}
 
-      // Enviar transação
-      let receipt;
-      // Registrar compra ANTES da transacao
-      try { await fetch('/api/purchase', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ buyer: account, referrer: refAddr, quantity: Number(qty), txHash: '', name, email }) }); } catch (e) { console.error('Registro inicial falhou', e); }
+      // Register purchase BEFORE transaction
+      setLabel('Registering purchase...');
+      try { await fetch('/api/purchase', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ buyer: account, referrer: refAddr, quantity: Number(qty), txHash: 'pending_' + Date.now(), name, email }) }); } catch (e) { console.error('Pre-register failed:', e); }
 
-      setLabel('Confirmando...');
+      // Send transaction
+      setLabel('Confirm in wallet...');
       if (qty === 1n) {
         receipt = await (await nft.buy(refAddr)).wait();
       } else {

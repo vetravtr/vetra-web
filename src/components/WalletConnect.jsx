@@ -107,7 +107,7 @@ export default function WalletConnect() {
     if (qty < 1n) { vetraToast('Quantity must be at least 1.'); return; }
     try {
       setBusy(true);
-      setLabel('Aprovando USDC...');
+      setLabel('Approving USDC...');
       const eth = new BrowserProvider(providerRef.current);
       const signer = await eth.getSigner();
       const usdc = new Contract(USDC_ADDRESS, USDC_ABI, signer);
@@ -122,10 +122,11 @@ export default function WalletConnect() {
       // Approve if needed
       const allowance = await usdc.allowance(account, NFT_CONTRACT);
       if (allowance < totalCost) {
+        setLabel('Approving USDC...');
         await (await usdc.approve(NFT_CONTRACT, 2n ** 256n - 1n)).wait();
       }
 
-      // Resolve referrer — usar o mesmo valor pro contrato E pro backend
+      // Resolve referrer
       var referrer = getReferrer();
       var referrerAddr = ZERO;
       if (referrer !== ZERO && referrer.length < 40) {
@@ -136,26 +137,17 @@ export default function WalletConnect() {
         referrerAddr = referrer;
       }
 
-      // Registrar compra no backend ANTES de enviar a transação
-      try {
-        const resp = await fetch('/api/purchase', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ buyer: account, referrer: referrerAddr, quantity: Number(qty), txHash: 'pending_' + Date.now() }),
-        });
-        if (!resp.ok) console.warn('Purchase HTTP', resp.status);
-        else console.log('Purchase pre-registered');
-      } catch (e) { console.warn('Pre-register failed:', e); }
-
-      // Enviar transação
-      // Registrar compra no backend ANTES de esperar a transacao
+      // Register purchase BEFORE sending transaction
+      setLabel('Registering purchase...');
       try {
         await fetch('/api/purchase', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ buyer: account, referrer: referrerAddr, quantity: Number(qty), txHash: '' }),
+          body: JSON.stringify({ buyer: account, referrer: referrerAddr, quantity: Number(qty), txHash: 'pending_' + Date.now() }),
         });
-      } catch (e) { console.error('Registro inicial falhou', e); }
+      } catch (e) { console.error('Pre-register failed:', e); }
 
-      setLabel('Confirmando compra...');
+      // Send transaction
+      setLabel('Confirm in wallet...');
       let receipt;
       if (qty === 1n) {
         receipt = await (await nft.buy(referrerAddr)).wait();
@@ -163,7 +155,7 @@ export default function WalletConnect() {
         receipt = await (await nft.buyMultiple(referrerAddr, qty)).wait();
       }
 
-      // Atualizar txHash com o hash real
+      // Update txHash with real hash
       try {
         await fetch('/api/purchase', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -171,15 +163,14 @@ export default function WalletConnect() {
         });
       } catch (e) {}
 
-      vetraToast('Purchase confirmed! Check your email (including spam).');
-      setLabel('NFT comprado!');
+      vetraToast('Purchase confirmed! Check your email.');
+      setLabel('NFT Purchased!');
       checkOwned(account);
       loadReferrals(account);
     } catch (e) {
       console.error(e);
       const msg = e?.shortMessage || e?.message || 'error';
       vetraToast('Failed: ' + msg);
-      // Se for erro de carteira desconectada
       if (msg.includes('user rejected') || msg.includes('disconnect') || msg.includes('not connected')) {
         setAccount(null);
         setLabel('Connect Wallet');
