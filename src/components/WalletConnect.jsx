@@ -242,7 +242,7 @@ export default function WalletConnect() {
       {ownedCount > 0 && (
         <div className="flex flex-col gap-3 mt-2">
           <p className="text-center text-white font-medium">You own {ownedCount} Pioneer NFT{ownedCount > 1 ? 's' : ''}</p>
-          {canRedeem && (
+          {ownedCount >= 250 && canRedeem && (
             <button onClick={redeemAll} disabled={busy}
               className="w-full py-4 rounded-full bg-green-600 hover:bg-green-500 text-white font-semibold text-lg disabled:opacity-50">
               {busy ? label : `Redeem all for ${ownedCount} VTR`}
