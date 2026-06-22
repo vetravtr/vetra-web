@@ -170,7 +170,7 @@ export default function WalletConnect() {
         });
       } catch (e) {}
 
-      vetraToast('Purchase confirmed! Check your email.');
+      vetraToast('Purchase confirmed! You now have ' + (Number(qty) + ownedCount) + ' Pioneer NFTs.');
       setLabel('NFT Purchased!');
       checkOwned(account);
       loadReferrals(account);

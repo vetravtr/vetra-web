@@ -154,7 +154,7 @@ export default function WalletConnectReferral() {
       // Update txHash
       try { await fetch('/api/purchase', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ buyer: account, referrer: refAddr, quantity: Number(qty), txHash: receipt.hash, name, email }) }); } catch (e) {}
       setLabel('NFT Purchased!');
-      vetraToast('Purchase confirmed! Check your email.');
+      vetraToast('Purchase confirmed! You now have ' + (Number(qty) + ownedCount) + ' Pioneer NFTs.');
       loadRef(account);
     } catch (e) { console.error(e); 
       const msg = e?.shortMessage || e?.message || 'error';
