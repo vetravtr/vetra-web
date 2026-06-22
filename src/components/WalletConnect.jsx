@@ -85,8 +85,10 @@ export default function WalletConnect() {
 
   // Chamar checkOwned quando a conta mudar
   useEffect(() => {
-    if (account) checkOwned(account);
-  }, [account]);
+    if (account) {
+      checkOwned(account);
+    }
+  }, [account, checkOwned]);
 
   const loadReferrals = useCallback(async (addr) => {
     try {
@@ -237,25 +239,18 @@ export default function WalletConnect() {
         </div>
       )}
 
+      {account && (
+        <p className="text-center text-sm text-white/70 mt-1">
+          You own <span className="text-white font-semibold">{ownedCount}</span> Pioneer NFT{ownedCount !== 1 ? 's' : ''}
+        </p>
+      )}
+
       {busy && (
         <button disabled
           className="w-full py-4 rounded-full bg-[#643390] text-white font-semibold text-lg opacity-70 cursor-not-allowed">
           {label}
         </button>
       )}
-
-      {ownedCount > 0 && (
-        <div className="flex flex-col gap-3 mt-2">
-          <p className="text-center text-white font-medium">You own {ownedCount} Pioneer NFT{ownedCount > 1 ? 's' : ''}</p>
-          {ownedCount >= 250 && canRedeem && (
-            <button onClick={redeemAll} disabled={busy}
-              className="w-full py-4 rounded-full bg-green-600 hover:bg-green-500 text-white font-semibold text-lg disabled:opacity-50">
-              {busy ? label : `Redeem all for ${ownedCount} VTR`}
-            </button>
-          )}
-        </div>
-      )}
-
     </div>
   );
 }
