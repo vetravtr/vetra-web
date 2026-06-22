@@ -10,6 +10,7 @@ const ZERO  = '0x0000000000000000000000000000000000000000';
 const NFT_ABI = [
   'function buy(address referrer) external',
   'function buyMultiple(address referrer, uint256 quantity) external',
+  'function balanceOf(address) view returns (uint256)',
   'function boughtCount(address) view returns (uint256)',
 ];
 const USDC_ABI = [
