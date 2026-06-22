@@ -251,22 +251,6 @@ export default function WalletConnect() {
         </div>
       )}
 
-      {ref && (
-        <div className="flex flex-col gap-4">
-          <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-4">
-            <p className="text-text-grey text-xs mb-2">Your referral link:</p>
-            <div className="flex items-center justify-between gap-2">
-              <span className="text-sm text-white font-mono truncate">{ref.link}</span>
-              <button onClick={() => navigator.clipboard.writeText(ref.link)}
-                className="text-badge-purple hover:text-light-purple text-xs font-medium">COPY</button>
-            </div>
-          </div>
-          <div className="bg-badge-purple/5 border border-badge-purple/10 rounded-xl p-4 flex justify-between items-center">
-            <div><p className="text-text-grey text-xs">Referred</p><p className="text-white text-2xl font-bold">{ref.count || 0}</p></div>
-            <div className="text-right"><p className="text-text-grey text-xs">Bonus</p><p className="text-light-purple text-2xl font-bold">{ref.bonusPercent || 0}%</p></div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
