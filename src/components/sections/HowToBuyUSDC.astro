@@ -1,0 +1,78 @@
+---
+interface Props {
+  className?: string;
+}
+
+import SectionLayout from "../../layouts/SectionLayout.astro";
+import AlignmentLayout from "../../layouts/AlignmentLayout.astro";
+import Title from "../Title.astro";
+import Description from "../Description.astro";
+import { Image } from "astro:assets";
+import { cn } from "../../utils/cn";
+
+import kucoinPartner from "../../assets/images/partners/kucoin-partner.png";
+
+const { className } = Astro.props as Props;
+---
+
+<SectionLayout class={cn("py-16 md:py-24 relative", className)}>
+  <AlignmentLayout direction="vertical" justify="center" align="center" class="w-full">
+    <div class="max-w-[900px] mx-auto px-4 text-center">
+      
+      <div class="flex items-center justify-center gap-3 mb-6">
+        <Image src={kucoinPartner} alt="KuCoin Institutional" class="h-10 w-auto" />
+      </div>
+
+      <Title className="text-center text-[24px] md:text-[32px]">
+        Need USDC to buy NFTs?
+      </Title>
+      
+      <Description 
+        text="Buy USDC on KuCoin and send it to your Polygon wallet. It's fast, low-cost, and secure."
+        className="text-center mt-3 max-w-[650px] mx-auto"
+      />
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10 text-left">
+        
+        <div class="bg-white/[0.03] border border-white/[0.06] rounded-xl p-6">
+          <div class="text-2xl font-bold text-light-purple mb-2 font-['Urbanist']">1</div>
+          <h4 class="text-white font-semibold mb-2 font-['Urbanist'] text-sm">Create an account</h4>
+          <p class="text-text-grey text-sm leading-relaxed">
+            Sign up on KuCoin using our 
+            <a href="https://www.kucoin.com/r/broker/CXEMTGL5" target="_blank" rel="noopener noreferrer" class="text-badge-purple hover:text-light-purple underline underline-offset-2">partner link</a>.
+            Complete verification and secure your account.
+          </p>
+        </div>
+
+        <div class="bg-white/[0.03] border border-white/[0.06] rounded-xl p-6">
+          <div class="text-2xl font-bold text-light-purple mb-2 font-['Urbanist']">2</div>
+          <h4 class="text-white font-semibold mb-2 font-['Urbanist'] text-sm">Deposit and buy USDC</h4>
+          <p class="text-text-grey text-sm leading-relaxed">
+            Deposit fiat or crypto, then swap to USDC on KuCoin's spot market. Low fees and instant settlement.
+          </p>
+        </div>
+
+        <div class="bg-white/[0.03] border border-white/[0.06] rounded-xl p-6">
+          <div class="text-2xl font-bold text-light-purple mb-2 font-['Urbanist']">3</div>
+          <h4 class="text-white font-semibold mb-2 font-['Urbanist'] text-sm">Buy your NFT</h4>
+          <p class="text-text-grey text-sm leading-relaxed">
+            Connect your KuCoin Wallet or any Polygon wallet and buy your VETRA Pioneer NFT directly. No need to withdraw — just buy and collect in one place.
+          </p>
+        </div>
+
+      </div>
+
+      <div class="mt-8">
+        <a
+          href="https://www.kucoin.com/r/broker/CXEMTGL5"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-[#643390] hover:bg-[#9A3CEB] text-white font-semibold text-sm transition-all"
+        >
+          Get Started on KuCoin
+        </a>
+      </div>
+
+    </div>
+  </AlignmentLayout>
+</SectionLayout>

@@ -13,6 +13,7 @@ import Tooltip from "../common/Tooltip.astro";
 
 import StarsIcon from "../../assets/icons/stars-light-sparkle.svg";
 import geckoIcon from "../../assets/icons/social/geckoterminal.png";
+import kucoinIcon from "../../assets/icons/social/kucoin-green.svg";
 import logoVetra from "../../assets/logo.svg";
 
 const sectionClasses = cn("py-16 md:py-24 mt-20");
@@ -85,6 +86,18 @@ const GT_URL = "https://www.geckoterminal.com/polygon_pos/pools/0x98Bd9D327b6a31
       >
         <Image src={geckoIcon} alt="" class="h-4 w-auto" />
         View on GeckoTerminal
+      </a>
+
+      <span class="text-white/20 hidden sm:inline">|</span>
+
+      <a
+        href="https://www.kucoin.com/r/broker/CXEMTGL5"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-white/[0.12] text-sm font-medium text-white hover:bg-white/[0.05] transition-colors"
+      >
+        <Image src={kucoinIcon} alt="" class="h-4 w-auto" />
+        Buy on KuCoin
       </a>
 
       <span class="text-white/20 hidden sm:inline">|</span>
