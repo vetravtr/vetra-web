@@ -105,7 +105,7 @@ export default function WalletConnectReferral() {
       if (sharedAccount) { await p.disconnect(); sharedAccount = null; setAccount(null); setRef(null); notifyAll(); return; }
       await p.connect();
       const addr = p.accounts?.[0];
-      if (addr) { sharedAccount = addr; setAccount(addr); notifyAll(); loadRef(addr); }
+      if (addr) { sharedAccount = addr; setAccount(addr); notifyAll(); loadRef(addr); checkOwned(addr); }
     } catch (e) { console.error('connect', e); }
   };
 
