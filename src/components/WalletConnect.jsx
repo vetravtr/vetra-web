@@ -78,9 +78,10 @@ export default function WalletConnect() {
       const bal = await nft.balanceOf(addr);
       const rd  = await nft.redeemable();
       const bc  = await nft.boughtCount(addr);
+      console.log('[ANON] checkOwned addr:', addr, 'balanceOf:', Number(bal), 'boughtCount:', Number(bc), 'redeemable:', rd);
       setOwnedCount(Number(bal));
       setCanRedeem(bal > 0n && rd);
-    } catch(e) { console.error('checkOwned error - wallet:', addr, 'msg:', e?.message || e); }
+    } catch(e) { console.error('[ANON] checkOwned error - wallet:', addr, 'msg:', e?.message || e); }
   }, []);
 
   // Chamar checkOwned quando a conta mudar

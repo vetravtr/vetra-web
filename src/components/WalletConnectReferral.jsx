@@ -74,8 +74,9 @@ export default function WalletConnectReferral() {
       const rpc = new JsonRpcProvider('https://polygon-mainnet.g.alchemy.com/v2/16sJw5JgOrfP0sQXZ1tlb');
       const nft = new Contract(NFT_CONTRACT, NFT_ABI, rpc);
       const bal = await nft.balanceOf(addr);
+      console.log('[REFERRAL] checkOwned addr:', addr, 'balanceOf:', Number(bal));
       setOwnedCount(Number(bal));
-    } catch(e) { console.error('checkOwned error:', e); }
+    } catch(e) { console.error('[REFERRAL] checkOwned error:', addr, e?.message || e); }
   };
 
   useEffect(() => {
