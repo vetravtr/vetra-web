@@ -251,6 +251,10 @@ export default function WalletConnect() {
           {label}
         </button>
       )}
+
+      <p className="text-center text-[11px] text-text-grey/50 mt-4">
+        Trust Wallet is not supported. Use MetaMask, SafePal or any WalletConnect-compatible wallet.
+      </p>
     </div>
   );
 }
