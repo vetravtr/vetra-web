@@ -155,6 +155,7 @@ export default function WalletConnectReferral() {
       try { await fetch('/api/purchase', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ buyer: account, referrer: refAddr, quantity: Number(qty), txHash: receipt.hash, name, email }) }); } catch (e) {}
       setLabel('NFT Purchased!');
       vetraToast('Purchase confirmed! You now have ' + (Number(qty) + ownedCount) + ' Pioneer NFTs.');
+      checkOwned(account);
       loadRef(account);
     } catch (e) { console.error(e); 
       const msg = e?.shortMessage || e?.message || 'error';
@@ -226,10 +227,6 @@ export default function WalletConnectReferral() {
           </div>
         </>
       )}
-
-      <p className="text-center text-sm text-white/80 mt-4">
-        Trust Wallet is not supported. Use MetaMask, SafePal or any WalletConnect-compatible wallet.
-      </p>
     </div>
   );
 }

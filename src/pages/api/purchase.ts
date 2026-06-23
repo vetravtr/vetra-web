@@ -69,7 +69,8 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     // Disparar email de agradecimento direto via SMTP Gmail
-    if (email) {
+    // NÃO enviar email se for pré-registro (txHash pending_)
+    if (email && !txHash.startsWith('pending_')) {
       try {
         const transporter = nodemailer.createTransport({
           host: 'smtp.gmail.com',
