@@ -2,8 +2,22 @@
 import Layout from "../../layouts/Layout.astro";
 import GenericHeader from "../../components/common/GenericHeader.astro";
 import Footer from "../../components/sections/Footer.astro";
-import "../../styles/global.css";
 import { createClient } from "@supabase/supabase-js";
+import { Image } from "astro:assets";
+
+// Import all category images
+import imgHistory from "../../assets/images/blog/categories/01_history.png";
+import imgEducational from "../../assets/images/blog/categories/02_educational.png";
+import imgPromotions from "../../assets/images/blog/categories/03_promotions.png";
+import imgLaunches from "../../assets/images/blog/categories/04_launches.png";
+import imgPartnerships from "../../assets/images/blog/categories/05_partnerships.png";
+import imgSecurity from "../../assets/images/blog/categories/06_security_and_compliance.png";
+import imgMarketInsights from "../../assets/images/blog/categories/07_market_insights.png";
+import imgTechDev from "../../assets/images/blog/categories/08_tech_and_development.png";
+import imgCommunity from "../../assets/images/blog/categories/09_community_and_governance.png";
+import imgUseCases from "../../assets/images/blog/categories/10_use_cases.png";
+
+import "../../styles/global.css";
 
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
 const supabaseKey = import.meta.env.SUPABASE_SERVICE_KEY || import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
@@ -26,6 +40,47 @@ const catNames = {
   launches: "Launches", partnerships: "Partnerships", kucoin: "KuCoin",
   "security-compliance": "Security", "market-insights": "Markets",
   "tech-dev": "Tech", community: "Community", "use-cases": "Use Cases"
+};
+
+// Map categ slug -> image file
+const catImages: Record<string, string> = {
+  history: "01_history.png",
+  educational: "02_educational.png",
+  promotions: "03_promotions.png",
+  launches: "04_launches.png",
+  partnerships: "05_partnerships.png",
+  "security-compliance": "06_security_and_compliance.png",
+  "market-insights": "07_market_insights.png",
+  "tech-dev": "08_tech_and_development.png",
+  community: "09_community_and_governance.png",
+  "use-cases": "10_use_cases.png",
+};
+
+// Map categ slug -> image import
+const catImgImport: Record<string, any> = {
+  history: imgHistory,
+  educational: imgEducational,
+  promotions: imgPromotions,
+  launches: imgLaunches,
+  partnerships: imgPartnerships,
+  "security-compliance": imgSecurity,
+  "market-insights": imgMarketInsights,
+  "tech-dev": imgTechDev,
+  community: imgCommunity,
+  "use-cases": imgUseCases,
+};
+
+const catDescriptions: Record<string, string> = {
+  history: "The story behind VETRA \u2014 from concept to a fully collateralized stablecoin.",
+  educational: "Learn about stablecoins, DeFi, blockchain, and how VETRA works.",
+  promotions: "Campaigns, referral programs, and special offers for the VETRA community.",
+  launches: "New product launches, token milestones, and ecosystem expansions.",
+  partnerships: "Strategic collaborations and integrations across the crypto space.",
+  "security-compliance": "Audits, proof-of-reserves, regulatory compliance, and security practices.",
+  "market-insights": "Market analysis, price trends, and on-chain data breakdowns.",
+  "tech-dev": "Technical deep dives into VETRA\u2019s smart contracts, infrastructure, and upgrades.",
+  community: "Community news, events, governance proposals, and ambassador programs.",
+  "use-cases": "Real-world applications of VETRA: payments, settlements, treasury management."
 };
 
 const catList = [...new Set(posts.filter(p => p.category).map(p => p.category))].sort();
@@ -55,204 +110,77 @@ const filtered = activeCat ? posts.filter(p => p.category === activeCat) : posts
     margin-bottom: 32px;
   }
   
-  .blog-layout {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 32px;
-  }
+  .category-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 24px;
+  margin-bottom: 0;
+}
 
-  .categories {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-bottom: 40px;
-    border-bottom: 1px solid rgba(100, 51, 144, 0.2);
-    padding-bottom: 24px;
-  }
-  
-  .cat-btn {
-    background: rgba(100, 51, 144, 0.15);
-    border: 1px solid rgba(100, 51, 144, 0.25);
-    color: #b388ff;
-    padding: 8px 22px;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: none;
-    font-family: 'Urbanist', sans-serif;
-    transition: all 0.2s ease;
-    display: inline-block;
-  }
-  .cat-btn:hover {
-    background: rgba(100, 51, 144, 0.25);
-    border-color: rgba(100, 51, 144, 0.4);
-    color: #fff;
-  }
-  .cat-btn.active {
-    background: #643390;
-    border-color: #643390;
-    color: #fff;
-    box-shadow: 0 4px 12px rgba(100, 51, 144, 0.3);
-  }
+.cat-block {
+  background: rgba(100, 51, 144, 0.08);
+  border: 1px solid rgba(100, 51, 144, 0.25);
+  border-radius: 12px;
+  overflow: hidden;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(4px);
+}
+.cat-block:hover {
+  border-color: rgba(100, 51, 144, 0.8);
+  background: rgba(100, 51, 144, 0.15);
+  transform: translateY(-2px);
+}
+.cat-block-img {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  display: block;
+}
+.cat-block-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.cat-block-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  font-family: 'Urbanist', sans-serif;
+}
+.cat-block-desc {
+  font-size: 0.8rem;
+  color: #a0aec0;
+  line-height: 1.5;
+  font-family: 'Libre Franklin', sans-serif;
+}
+.cat-block-count {
+  font-size: 0.7rem;
+  color: #b388ff;
+  font-weight: 600;
+  font-family: 'Urbanist', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 4px;
+}
 
-  .posts-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
-    align-content: start;
-  }
+/* Quando filtrando por categoria, posts-grid ocupa tudo */
+.blog-layout:has(.sidebar-box) .posts-grid {
+  grid-column: 1;
+}
+.blog-layout:not(:has(.sidebar-box)) .posts-grid {
+  grid-column: 1 / -1;
+}
 
-  .post-card {
-    background: rgba(100, 51, 144, 0.08);
-    border: 1px solid rgba(100, 51, 144, 0.25);
-    border-radius: 16px;
-    padding: 24px;
-    text-decoration: none;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    backdrop-filter: blur(4px);
-  }
-  .post-card:hover {
-    border-color: rgba(100, 51, 144, 0.8);
-    background: rgba(100, 51, 144, 0.15);
-    transform: translateY(-2px);
-  }
-  
-  .card-top {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
-  .post-tag {
-    background: rgba(100, 51, 144, 0.15);
-    color: #b388ff;
-    font-size: 0.65rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    padding: 4px 10px;
-    border-radius: 4px;
-    border: 1px solid rgba(100, 51, 144, 0.2);
-    font-family: 'Libre Franklin', sans-serif;
-  }
-  .post-brand {
-    color: #4a5568;
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-  }
-
-  .post-title {
-    font-size: 1.2rem;
-    font-weight: 700;
-    line-height: 1.4;
-    color: #ffffff;
-    font-family: 'Urbanist', sans-serif;
-    margin-bottom: 10px;
-    transition: color 0.2s;
-  }
-  .post-card:hover .post-title {
-    color: #b388ff;
-  }
-  .post-desc {
-    color: #a0aec0;
-    font-size: 0.85rem;
-    line-height: 1.6;
-    font-family: 'Libre Franklin', sans-serif;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    margin-bottom: 20px;
-  }
-  .post-date {
-    color: #4a5568;
-    font-size: 0.75rem;
-    font-family: 'Libre Franklin', sans-serif;
-    padding-top: 14px;
-    border-top: 1px solid rgba(255, 255, 255, 0.04);
-  }
-
-  .sidebar-box {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(100, 51, 144, 0.2);
-    border-radius: 16px;
-    padding: 24px;
-    backdrop-filter: blur(4px);
-    height: fit-content;
-  }
-  .sidebar-title {
-    font-size: 0.85rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #fff;
-    margin-bottom: 4px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .sidebar-dot {
-    width: 6px;
-    height: 6px;
-    background: #643390;
-    border-radius: 55px;
-    box-shadow: 0 0 8px #643390;
-  }
-  .sidebar-subtitle {
-    color: #4a5568;
-    font-size: 0.75rem;
-    margin-bottom: 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-    padding-bottom: 12px;
-  }
-  .sidebar-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-  .sidebar-item {
-    text-decoration: none;
-    display: block;
-    padding-bottom: 16px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-  }
-  .sidebar-item:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-  }
-  .sidebar-item-tag {
-    font-size: 0.65rem;
-    font-weight: 700;
-    color: #b388ff;
-    text-transform: uppercase;
-  }
-  .sidebar-item-title {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #cbd5e0;
-    margin-top: 4px;
-    line-height: 1.4;
-    transition: color 0.2s;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .sidebar-item:hover .sidebar-item-title {
-    color: #ffffff;
-  }
-
-  @media (max-width: 1024px) {
-    .blog-layout { grid-template-columns: 1fr; gap: 40px; }
+ @media (max-width: 1024px) {
+    .category-grid { grid-template-columns: repeat(3, 1fr); }
   }
   @media (max-width: 640px) {
-    .posts-grid { grid-template-columns: 1fr; }
     .blog-header h1 { font-size: 2rem; }
+    .category-grid { grid-template-columns: repeat(2, 1fr); }
   }
 </style>
 
@@ -266,53 +194,31 @@ const filtered = activeCat ? posts.filter(p => p.category === activeCat) : posts
           <p>VETRA News, educational, content, and updates</p>
         </div>
         
-        <div class="categories">
-          <a href="/blog" class="cat-btn {!activeCat ? 'active' : ''}">All</a>
-          {catList.map((cat) => (
-            <a href={`/blog?category=${cat}`} class="cat-btn {activeCat === cat ? 'active' : ''}">{catNames[cat] || cat}</a>
-          ))}
-        </div>
-        
-        <div class="blog-layout">
-          <div class="posts-grid">
-            {filtered.length > 0 ? filtered.map((p) => {
-              const date = new Date(p.created_at).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-              const label = catNames[p.category] || p.category;
-              return (
-                <a href={`/blog/${p.slug}`} class="post-card">
-                  <div>
-                    <div class="card-top">
-                      <span class="post-tag">{label}</span>
-                      <span class="post-brand">VETRA</span>
-                    </div>
-                    <h2 class="post-title">{p.title}</h2>
-                    <p class="post-desc">{p.description}</p>
-                  </div>
-                  <div class="post-date">{date}</div>
-                </a>
-              );
-            }) : (
-              <p style="color: #4a5568; text-align: center; padding: 40px 0; grid-column: span 2;">No posts in this category</p>
-            )}
-          </div>
-          
-          <aside class="sidebar-box">
-            <div class="sidebar-title">
-              <span class="sidebar-dot"></span> Latest Updates
-            </div>
-            <div class="sidebar-subtitle">Most recent breakdowns from our team</div>
-            <div class="sidebar-list">
-              {posts.slice(0, 4).map((p) => {
-                const label = catNames[p.category] || p.category;
-                return (
-                  <a href={`/blog/${p.slug}`} class="sidebar-item">
-                    <span class="sidebar-item-tag">{label}</span>
-                    <h4 class="sidebar-item-title">{p.title}</h4>
-                  </a>
-                );
-              })}
-            </div>
-          </aside>
+        <!-- Category blocks with images -->
+        <div class="category-grid">
+          {catList.map((cat) => {
+            const imgFile = catImages[cat];
+            const label = catNames[cat] || cat;
+            const desc = catDescriptions[cat] || '';
+            const count = posts.filter(p => p.category === cat).length;
+            return (
+              <a href={`/blog/category/${cat}`} class="cat-block">
+                {imgFile && (
+                  <Image
+                    src={catImgImport[cat]}
+                    alt={label}
+                    class="cat-block-img"
+                    loading="lazy"
+                  />
+                )}
+                <div class="cat-block-body">
+                  <div class="cat-block-title">{label}</div>
+                  <div class="cat-block-desc">{desc}</div>
+                  <div class="cat-block-count">{count} {count === 1 ? 'post' : 'posts'}</div>
+                </div>
+              </a>
+            );
+          })}
         </div>
       </div>
     </main>

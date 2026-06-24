@@ -1,0 +1,194 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import GenericHeader from "../../../components/common/GenericHeader.astro";
+import Footer from "../../../components/sections/Footer.astro";
+import { createClient } from "@supabase/supabase-js";
+import { Image } from "astro:assets";
+import "../../../styles/global.css";
+
+import imgHistory from "../../../assets/images/blog/categories/01_history.png";
+import imgEducational from "../../../assets/images/blog/categories/02_educational.png";
+import imgPromotions from "../../../assets/images/blog/categories/03_promotions.png";
+import imgLaunches from "../../../assets/images/blog/categories/04_launches.png";
+import imgPartnerships from "../../../assets/images/blog/categories/05_partnerships.png";
+import imgSecurity from "../../../assets/images/blog/categories/06_security_and_compliance.png";
+import imgMarketInsights from "../../../assets/images/blog/categories/07_market_insights.png";
+import imgTechDev from "../../../assets/images/blog/categories/08_tech_and_development.png";
+import imgCommunity from "../../../assets/images/blog/categories/09_community_and_governance.png";
+import imgUseCases from "../../../assets/images/blog/categories/10_use_cases.png";
+
+export async function getStaticPaths() {
+  const slugs = ["history","educational","promotions","launches","partnerships",
+    "security-compliance","market-insights","tech-dev","community","use-cases","kucoin"];
+  return slugs.map(s => ({ params: { cat: s } }));
+}
+
+const { cat } = Astro.params;
+
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+const supabaseKey = import.meta.env.SUPABASE_SERVICE_KEY || import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+
+let posts = [];
+let error = null;
+
+if (supabaseUrl && supabaseKey && cat) {
+  try {
+    const supabase = createClient(supabaseUrl, supabaseKey);
+    const { data } = await supabase
+      .from("blog_posts")
+      .select("*")
+      .eq("category", cat)
+      .order("created_at", { ascending: false });
+    if (data) posts = data;
+  } catch (e) {
+    error = e.message;
+  }
+}
+
+const catNames: Record<string, string> = {
+  history: "History", educational: "Educational", promotions: "Promotions",
+  launches: "Launches", partnerships: "Partnerships", kucoin: "KuCoin",
+  "security-compliance": "Security", "market-insights": "Markets",
+  "tech-dev": "Tech", community: "Community", "use-cases": "Use Cases"
+};
+
+const catImgImport: Record<string, any> = {
+  history: imgHistory, educational: imgEducational,
+  promotions: imgPromotions, launches: imgLaunches,
+  partnerships: imgPartnerships, "security-compliance": imgSecurity,
+  "market-insights": imgMarketInsights, "tech-dev": imgTechDev,
+  community: imgCommunity, "use-cases": imgUseCases,
+};
+
+const label = catNames[cat] || cat;
+const catImg = catImgImport[cat];
+---
+
+<style>
+  .cat-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 120px 24px 80px;
+    color: #fff;
+    min-height: 80vh;
+  }
+  .cat-header {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+  .cat-header-img {
+    width: 120px;
+    height: auto;
+    border-radius: 12px;
+    flex-shrink: 0;
+  }
+  .cat-header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    font-family: 'Urbanist', sans-serif;
+    letter-spacing: -0.5px;
+  }
+  .cat-header p {
+    color: #a0aec0;
+    font-size: 0.9rem;
+    font-family: 'Libre Franklin', sans-serif;
+  }
+  .back-link {
+    color: #b388ff;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-family: 'Libre Franklin', sans-serif;
+    margin-bottom: 24px;
+    display: inline-block;
+  }
+  .back-link:hover { color: #9A3CEB; }
+  
+  .posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .post-card {
+    background: rgba(100, 51, 144, 0.08);
+    border: 1px solid rgba(100, 51, 144, 0.25);
+    border-radius: 16px;
+    padding: 24px;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.25s;
+    backdrop-filter: blur(4px);
+  }
+  .post-card:hover {
+    border-color: rgba(100, 51, 144, 0.8);
+    background: rgba(100, 51, 144, 0.15);
+    transform: translateY(-2px);
+  }
+  .post-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+    font-family: 'Urbanist', sans-serif;
+    margin-bottom: 8px;
+  }
+  .post-desc {
+    color: #a0aec0;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    font-family: 'Libre Franklin', sans-serif;
+  }
+  .post-date {
+    color: #4a5568;
+    font-size: 0.75rem;
+    font-family: 'Libre Franklin', sans-serif;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.04);
+  }
+  .not-found {
+    text-align: center;
+    padding: 60px 20px;
+    color: #4a5568;
+  }
+</style>
+
+<Layout title={`${label} — VETRA Blog`}>
+  <div class="relative">
+    <GenericHeader />
+    <main>
+      <div class="cat-page">
+        <a href="/blog" class="back-link">← Back to Blog</a>
+        
+        <div class="cat-header">
+          {catImg && <Image src={catImg} alt={label} class="cat-header-img" />}
+          <div>
+            <h1>{label}</h1>
+            <p>{posts.length} {posts.length === 1 ? 'post' : 'posts'} in this category</p>
+          </div>
+        </div>
+
+        {posts.length > 0 ? (
+          <div class="posts-list">
+            {posts.map((p) => {
+              const date = new Date(p.created_at).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+              return (
+                <a href={`/blog/${p.slug}`} class="post-card">
+                  <h2 class="post-title">{p.title}</h2>
+                  <p class="post-desc">{p.description}</p>
+                  <div class="post-date">{date}</div>
+                </a>
+              );
+            })}
+          </div>
+        ) : (
+          <div class="not-found">
+            <p>No posts in this category yet.</p>
+          </div>
+        )}
+      </div>
+    </main>
+    <Footer />
+  </div>
+</Layout>
