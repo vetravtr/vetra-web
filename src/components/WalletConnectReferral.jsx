@@ -163,15 +163,14 @@ export default function WalletConnectReferral() {
       setLabel('Registering purchase...');
       try { await fetch('/api/purchase', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ buyer: account, referrer: refAddr, quantity: Number(qty), txHash: 'pending_' + Date.now(), name, email }) }); } catch (e) { console.error('Pre-register failed:', e); }
 
-      // Send transaction - timeout de 40s pra WalletConnect
+      // Send transaction
       setLabel('Confirm in wallet...');
       let receipt;
       console.log('[REFERRAL] Enviando transacao buy...');
       try {
-        const txPromise = (qty === 1n) ? nft.buy(refAddr) : nft.buyMultiple(refAddr, qty);
-        const tx = await Promise.race([txPromise, new Promise((_, reject) => setTimeout(() => reject(new Error('Wallet did not respond in 40s')), 40000))]);
+        const tx = (qty === 1n) ? await nft.buy(refAddr) : await nft.buyMultiple(refAddr, qty);
         console.log('[REFERRAL] Tx enviada:', tx.hash);
-        receipt = await Promise.race([tx.wait(), new Promise((_, reject) => setTimeout(() => reject(new Error('Transaction timeout')), 180000))]);
+        receipt = await tx.wait();
       } catch (buyError) {
         console.error('[REFERRAL] Erro no buy:', buyError?.message || buyError);
         try { fetch('/api/purchase-log', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: 'error', wallet: account, qty: Number(qty), error: buyError?.message || buyError?.shortMessage || 'unknown' }) }); } catch(e) {}
