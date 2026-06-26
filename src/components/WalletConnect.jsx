@@ -10,6 +10,13 @@ const PRICE = 340000n;
 const ZERO  = '0x0000000000000000000000000000000000000000';
 const V1_CONTRACT = '0xdb9B1e94B5b69Df7e401DDbedE43491141047dB3'; // desativado - só pra warn
 
+// Lista de RPCs para failover
+const RPCS = [
+  'https://polygon-bor.publicnode.com',
+  'https://polygon-mainnet.g.alchemy.com/v2/16sJw5JgOrfP0sQXZ1tlb',
+  'https://polygon-rpc.com',
+];
+
 // Alertar se estiver usando contrato V1
 if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
   console.log('Dev mode - usando V2');
@@ -73,7 +80,17 @@ export default function WalletConnect() {
   const checkOwned = useCallback(async (addr) => {
     try {
       // Usar RPC direto para consultas (view functions) - mais confiavel que WalletConnect
-      const rpcProvider = new JsonRpcProvider('https://polygon-bor.publicnode.com');
+      // Tentar varios RPCs em sequencia
+      let rpcProvider = null;
+      for (const rpcUrl of RPCS) {
+        try {
+          const test = new JsonRpcProvider(rpcUrl);
+          await test.getBlockNumber();
+          rpcProvider = test;
+          break;
+        } catch(e) { continue; }
+      }
+      if (!rpcProvider) throw new Error('No RPC available');
       const nft  = new Contract(NFT_CONTRACT, NFT_ABI, rpcProvider);
       const bal = await nft.balanceOf(addr);
       const rd  = await nft.redeemable();

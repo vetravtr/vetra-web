@@ -7,6 +7,12 @@ const USDC_ADDRESS = '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359';
 const PRICE = 340000n;
 const ZERO  = '0x0000000000000000000000000000000000000000';
 
+const RPCS = [
+  'https://polygon-bor.publicnode.com',
+  'https://polygon-mainnet.g.alchemy.com/v2/16sJw5JgOrfP0sQXZ1tlb',
+  'https://polygon-rpc.com',
+];
+
 const NFT_ABI = [
   'function buy(address referrer) external',
   'function buyMultiple(address referrer, uint256 quantity) external',
@@ -71,7 +77,16 @@ export default function WalletConnectReferral() {
 
   const checkOwned = async (addr) => {
     try {
-      const rpc = new JsonRpcProvider('https://polygon-bor.publicnode.com');
+      let rpc = null;
+      for (const rpcUrl of RPCS) {
+        try {
+          const test = new JsonRpcProvider(rpcUrl);
+          await test.getBlockNumber();
+          rpc = test;
+          break;
+        } catch(e) { continue; }
+      }
+      if (!rpc) throw new Error('No RPC available');
       const nft = new Contract(NFT_CONTRACT, NFT_ABI, rpc);
       const bal = await nft.balanceOf(addr);
       console.log('[REFERRAL] checkOwned addr:', addr, 'balanceOf:', Number(bal));
