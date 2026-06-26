@@ -179,17 +179,17 @@ export default function WalletConnect() {
       setLabel('Confirm in wallet...');
       let receipt;
       console.log('[ANON] Enviando transacao buy...');
-      const txOverrides = { gasLimit: Math.max(500000, Number(qty) * 140000) };
+      // Deixar a carteira definir o gas automaticamente
       try {
         if (qty === 1n) {
-          const tx = await nft.buy(referrerAddr, txOverrides);
+          const tx = await nft.buy(referrerAddr);
           console.log('[ANON] Tx enviada:', tx.hash);
           receipt = await Promise.race([
             tx.wait(),
             new Promise((_, reject) => setTimeout(() => reject(new Error('Transaction timeout after 2 minutes')), 120000))
           ]);
         } else {
-          const tx = await nft.buyMultiple(referrerAddr, qty, txOverrides);
+          const tx = await nft.buyMultiple(referrerAddr, qty);
           console.log('[ANON] Tx enviada:', tx.hash);
           receipt = await Promise.race([
             tx.wait(),

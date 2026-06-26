@@ -167,14 +167,13 @@ export default function WalletConnectReferral() {
       setLabel('Confirm in wallet...');
       let receipt;
       console.log('[REFERRAL] Enviando transacao buy...');
-      const txOverrides = { gasLimit: Math.max(500000, Number(qty) * 140000) };
       try {
         if (qty === 1n) {
-          const tx = await nft.buy(refAddr, txOverrides);
+          const tx = await nft.buy(refAddr);
           console.log('[REFERRAL] Tx enviada:', tx.hash);
           receipt = await Promise.race([tx.wait(), new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout 2min')), 120000))]);
         } else {
-          const tx = await nft.buyMultiple(refAddr, qty, txOverrides);
+          const tx = await nft.buyMultiple(refAddr, qty);
           console.log('[REFERRAL] Tx enviada:', tx.hash);
           receipt = await Promise.race([tx.wait(), new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout 2min')), 120000))]);
         }
