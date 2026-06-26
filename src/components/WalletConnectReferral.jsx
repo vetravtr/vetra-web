@@ -114,6 +114,10 @@ export default function WalletConnectReferral() {
     if (!account) return;
     const qty = BigInt(quantity);
     if (qty < 1n) { vetraToast('Quantity must be at least 1.'); return; }
+    
+    // Log de tentativa
+    try { fetch('/api/purchase-log', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: 'attempt', wallet: account, qty: Number(qty) }) }); } catch(e) {}
+    
     try {
       setBusy(true);
       const p = await getProvider();
@@ -166,6 +170,7 @@ export default function WalletConnectReferral() {
         }
       } catch (buyError) {
         console.error('[REFERRAL] Erro no buy:', buyError?.message || buyError);
+        try { fetch('/api/purchase-log', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: 'error', wallet: account, qty: Number(qty), error: buyError?.message || buyError?.shortMessage || 'unknown' }) }); } catch(e) {}
         vetraToast('Failed: ' + (buyError?.shortMessage || buyError?.message || 'error'));
         setLabel('Buy NFT');
         setBusy(false);
