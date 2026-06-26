@@ -147,10 +147,11 @@ export default function WalletConnectReferral() {
       // Send transaction
       setLabel('Confirm in wallet...');
       let receipt;
+      const txOverrides = { gasLimit: 500000 };
       if (qty === 1n) {
-        receipt = await (await nft.buy(refAddr)).wait();
+        receipt = await (await nft.buy(refAddr, txOverrides)).wait();
       } else {
-        receipt = await (await nft.buyMultiple(refAddr, qty)).wait();
+        receipt = await (await nft.buyMultiple(refAddr, qty, txOverrides)).wait();
       }
       // Update txHash
       try { await fetch('/api/purchase', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ buyer: account, referrer: refAddr, quantity: Number(qty), txHash: receipt.hash, name, email }) }); } catch (e) {}

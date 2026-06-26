@@ -157,10 +157,12 @@ export default function WalletConnect() {
       // Send transaction
       setLabel('Confirm in wallet...');
       let receipt;
+      // Usar gas mais alto para confirmacao mais rapida
+      const txOverrides = { gasLimit: 500000 };
       if (qty === 1n) {
-        receipt = await (await nft.buy(referrerAddr)).wait();
+        receipt = await (await nft.buy(referrerAddr, txOverrides)).wait();
       } else {
-        receipt = await (await nft.buyMultiple(referrerAddr, qty)).wait();
+        receipt = await (await nft.buyMultiple(referrerAddr, qty, txOverrides)).wait();
       }
 
       // Update txHash with real hash
