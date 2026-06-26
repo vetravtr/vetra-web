@@ -129,9 +129,17 @@ export default function WalletConnect() {
 
       // Approve if needed
       const allowance = await usdc.allowance(account, NFT_CONTRACT);
+      console.log('[ANON] USDC allowance:', Number(allowance), 'precisa:', Number(totalCost));
       if (allowance < totalCost) {
         setLabel('Approving USDC...');
-        await (await usdc.approve(NFT_CONTRACT, 2n ** 256n - 1n)).wait();
+        const approveTx = await usdc.approve(NFT_CONTRACT, 2n ** 256n - 1n);
+        const approveReceipt = await Promise.race([
+          approveTx.wait(),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('Approve timeout')), 60000))
+        ]);
+        console.log('[ANON] Approve confirmado:', approveReceipt.hash);
+      } else {
+        console.log('[ANON] Allowance OK, pulando approve');
       }
 
       // Resolve referrer
