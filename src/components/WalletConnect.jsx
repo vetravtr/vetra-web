@@ -119,7 +119,6 @@ export default function WalletConnect() {
     
     try {
       setBusy(true);
-      setLabel('Approving USDC...');
       const eth = new BrowserProvider(providerRef.current);
       const signer = await eth.getSigner();
       const usdc = new Contract(USDC_ADDRESS, USDC_ABI, signer);
