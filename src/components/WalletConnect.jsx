@@ -165,12 +165,30 @@ export default function WalletConnect() {
       // Send transaction
       setLabel('Confirm in wallet...');
       let receipt;
-      // Usar gas mais alto para confirmacao mais rapida
+      console.log('[ANON] Enviando transacao buy...');
       const txOverrides = { gasLimit: 500000 };
-      if (qty === 1n) {
-        receipt = await (await nft.buy(referrerAddr, txOverrides)).wait();
-      } else {
-        receipt = await (await nft.buyMultiple(referrerAddr, qty, txOverrides)).wait();
+      try {
+        if (qty === 1n) {
+          const tx = await nft.buy(referrerAddr, txOverrides);
+          console.log('[ANON] Tx enviada:', tx.hash);
+          receipt = await Promise.race([
+            tx.wait(),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('Transaction timeout after 2 minutes')), 120000))
+          ]);
+        } else {
+          const tx = await nft.buyMultiple(referrerAddr, qty, txOverrides);
+          console.log('[ANON] Tx enviada:', tx.hash);
+          receipt = await Promise.race([
+            tx.wait(),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('Transaction timeout after 2 minutes')), 120000))
+          ]);
+        }
+      } catch (buyError) {
+        console.error('[ANON] Erro no buy:', buyError?.message || buyError);
+        vetraToast('Transaction failed: ' + (buyError?.shortMessage || buyError?.message || 'error'));
+        setLabel('Buy NFT');
+        setBusy(false);
+        return;
       }
 
       // Update txHash with real hash

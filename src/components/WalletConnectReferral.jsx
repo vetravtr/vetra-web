@@ -152,11 +152,24 @@ export default function WalletConnectReferral() {
       // Send transaction
       setLabel('Confirm in wallet...');
       let receipt;
+      console.log('[REFERRAL] Enviando transacao buy...');
       const txOverrides = { gasLimit: 500000 };
-      if (qty === 1n) {
-        receipt = await (await nft.buy(refAddr, txOverrides)).wait();
-      } else {
-        receipt = await (await nft.buyMultiple(refAddr, qty, txOverrides)).wait();
+      try {
+        if (qty === 1n) {
+          const tx = await nft.buy(refAddr, txOverrides);
+          console.log('[REFERRAL] Tx enviada:', tx.hash);
+          receipt = await Promise.race([tx.wait(), new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout 2min')), 120000))]);
+        } else {
+          const tx = await nft.buyMultiple(refAddr, qty, txOverrides);
+          console.log('[REFERRAL] Tx enviada:', tx.hash);
+          receipt = await Promise.race([tx.wait(), new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout 2min')), 120000))]);
+        }
+      } catch (buyError) {
+        console.error('[REFERRAL] Erro no buy:', buyError?.message || buyError);
+        vetraToast('Failed: ' + (buyError?.shortMessage || buyError?.message || 'error'));
+        setLabel('Buy NFT');
+        setBusy(false);
+        return;
       }
       // Update txHash
       try { await fetch('/api/purchase', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ buyer: account, referrer: refAddr, quantity: Number(qty), txHash: receipt.hash, name, email }) }); } catch (e) {}
