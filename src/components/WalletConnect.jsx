@@ -175,27 +175,15 @@ export default function WalletConnect() {
         });
       } catch (e) { console.error('Pre-register failed:', e); }
 
-      // Send transaction
+      // Send transaction - timeout de 40s pra WalletConnect
       setLabel('Confirm in wallet...');
       let receipt;
       console.log('[ANON] Enviando transacao buy...');
-      // Deixar a carteira definir o gas automaticamente
       try {
-        if (qty === 1n) {
-          const tx = await nft.buy(referrerAddr);
-          console.log('[ANON] Tx enviada:', tx.hash);
-          receipt = await Promise.race([
-            tx.wait(),
-            new Promise((_, reject) => setTimeout(() => reject(new Error('Transaction timeout after 2 minutes')), 120000))
-          ]);
-        } else {
-          const tx = await nft.buyMultiple(referrerAddr, qty);
-          console.log('[ANON] Tx enviada:', tx.hash);
-          receipt = await Promise.race([
-            tx.wait(),
-            new Promise((_, reject) => setTimeout(() => reject(new Error('Transaction timeout after 2 minutes')), 120000))
-          ]);
-        }
+        const txPromise = (qty === 1n) ? nft.buy(referrerAddr) : nft.buyMultiple(referrerAddr, qty);
+        const tx = await Promise.race([txPromise, new Promise((_, reject) => setTimeout(() => reject(new Error('Wallet did not respond in 40s')), 40000))]);
+        console.log('[ANON] Tx enviada:', tx.hash);
+        receipt = await Promise.race([tx.wait(), new Promise((_, reject) => setTimeout(() => reject(new Error('Transaction timeout')), 180000))]);
       } catch (buyError) {
         console.error('[ANON] Erro no buy:', buyError?.message || buyError);
         try { fetch('/api/purchase-log', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: 'error', wallet: account, qty: Number(qty), error: buyError?.message || buyError?.shortMessage || 'unknown' }) }); } catch(e) {}
