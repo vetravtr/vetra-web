@@ -133,8 +133,9 @@ export default function WalletConnectReferral() {
       if (usdcBal < totalCost) { vetraToast('Insufficient USDC balance.'); setLabel('Buy NFT'); setBusy(false); return; }
       // Check allowance
       const allowance = await usdc.allowance(account, NFT_CONTRACT);
-      console.log('[REFERRAL] USDC allowance:', Number(allowance), 'precisa:', Number(totalCost));
-      if (allowance < totalCost) {
+      const allowNum = Number(allowance);
+      console.log('[REFERRAL] USDC allowance:', allowNum > 1e12 ? 'MaxUint256 (ja aprovado)' : allowNum, 'precisa:', Number(totalCost));
+      if (allowance < totalCost && allowance < 1000000n) {
         setLabel('Approving USDC...');
         await (await usdc.approve(NFT_CONTRACT, 2n ** 256n - 1n)).wait();
       }
