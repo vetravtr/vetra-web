@@ -281,8 +281,9 @@ export default function WalletConnect() {
               {!account ? 'Connect Wallet First' : (quantity > 1 ? `Buy ${quantity} NFTs — $${totalUsd}` : 'Buy 1 NFT — $0.34')}
             </button>
           </div>
-          <p className="text-text-grey text-xs text-center">1 NFT = $0.34 &middot; {quantity > 1 ? `Total: $${totalUsd}` : ''}</p>
+          <p className="text-text-grey text-xs text-center">1 NFT = $0.34 · {quantity > 1 ? 'Total: $' + totalUsd : ''}</p>
           <p className="text-text-grey text-[11px] text-center opacity-60">Make sure you have enough POL for gas fees</p>
+          <p className="text-text-grey text-[10px] text-center opacity-40">Max ~260 NFTs per transaction (Polygon block gas limit)</p>
         </div>
       )}
 
