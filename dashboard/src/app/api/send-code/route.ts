@@ -5,7 +5,7 @@ import { createClient } from '@supabase/supabase-js';
 export const dynamic = 'force-dynamic';
 
 const supabaseUrl = 'https://qhgxffazypogelvclyjn.supabase.co';
-const supabaseKey = 'sb_secret_A1guid5ooh-yiMVasQG8ug_eeKF-Whg';
+const supabaseKey = 'process.env.SUPABASE_SERVICE_KEY';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // POST: Enviar código de verificação
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
       secure: false,
       auth: {
         user: 'vetraquant@gmail.com',
-        pass: 'eegd onmq ulit shcl',
+        pass: process.env.SMTP_PASS,
       },
     });
 

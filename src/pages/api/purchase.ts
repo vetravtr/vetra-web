@@ -78,7 +78,7 @@ export const POST: APIRoute = async ({ request }) => {
           secure: false,
           auth: {
             user: 'vetraquant@gmail.com',
-            pass: 'eegd onmq ulit shcl',
+            pass: process.env.SMTP_PASS,
           },
         });
         await transporter.sendMail({
