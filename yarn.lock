@@ -976,6 +976,15 @@
     dayjs "1.11.13"
     viem ">=2.29.0"
 
+"@reown/appkit-common@1.8.19":
+  version "1.8.19"
+  resolved "https://registry.npmjs.org/@reown/appkit-common/-/appkit-common-1.8.19.tgz"
+  integrity sha512-z5wDrYjUGY7YbM4b14NHVo54WKZ5++PQtGkcsXhiOP39yAVijubBQD8BfHs/Pu2fSFqnqLIFoCVvIEfNWWccRw==
+  dependencies:
+    big.js "6.2.2"
+    dayjs "1.11.13"
+    viem ">=2.45.0"
+
 "@reown/appkit-common@1.8.20":
   version "1.8.20"
   resolved "https://registry.npmjs.org/@reown/appkit-common/-/appkit-common-1.8.20.tgz"
@@ -995,6 +1004,17 @@
     "@walletconnect/universal-provider" "2.21.0"
     valtio "1.13.2"
     viem ">=2.29.0"
+
+"@reown/appkit-controllers@1.8.19":
+  version "1.8.19"
+  resolved "https://registry.npmjs.org/@reown/appkit-controllers/-/appkit-controllers-1.8.19.tgz"
+  integrity sha512-JFNT8CfAVit9FJXh596Ye4U8A/oIapW+Y0KQqjB59DXyTCDZbxZDB32rULBQrSkZ6PufTEa239Dil4kABCQKtg==
+  dependencies:
+    "@reown/appkit-common" "1.8.19"
+    "@reown/appkit-wallet" "1.8.19"
+    "@walletconnect/universal-provider" "2.23.7"
+    valtio "2.1.7"
+    viem ">=2.45.0"
 
 "@reown/appkit-controllers@1.8.20":
   version "1.8.20"
@@ -1019,6 +1039,18 @@
     lit "3.3.0"
     valtio "1.13.2"
 
+"@reown/appkit-pay@1.8.19":
+  version "1.8.19"
+  resolved "https://registry.npmjs.org/@reown/appkit-pay/-/appkit-pay-1.8.19.tgz"
+  integrity sha512-HO/tQT0TbTQO3eONxNNPJAOZAOzUiHvjM0Mty1rFFeRBH68auiqQxQi2YFNMs014gNkRN+cb84VYau7+MCC0fQ==
+  dependencies:
+    "@reown/appkit-common" "1.8.19"
+    "@reown/appkit-controllers" "1.8.19"
+    "@reown/appkit-ui" "1.8.19"
+    "@reown/appkit-utils" "1.8.19"
+    lit "3.3.0"
+    valtio "2.1.7"
+
 "@reown/appkit-pay@1.8.20":
   version "1.8.20"
   resolved "https://registry.npmjs.org/@reown/appkit-pay/-/appkit-pay-1.8.20.tgz"
@@ -1035,6 +1067,13 @@
   version "1.7.8"
   resolved "https://registry.npmjs.org/@reown/appkit-polyfills/-/appkit-polyfills-1.7.8.tgz"
   integrity sha512-W/kq786dcHHAuJ3IV2prRLEgD/2iOey4ueMHf1sIFjhhCGMynMkhsOhQMUH0tzodPqUgAC494z4bpIDYjwWXaA==
+  dependencies:
+    buffer "6.0.3"
+
+"@reown/appkit-polyfills@1.8.19":
+  version "1.8.19"
+  resolved "https://registry.npmjs.org/@reown/appkit-polyfills/-/appkit-polyfills-1.8.19.tgz"
+  integrity sha512-PSoetRSuZg7f2YFPzdfs4BayQl51zcGqYr7frwOe6td0XEsspLrrVFn/zk5QFbFHZVsMdfRZ+TTunt84ozRdnQ==
   dependencies:
     buffer "6.0.3"
 
@@ -1055,6 +1094,19 @@
     "@reown/appkit-ui" "1.7.8"
     "@reown/appkit-utils" "1.7.8"
     "@reown/appkit-wallet" "1.7.8"
+    lit "3.3.0"
+
+"@reown/appkit-scaffold-ui@1.8.19":
+  version "1.8.19"
+  resolved "https://registry.npmjs.org/@reown/appkit-scaffold-ui/-/appkit-scaffold-ui-1.8.19.tgz"
+  integrity sha512-Ak767x0VzeDIXb0wbzkl19kx6udw7vkb1EU0SAweG3iKc9BunW87Rfcd48/YimzMZycJaYmlbtfmqQQDYs6Few==
+  dependencies:
+    "@reown/appkit-common" "1.8.19"
+    "@reown/appkit-controllers" "1.8.19"
+    "@reown/appkit-pay" "1.8.19"
+    "@reown/appkit-ui" "1.8.19"
+    "@reown/appkit-utils" "1.8.19"
+    "@reown/appkit-wallet" "1.8.19"
     lit "3.3.0"
 
 "@reown/appkit-scaffold-ui@1.8.20":
@@ -1078,6 +1130,18 @@
     "@reown/appkit-common" "1.7.8"
     "@reown/appkit-controllers" "1.7.8"
     "@reown/appkit-wallet" "1.7.8"
+    lit "3.3.0"
+    qrcode "1.5.3"
+
+"@reown/appkit-ui@1.8.19":
+  version "1.8.19"
+  resolved "https://registry.npmjs.org/@reown/appkit-ui/-/appkit-ui-1.8.19.tgz"
+  integrity sha512-fCAwW8yyyC3JcgKLBPvCtYuDGC4H8anO7u4LTaAXGEzdcU5H+IrCgNFSPNK7NuTSmgXm1TnoYxPxRFKNiNwFdA==
+  dependencies:
+    "@phosphor-icons/webcomponents" "2.1.5"
+    "@reown/appkit-common" "1.8.19"
+    "@reown/appkit-controllers" "1.8.19"
+    "@reown/appkit-wallet" "1.8.19"
     lit "3.3.0"
     qrcode "1.5.3"
 
@@ -1107,6 +1171,25 @@
     valtio "1.13.2"
     viem ">=2.29.0"
 
+"@reown/appkit-utils@1.8.19":
+  version "1.8.19"
+  resolved "https://registry.npmjs.org/@reown/appkit-utils/-/appkit-utils-1.8.19.tgz"
+  integrity sha512-VQPgUMTFqoh4UD3EDZSw9wyMkyZsmIVmu8CdQ2FUxIuqYW4fLd0VIpkDeO64MMhSv8b0X8Vd6m4+eGcqSwlUAg==
+  dependencies:
+    "@reown/appkit-common" "1.8.19"
+    "@reown/appkit-controllers" "1.8.19"
+    "@reown/appkit-polyfills" "1.8.19"
+    "@reown/appkit-wallet" "1.8.19"
+    "@wallet-standard/wallet" "1.1.0"
+    "@walletconnect/logger" "3.0.2"
+    "@walletconnect/universal-provider" "2.23.7"
+    valtio "2.1.7"
+    viem ">=2.45.0"
+  optionalDependencies:
+    "@base-org/account" "2.4.0"
+    "@safe-global/safe-apps-provider" "0.18.6"
+    "@safe-global/safe-apps-sdk" "9.1.0"
+
 "@reown/appkit-utils@1.8.20":
   version "1.8.20"
   resolved "https://registry.npmjs.org/@reown/appkit-utils/-/appkit-utils-1.8.20.tgz"
@@ -1135,6 +1218,16 @@
     "@reown/appkit-common" "1.7.8"
     "@reown/appkit-polyfills" "1.7.8"
     "@walletconnect/logger" "2.1.2"
+    zod "3.22.4"
+
+"@reown/appkit-wallet@1.8.19":
+  version "1.8.19"
+  resolved "https://registry.npmjs.org/@reown/appkit-wallet/-/appkit-wallet-1.8.19.tgz"
+  integrity sha512-NVdIKceUhkXYtsG32925ctmVn0QJFNyDlr+mWheMLCEZ/IUPn+6aA53vTVaSUquhyeFxUXtrCOh3ln6v1tup5w==
+  dependencies:
+    "@reown/appkit-common" "1.8.19"
+    "@reown/appkit-polyfills" "1.8.19"
+    "@walletconnect/logger" "3.0.2"
     zod "3.22.4"
 
 "@reown/appkit-wallet@1.8.20":
@@ -1186,6 +1279,27 @@
     bs58 "6.0.0"
     valtio "1.13.2"
     viem ">=2.29.0"
+
+"@reown/appkit@1.8.19":
+  version "1.8.19"
+  resolved "https://registry.npmjs.org/@reown/appkit/-/appkit-1.8.19.tgz"
+  integrity sha512-wB+xatkRbOy0AY1cZxxtcKzzPk3l3CTFulDbaISLVmZI6ZnQrOFuLnYc285zGsC6DB4d6bmwYUh89zcMLa4PvQ==
+  dependencies:
+    "@reown/appkit-common" "1.8.19"
+    "@reown/appkit-controllers" "1.8.19"
+    "@reown/appkit-pay" "1.8.19"
+    "@reown/appkit-polyfills" "1.8.19"
+    "@reown/appkit-scaffold-ui" "1.8.19"
+    "@reown/appkit-ui" "1.8.19"
+    "@reown/appkit-utils" "1.8.19"
+    "@reown/appkit-wallet" "1.8.19"
+    "@walletconnect/universal-provider" "2.23.7"
+    bs58 "6.0.0"
+    semver "7.7.2"
+    valtio "2.1.7"
+    viem ">=2.45.0"
+  optionalDependencies:
+    "@lit/react" "1.0.8"
 
 "@rolldown/pluginutils@1.0.0-rc.3":
   version "1.0.0-rc.3"
@@ -2283,6 +2397,29 @@
     events "3.3.0"
     uint8arrays "3.1.0"
 
+"@walletconnect/core@2.23.10":
+  version "2.23.10"
+  resolved "https://registry.npmjs.org/@walletconnect/core/-/core-2.23.10.tgz"
+  integrity sha512-Qq2btHEoCgruvkZCWLSrVsvg/dYbM9Z045qeClwhJR4meL32jbIRT0mKWjf0HkRc2LA82MsnszVnfuZl3yWl5A==
+  dependencies:
+    "@walletconnect/heartbeat" "1.2.2"
+    "@walletconnect/jsonrpc-provider" "1.0.14"
+    "@walletconnect/jsonrpc-types" "1.0.4"
+    "@walletconnect/jsonrpc-utils" "1.0.8"
+    "@walletconnect/jsonrpc-ws-connection" "1.0.16"
+    "@walletconnect/keyvaluestorage" "1.1.1"
+    "@walletconnect/logger" "3.0.2"
+    "@walletconnect/relay-api" "1.0.11"
+    "@walletconnect/relay-auth" "1.1.0"
+    "@walletconnect/safe-json" "1.0.2"
+    "@walletconnect/time" "1.0.2"
+    "@walletconnect/types" "2.23.10"
+    "@walletconnect/utils" "2.23.10"
+    "@walletconnect/window-getters" "1.0.1"
+    es-toolkit "1.45.1"
+    events "3.3.0"
+    uint8arrays "3.1.1"
+
 "@walletconnect/core@2.23.7":
   version "2.23.7"
   resolved "https://registry.npmjs.org/@walletconnect/core/-/core-2.23.7.tgz"
@@ -2335,6 +2472,22 @@
   integrity sha512-T426LLZtHj8e8rYnKfzsw1aG6+M0BT1ZxayMdv/p8yM0MU+eJDISqNY3/bccxRr4LrF9csq02Rhqt08Ibl0VRg==
   dependencies:
     tslib "1.14.1"
+
+"@walletconnect/ethereum-provider@^2.23.10":
+  version "2.23.10"
+  resolved "https://registry.npmjs.org/@walletconnect/ethereum-provider/-/ethereum-provider-2.23.10.tgz"
+  integrity sha512-OpmTS2s+zrqK7cr8yfGu62tCv6Dsoe/TI1SFYQd2tKyAaBYjrKVzZPfqbRYesgbtNKcCn8KK5Y6PrKIK52U7RQ==
+  dependencies:
+    "@reown/appkit" "1.8.19"
+    "@walletconnect/jsonrpc-provider" "1.0.14"
+    "@walletconnect/jsonrpc-types" "1.0.4"
+    "@walletconnect/jsonrpc-utils" "1.0.8"
+    "@walletconnect/keyvaluestorage" "1.1.1"
+    "@walletconnect/sign-client" "2.23.10"
+    "@walletconnect/types" "2.23.10"
+    "@walletconnect/universal-provider" "2.23.10"
+    "@walletconnect/utils" "2.23.10"
+    events "3.3.0"
 
 "@walletconnect/ethereum-provider@2.21.1":
   version "2.21.1"
@@ -2536,6 +2689,19 @@
     "@walletconnect/utils" "2.21.1"
     events "3.3.0"
 
+"@walletconnect/sign-client@2.23.10":
+  version "2.23.10"
+  resolved "https://registry.npmjs.org/@walletconnect/sign-client/-/sign-client-2.23.10.tgz"
+  integrity sha512-vO7DGRRmKo+rykmjVyQR1aM4I2nbk9kJ6olbxgjFRR6Jdhy+Kz+zgN7Ce5xVhPfWYVu4bV/XhOQxhvnQw7S5ng==
+  dependencies:
+    "@walletconnect/core" "2.23.10"
+    "@walletconnect/jsonrpc-utils" "1.0.8"
+    "@walletconnect/logger" "3.0.2"
+    "@walletconnect/time" "1.0.2"
+    "@walletconnect/types" "2.23.10"
+    "@walletconnect/utils" "2.23.10"
+    events "3.3.0"
+
 "@walletconnect/sign-client@2.23.7":
   version "2.23.7"
   resolved "https://registry.npmjs.org/@walletconnect/sign-client/-/sign-client-2.23.7.tgz"
@@ -2580,6 +2746,18 @@
     "@walletconnect/jsonrpc-types" "1.0.4"
     "@walletconnect/keyvaluestorage" "1.1.1"
     "@walletconnect/logger" "2.1.2"
+    events "3.3.0"
+
+"@walletconnect/types@2.23.10":
+  version "2.23.10"
+  resolved "https://registry.npmjs.org/@walletconnect/types/-/types-2.23.10.tgz"
+  integrity sha512-XP8d41979anTrc1OJF3ISF+g81cvp1wim+ObdNnbcaT/jhwLwv+0T7rRe9VwRv+h8EaRgLyeb5YGy7oJ49vxVg==
+  dependencies:
+    "@walletconnect/events" "1.0.1"
+    "@walletconnect/heartbeat" "1.2.2"
+    "@walletconnect/jsonrpc-types" "1.0.4"
+    "@walletconnect/keyvaluestorage" "1.1.1"
+    "@walletconnect/logger" "3.0.2"
     events "3.3.0"
 
 "@walletconnect/types@2.23.7":
@@ -2640,6 +2818,24 @@
     "@walletconnect/types" "2.21.1"
     "@walletconnect/utils" "2.21.1"
     es-toolkit "1.33.0"
+    events "3.3.0"
+
+"@walletconnect/universal-provider@2.23.10":
+  version "2.23.10"
+  resolved "https://registry.npmjs.org/@walletconnect/universal-provider/-/universal-provider-2.23.10.tgz"
+  integrity sha512-wkLcoaPA8R1Cfx5dcYmS7oMalYd0aEO6+8PNs9gZ5Zwe+zwU+6HOImL8HcCHngeMcdjLqW5aKN3Dy6NbueA3fg==
+  dependencies:
+    "@walletconnect/events" "1.0.1"
+    "@walletconnect/jsonrpc-http-connection" "1.0.8"
+    "@walletconnect/jsonrpc-provider" "1.0.14"
+    "@walletconnect/jsonrpc-types" "1.0.4"
+    "@walletconnect/jsonrpc-utils" "1.0.8"
+    "@walletconnect/keyvaluestorage" "1.1.1"
+    "@walletconnect/logger" "3.0.2"
+    "@walletconnect/sign-client" "2.23.10"
+    "@walletconnect/types" "2.23.10"
+    "@walletconnect/utils" "2.23.10"
+    es-toolkit "1.45.1"
     events "3.3.0"
 
 "@walletconnect/universal-provider@2.23.7":
@@ -2705,6 +2901,31 @@
     query-string "7.1.3"
     uint8arrays "3.1.0"
     viem "2.23.2"
+
+"@walletconnect/utils@2.23.10":
+  version "2.23.10"
+  resolved "https://registry.npmjs.org/@walletconnect/utils/-/utils-2.23.10.tgz"
+  integrity sha512-b1c9FRF2g7vNnz66oLW5WZD2VCMrbu9xhpmwJJwqGarBiGW7cY8NbUtS9/w2/qc0vsBVKJ/bzDn4TGjpELU6aQ==
+  dependencies:
+    "@msgpack/msgpack" "3.1.3"
+    "@noble/ciphers" "1.3.0"
+    "@noble/curves" "1.9.7"
+    "@noble/hashes" "1.8.0"
+    "@scure/base" "1.2.6"
+    "@walletconnect/jsonrpc-utils" "1.0.8"
+    "@walletconnect/keyvaluestorage" "1.1.1"
+    "@walletconnect/logger" "3.0.2"
+    "@walletconnect/relay-api" "1.0.11"
+    "@walletconnect/relay-auth" "1.1.0"
+    "@walletconnect/safe-json" "1.0.2"
+    "@walletconnect/time" "1.0.2"
+    "@walletconnect/types" "2.23.10"
+    "@walletconnect/window-getters" "1.0.1"
+    "@walletconnect/window-metadata" "1.0.1"
+    blakejs "1.2.1"
+    detect-browser "5.3.0"
+    ox "0.9.3"
+    uint8arrays "3.1.1"
 
 "@walletconnect/utils@2.23.7":
   version "2.23.7"
@@ -3944,6 +4165,11 @@ es-toolkit@1.44.0:
   version "1.44.0"
   resolved "https://registry.npmjs.org/es-toolkit/-/es-toolkit-1.44.0.tgz"
   integrity sha512-6penXeZalaV88MM3cGkFZZfOoLGWshWWfdy0tWw/RlVVyhvMaWSBTOvXNeiW3e5FwdS5ePW0LGEu17zT139ktg==
+
+es-toolkit@1.45.1:
+  version "1.45.1"
+  resolved "https://registry.npmjs.org/es-toolkit/-/es-toolkit-1.45.1.tgz"
+  integrity sha512-/jhoOj/Fx+A+IIyDNOvO3TItGmlMKhtX8ISAHKE90c4b/k1tqaqEZ+uUqfpU8DMnW5cgNJv606zS55jGvza0Xw==
 
 esbuild@^0.25.0:
   version "0.25.12"
@@ -7106,17 +7332,17 @@ ufo@^1.6.1:
   resolved "https://registry.npmjs.org/ufo/-/ufo-1.6.1.tgz"
   integrity sha512-9a4/uxlTWJ4+a5i0ooc1rU7C7YOw3wT+UGqdeNNHWnOF9qcMBgLRS+4IYUqbczewFx4mLEig6gawh7X6mFlEkA==
 
-uint8arrays@^3.0.0, uint8arrays@3.1.0:
-  version "3.1.0"
-  resolved "https://registry.npmjs.org/uint8arrays/-/uint8arrays-3.1.0.tgz"
-  integrity sha512-ei5rfKtoRO8OyOIor2Rz5fhzjThwIHJZ3uyDPnDHTXbP0aMQ1RN/6AI5B5d9dBxJOU+BvOAk7ZQ1xphsX8Lrog==
-  dependencies:
-    multiformats "^9.4.2"
-
-uint8arrays@3.1.1:
+uint8arrays@^3.0.0, uint8arrays@3.1.1:
   version "3.1.1"
   resolved "https://registry.npmjs.org/uint8arrays/-/uint8arrays-3.1.1.tgz"
   integrity sha512-+QJa8QRnbdXVpHYjLoTpJIdCTiw9Ir62nocClWuXIq2JIh4Uta0cQsTSpFL678p2CN8B+XSApwcU+pQEqVpKWg==
+  dependencies:
+    multiformats "^9.4.2"
+
+uint8arrays@3.1.0:
+  version "3.1.0"
+  resolved "https://registry.npmjs.org/uint8arrays/-/uint8arrays-3.1.0.tgz"
+  integrity sha512-ei5rfKtoRO8OyOIor2Rz5fhzjThwIHJZ3uyDPnDHTXbP0aMQ1RN/6AI5B5d9dBxJOU+BvOAk7ZQ1xphsX8Lrog==
   dependencies:
     multiformats "^9.4.2"
 
