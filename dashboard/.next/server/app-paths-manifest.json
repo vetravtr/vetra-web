@@ -1,0 +1,17 @@
+{
+  "/_global-error/page": "app/_global-error/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/auth/route": "app/api/auth/route.js",
+  "/api/balances/route": "app/api/balances/route.js",
+  "/api/blog/route": "app/api/blog/route.js",
+  "/api/buyback/route": "app/api/buyback/route.js",
+  "/api/lastro/route": "app/api/lastro/route.js",
+  "/api/nft-balance/route": "app/api/nft-balance/route.js",
+  "/api/nft-sold/route": "app/api/nft-sold/route.js",
+  "/api/otc/route": "app/api/otc/route.js",
+  "/api/send-code/route": "app/api/send-code/route.js",
+  "/api/verify/route": "app/api/verify/route.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/page": "app/page.js"
+}
