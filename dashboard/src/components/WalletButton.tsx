@@ -1,9 +1,71 @@
 'use client';
 
-import { useWallet } from '@/lib/WalletContext';
+import { useState, useRef, useCallback, useEffect } from 'react';
 
-export function WalletButton() {
-  const { account, connecting, connect, disconnect, error } = useWallet();
+const PROJECT_ID = 'd4ee97a93dc538bc7c23303cdd30814c';
+
+export function WalletButton({ onConnect }: { onConnect?: (account: string | null) => void }) {
+  const providerRef = useRef<any>(null);
+  const [account, setAccount] = useState<string | null>(null);
+  const [connecting, setConnecting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const ensureProvider = useCallback(async () => {
+    if (providerRef.current) return providerRef.current;
+    const { EthereumProvider } = await import('@walletconnect/ethereum-provider');
+    const p = await EthereumProvider.init({
+      projectId: PROJECT_ID,
+      chains: [137],
+      showQrModal: true,
+      qrModalOptions: { themeMode: 'dark' },
+      metadata: {
+        name: 'VETRA Dashboard',
+        description: 'Transparency & Portfolio Management',
+        url: window.location.origin,
+        icons: [window.location.origin + '/favicon.svg'],
+      },
+    });
+    p.on('disconnect', () => { setAccount(null); if (onConnect) onConnect(null); });
+    p.on('accountsChanged', (a: string[]) => { setAccount(a?.[0] || null); if (onConnect) onConnect(a?.[0] || null); });
+    providerRef.current = p;
+    return p;
+  }, []);
+
+  const connect = useCallback(async () => {
+    setConnecting(true);
+    setError(null);
+    try {
+      if (account) return;
+      const p = await ensureProvider();
+      await p.connect();
+      const addr = p.accounts?.[0];
+      if (addr) { setAccount(addr); if (onConnect) onConnect(addr); }
+    } catch (e: any) {
+      if (e?.code !== 4001) {
+        setError(e?.message || 'Connection failed');
+      }
+    } finally {
+      setConnecting(false);
+    }
+  }, [account, ensureProvider]);
+
+  const disconnect = useCallback(async () => {
+    if (providerRef.current) {
+      try { await providerRef.current.disconnect(); } catch {}
+    }
+    providerRef.current = null;
+    setAccount(null);
+  }, []);
+
+  useEffect(() => {
+    const check = async () => {
+      try {
+        const p = await ensureProvider();
+        if (p.accounts?.length > 0) { setAccount(p.accounts[0]); if (onConnect) onConnect(p.accounts[0]); }
+      } catch {}
+    };
+    check();
+  }, [ensureProvider]);
 
   if (connecting) {
     return (
