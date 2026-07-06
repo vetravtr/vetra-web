@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useCallback, useEffect } from 'react';
+import { EthereumProvider } from '@walletconnect/ethereum-provider';
 
 const PROJECT_ID = 'd4ee97a93dc538bc7c23303cdd30814c';
 
@@ -12,7 +13,6 @@ export function WalletButton({ onConnect }: { onConnect?: (account: string | nul
 
   const ensureProvider = useCallback(async () => {
     if (providerRef.current) return providerRef.current;
-    const { EthereumProvider } = await import('@walletconnect/ethereum-provider');
     const p = await EthereumProvider.init({
       projectId: PROJECT_ID,
       chains: [137],
@@ -21,25 +21,26 @@ export function WalletButton({ onConnect }: { onConnect?: (account: string | nul
       metadata: {
         name: 'VETRA Dashboard',
         description: 'Transparency & Portfolio Management',
-        url: window.location.origin,
-        icons: [window.location.origin + '/favicon.svg'],
+        url: typeof window !== 'undefined' ? window.location.origin : 'https://vetravtr.com',
+        icons: [typeof window !== 'undefined' ? window.location.origin + '/favicon.svg' : 'https://vetravtr.com/favicon.svg'],
       },
     });
     p.on('disconnect', () => { setAccount(null); if (onConnect) onConnect(null); });
-    p.on('accountsChanged', (a: string[]) => { setAccount(a?.[0] || null); if (onConnect) onConnect(a?.[0] || null); });
+    p.on('accountsChanged', (a: string[]) => { const addr = a?.[0] || null; setAccount(addr); if (onConnect) onConnect(addr); });
     providerRef.current = p;
     return p;
-  }, []);
+  }, [onConnect]);
 
   const connect = useCallback(async () => {
     setConnecting(true);
     setError(null);
     try {
-      if (account) return;
+      if (account) { setConnecting(false); return; }
       const p = await ensureProvider();
       await p.connect();
-      const addr = p.accounts?.[0];
-      if (addr) { setAccount(addr); if (onConnect) onConnect(addr); }
+      const addr = p.accounts?.[0] || null;
+      setAccount(addr);
+      if (addr && onConnect) onConnect(addr);
     } catch (e: any) {
       if (e?.code !== 4001) {
         setError(e?.message || 'Connection failed');
@@ -47,7 +48,7 @@ export function WalletButton({ onConnect }: { onConnect?: (account: string | nul
     } finally {
       setConnecting(false);
     }
-  }, [account, ensureProvider]);
+  }, [account, ensureProvider, onConnect]);
 
   const disconnect = useCallback(async () => {
     if (providerRef.current) {
@@ -55,17 +56,19 @@ export function WalletButton({ onConnect }: { onConnect?: (account: string | nul
     }
     providerRef.current = null;
     setAccount(null);
-  }, []);
+    if (onConnect) onConnect(null);
+  }, [onConnect]);
 
   useEffect(() => {
     const check = async () => {
       try {
         const p = await ensureProvider();
-        if (p.accounts?.length > 0) { setAccount(p.accounts[0]); if (onConnect) onConnect(p.accounts[0]); }
+        const addr = p.accounts?.[0] || null;
+        if (addr) { setAccount(addr); if (onConnect) onConnect(addr); }
       } catch {}
     };
     check();
-  }, [ensureProvider]);
+  }, [ensureProvider, onConnect]);
 
   if (connecting) {
     return (
