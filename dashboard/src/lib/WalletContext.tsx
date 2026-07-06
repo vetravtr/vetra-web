@@ -92,7 +92,6 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <WalletContext.Provider value={{ account, connecting, connect, disconnect, error }}>
-      <div id="walletconnect-container" />
       {children}
     </WalletContext.Provider>
   );
