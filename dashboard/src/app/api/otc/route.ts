@@ -5,7 +5,7 @@ import nodemailer from 'nodemailer';
 export const dynamic = 'force-dynamic';
 
 const supabaseUrl = 'https://qhgxffazypogelvclyjn.supabase.co';
-const supabaseKey = 'process.env.SUPABASE_SERVICE_KEY';
+const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export async function POST(request: NextRequest) {

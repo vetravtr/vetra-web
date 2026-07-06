@@ -5,7 +5,7 @@ import { createClient } from '@supabase/supabase-js';
 export const dynamic = 'force-dynamic';
 
 const supabaseUrl = 'https://qhgxffazypogelvclyjn.supabase.co';
-const supabaseKey = 'process.env.SUPABASE_SERVICE_KEY';
+const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // POST: Enviar código de verificação
