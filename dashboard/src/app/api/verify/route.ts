@@ -5,7 +5,7 @@ import { SignJWT } from 'jose';
 export const dynamic = 'force-dynamic';
 
 const supabaseUrl = 'https://qhgxffazypogelvclyjn.supabase.co';
-const supabaseKey = process.env.SUPABASE_SERVICE_KEY || "";
+const supabaseKey = 'sb_secret_A1guid5ooh-yiMVasQG8ug_eeKF-Whg';
 const JWT_SECRET = new TextEncoder().encode('vetra-dashboard-jwt-secret-2026');
 
 const supabase = createClient(supabaseUrl, supabaseKey);

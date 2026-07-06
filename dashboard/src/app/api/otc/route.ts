@@ -5,7 +5,7 @@ import nodemailer from 'nodemailer';
 export const dynamic = 'force-dynamic';
 
 const supabaseUrl = 'https://qhgxffazypogelvclyjn.supabase.co';
-const supabaseKey = process.env.SUPABASE_SERVICE_KEY || "";
+const supabaseKey = 'sb_secret_A1guid5ooh-yiMVasQG8ug_eeKF-Whg';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export async function POST(request: NextRequest) {
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     // Enviar email
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com', port: 587, secure: false,
-      auth: { user: 'vetraquant@gmail.com', pass: process.env.SMTP_PASS },
+      auth: { user: 'vetraquant@gmail.com', pass: 'eegd onmq ulit shcl' },
     });
 
     await transporter.sendMail({

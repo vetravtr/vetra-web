@@ -1,6 +1,7 @@
 'use client';
 
 import { WalletButton } from '@/components/WalletButton';
+import { useWallet } from '@/lib/WalletContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -21,9 +22,8 @@ const ABI_BALANCE = [{ constant: true, inputs: [{ name: '_owner', type: 'address
 let priceCache = { price: 0, timestamp: 0 };
 
 export default function DashboardPage() {
-  const [connectedWallet, setConnectedWallet] = useState<string | null>(null);
-  const isConnected = !!connectedWallet;
-  const address = connectedWallet;
+  const { account: address, connecting } = useWallet();
+  const isConnected = !!address;
   const [marketData, setMarketData] = useState({ price: 0, tvl: 0, vol24: 0, fdv: 0 });
   const [twap, setTwap] = useState(0);
   const [lastro, setLastro] = useState({ balance: 0, ratio: 0 });
@@ -262,7 +262,7 @@ export default function DashboardPage() {
           <a href="https://www.vetravtr.com/contact" target="_blank" className="hover:text-white/80 transition-colors">Contact us</a>
           <span className="text-white/90">Dashboard</span>
         </nav>
-        <WalletButton onConnect={(addr) => { setConnectedWallet(addr); }} />
+        <WalletButton />
       </header>
 
       {/* Ticker */}
