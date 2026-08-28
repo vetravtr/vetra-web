@@ -56,6 +56,9 @@ async function getProvider() {
 }
 
 export default function WalletConnectReferral() {
+  // ===== PAUSA MOMENTANEA DE VENDAS =====
+  // Mudar para false reativa as vendas (reversivel)
+  const SALES_PAUSED = true;
   const [account, setAccount] = useState(sharedAccount);
   const [ref, setRef] = useState(null);
   const [name, setName] = useState('');
@@ -161,7 +164,9 @@ export default function WalletConnectReferral() {
       console.log('[REFERRAL] USDC allowance:', allowNum > 1e12 ? 'MaxUint256 (ja aprovado)' : allowNum);
       if (allowance < totalCost && allowance < 1000000n) {
         setLabel('Approving USDC...');
-        await (await usdc.approve(NFT_CONTRACT, 2n ** 256n - 1n)).wait();
+        // Aprovacao LIMITADA: custo da compra x5 + margem, em vez de MaxUint256 (ilimitada)
+        const approveAmount = totalCost * 5n + 10n;
+        await (await usdc.approve(NFT_CONTRACT, approveAmount)).wait();
       }
       // Resolve referrer
       var refCode = getReferrer();
@@ -227,6 +232,13 @@ export default function WalletConnectReferral() {
         {account ? `${account.slice(0, 6)}...${account.slice(-4)}` : 'Connect Wallet'}
       </button>
 
+      {SALES_PAUSED ? (
+        <div className="rounded-full border border-[#643390]/40 bg-[#643390]/10 px-4 py-4 text-center">
+          <p className="text-white font-semibold text-lg">Under Maintenance</p>
+          <p className="text-text-grey text-xs mt-1">NFT sales are temporarily paused while we perform maintenance. We will be back soon — stay tuned.</p>
+        </div>
+      ) : (
+      <>
       <div className="flex items-center gap-3">
         <input type="number" min={1}
           value={inputVal}
@@ -248,6 +260,8 @@ export default function WalletConnectReferral() {
       <p className="text-text-grey text-xs text-center -mt-2">1 NFT = $0.34 · {quantity > 1 ? 'Total: $' + totalUsd : ''}</p>
       <p className="text-text-grey text-[11px] text-center -mt-1 opacity-60">Make sure you have enough POL for gas fees</p>
       <p className="text-text-grey text-[10px] text-center opacity-40">Max ~260 NFTs per transaction (Polygon block gas limit)</p>
+      </>
+      )}
 
       {account && (
         <p className="text-center text-sm text-white/70 mt-1">

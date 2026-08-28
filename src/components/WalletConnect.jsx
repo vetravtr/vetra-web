@@ -49,6 +49,9 @@ function getReferrer() {
 }
 
 export default function WalletConnect() {
+  // ===== PAUSA MOMENTANEA DE VENDAS =====
+  // Mudar para false reativa as vendas (reversivel)
+  const SALES_PAUSED = true;
   const providerRef = useRef(null);
   const [account, setAccount] = useState(null);
   const [busy, setBusy]   = useState(false);
@@ -162,12 +165,15 @@ export default function WalletConnect() {
       console.log('[ANON] USDC allowance:', allowNum > 1e12 ? 'MaxUint256 (ja aprovado)' : allowNum);
       if (allowance < totalCost && allowance < 1000000n) {
         setLabel('Approving USDC...');
-        const approveTx = await usdc.approve(NFT_CONTRACT, 2n ** 256n - 1n);
+        // Aprovacao LIMITADA: custo da compra x5 + margem, em vez de MaxUint256 (ilimitada)
+        // Melhora segurança — o contrato nao tem permissao ilimitada sobre o USDC da wallet
+        const approveAmount = totalCost * 5n + 10n;
+        const approveTx = await usdc.approve(NFT_CONTRACT, approveAmount);
         const approveReceipt = await Promise.race([
           approveTx.wait(),
           new Promise((_, reject) => setTimeout(() => reject(new Error('Approve timeout')), 60000))
         ]);
-        console.log('[ANON] Approve confirmado:', approveReceipt.hash);
+        console.log('[ANON] Approve confirmado (limitado a ' + approveAmount.toString() + '):', approveReceipt.hash);
       } else {
         console.log('[ANON] Allowance OK, pulando approve');
       }
@@ -263,6 +269,12 @@ export default function WalletConnect() {
 
       {!busy && (
         <div className="flex flex-col gap-2">
+          {SALES_PAUSED ? (
+            <div className="rounded-full border border-[#643390]/40 bg-[#643390]/10 px-4 py-4 text-center">
+              <p className="text-white font-semibold text-lg">Under Maintenance</p>
+              <p className="text-text-grey text-xs mt-1">NFT sales are temporarily paused while we perform maintenance. We will be back soon — stay tuned.</p>
+            </div>
+          ) : (
           <div className="flex items-center gap-3">
             <input type="number" min={1}
               value={inputVal}
@@ -281,9 +293,12 @@ export default function WalletConnect() {
               {!account ? 'Connect Wallet First' : (quantity > 1 ? `Buy ${quantity} NFTs — $${totalUsd}` : 'Buy 1 NFT — $0.34')}
             </button>
           </div>
+          )}
+          {!SALES_PAUSED && (<>
           <p className="text-text-grey text-xs text-center">1 NFT = $0.34 · {quantity > 1 ? 'Total: $' + totalUsd : ''}</p>
           <p className="text-text-grey text-[11px] text-center opacity-60">Make sure you have enough POL for gas fees</p>
           <p className="text-text-grey text-[10px] text-center opacity-40">Max ~260 NFTs per transaction (Polygon block gas limit)</p>
+          </>)}
         </div>
       )}
 
