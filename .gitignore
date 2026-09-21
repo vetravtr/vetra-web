@@ -36,3 +36,6 @@ pnpm-debug.log*
 *.sw?
 .vercel
 .env*.local
+
+# registros de clientes (OTC) — nunca versionar
+data/

@@ -2,16 +2,204 @@
 import Layout from "../layouts/Layout.astro";
 import GenericHeader from "../components/common/GenericHeader.astro";
 import Footer from "../components/sections/Footer.astro";
-import PioneerPreSale from "../components/sections/PioneerPreSale.astro";
-import WalletConnect from "../components/WalletConnect.jsx";
+import Newsletter from "../components/sections/Newsletter.astro";
+import FAQ from "../components/sections/FAQ.astro";
+import HowToBuyUSDC from "../components/sections/HowToBuyUSDC.astro";
+import Badge from "../components/Badge.astro";
+import Title from "../components/Title.astro";
+import Description from "../components/Description.astro";
+import "../styles/global.css";
+
+const steps = [
+  {
+    n: "1",
+    t: "Send your request",
+    d: "Fill in the form with your name, email, country, the amount you want to exchange and the Polygon wallet that should receive the VTR. Nothing to connect, nothing to sign.",
+  },
+  {
+    n: "2",
+    t: "Receive your quote",
+    d: "We reply with the current quote: the reference market price, the exact quantity of VTR, the address to send your USDC or USDT to, and how long the quote is valid for.",
+  },
+  {
+    n: "3",
+    t: "Send USDC or USDT",
+    d: "You send the amount on the Polygon network to the address in the quote. Please use Polygon only — funds sent on other networks cannot be recovered.",
+  },
+  {
+    n: "4",
+    t: "Receive your VTR",
+    d: "As soon as your payment is confirmed on-chain, we send the VTR to your wallet. Both transactions stay public and verifiable on Polygonscan.",
+  },
+];
 ---
 
-<Layout title="Buy VTR Pioneer - VETRA">
+<Layout title="Buy VTR - Vetra">
   <GenericHeader />
+
   <div class="relative z-10">
     <main>
-      <PioneerPreSale />
+      <!-- REQUEST A QUOTE -->
+      <section class="py-16 md:py-24">
+        <div class="max-w-[900px] mx-auto px-4">
+          <div class="flex flex-col items-center text-center gap-4 mb-10">
+            <Badge text="OTC DESK" />
+            <Title className="text-center" text="Buy VTR directly" />
+            <Description
+              text="Exchange USDC or USDT for VTR at the current market reference — one operation, human-reviewed, fully on-chain."
+              className="max-w-[620px] text-center"
+            />
+          </div>
+
+          <form id="otc-form" class="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6 md:p-8 flex flex-col gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <label class="flex flex-col gap-2">
+                <span class="text-text-grey text-[13px]">Full name *</span>
+                <input id="otc-name" type="text" required placeholder="Your name"
+                  class="bg-transparent border border-white/[0.12] rounded-lg px-4 py-3 text-white text-sm outline-none focus:border-light-purple" />
+              </label>
+              <label class="flex flex-col gap-2">
+                <span class="text-text-grey text-[13px]">Email *</span>
+                <input id="otc-email" type="email" required placeholder="you@email.com"
+                  class="bg-transparent border border-white/[0.12] rounded-lg px-4 py-3 text-white text-sm outline-none focus:border-light-purple" />
+              </label>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <label class="flex flex-col gap-2">
+                <span class="text-text-grey text-[13px]">Country</span>
+                <input id="otc-country" type="text" placeholder="Country of residence"
+                  class="bg-transparent border border-white/[0.12] rounded-lg px-4 py-3 text-white text-sm outline-none focus:border-light-purple" />
+              </label>
+              <label class="flex flex-col gap-2">
+                <span class="text-text-grey text-[13px]">Wallet to receive the VTR (Polygon) *</span>
+                <input id="otc-wallet" type="text" required placeholder="0x..."
+                  class="bg-transparent border border-white/[0.12] rounded-lg px-4 py-3 text-white text-sm outline-none focus:border-light-purple" />
+              </label>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <label class="flex flex-col gap-2">
+                <span class="text-text-grey text-[13px]">You send</span>
+                <select id="otc-token"
+                  class="bg-transparent border border-white/[0.12] rounded-lg px-4 py-3 text-white text-sm outline-none focus:border-light-purple">
+                  <option value="USDC">USDC</option>
+                  <option value="USDT">USDT</option>
+                </select>
+              </label>
+              <label class="flex flex-col gap-2 md:col-span-2">
+                <span class="text-text-grey text-[13px]">Amount in USD (minimum 50) *</span>
+                <input id="otc-amount" type="number" min="50" step="1" required placeholder="e.g. 500"
+                  class="bg-transparent border border-white/[0.12] rounded-lg px-4 py-3 text-white text-sm outline-none focus:border-light-purple" />
+              </label>
+            </div>
+
+            <label class="flex flex-col gap-2">
+              <span class="text-text-grey text-[13px]">Anything we should know? (optional)</span>
+              <textarea id="otc-note" rows="3" placeholder="Optional message"
+                class="bg-transparent border border-white/[0.12] rounded-lg px-4 py-3 text-white text-sm outline-none focus:border-light-purple resize-none"></textarea>
+            </label>
+
+            <button type="submit" id="otc-submit"
+              class="mt-2 inline-flex items-center justify-center px-8 py-4 rounded-full bg-[#643390] hover:bg-[#9A3CEB] text-white font-semibold text-sm transition-all disabled:opacity-60">
+              Request a quote
+            </button>
+
+            <p id="otc-msg" class="hidden text-sm leading-relaxed"></p>
+
+            <p class="text-text-grey text-[12px] leading-[18px] mt-1">
+              VTR is the utility and governance token of the VETRA protocol. It is not an investment product:
+              no return, yield or guaranteed value is offered, promised or implied. Operations above US$ 1,000
+              require a simple identification before completion.
+            </p>
+          </form>
+        </div>
+      </section>
+
+      <!-- HOW IT WORKS -->
+      <section class="py-16 md:py-20 bg-white/[0.02]">
+        <div class="max-w-[1100px] mx-auto px-4">
+          <div class="flex flex-col items-center text-center gap-3 mb-10">
+            <Badge text="HOW IT WORKS" />
+            <Title className="text-center" text="Four simple steps" />
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {steps.map((s) => (
+              <div class="bg-white/[0.03] border border-white/[0.06] rounded-xl p-6">
+                <div class="text-2xl font-bold text-light-purple mb-2 font-['Urbanist']">{s.n}</div>
+                <h4 class="text-white font-semibold mb-2 font-['Urbanist'] text-sm">{s.t}</h4>
+                <p class="text-text-grey text-sm leading-relaxed">{s.d}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <HowToBuyUSDC />
+      <FAQ />
+      <Newsletter />
     </main>
     <Footer />
   </div>
 </Layout>
+
+<script>
+  const form = document.getElementById('otc-form') as HTMLFormElement | null;
+  const msg = document.getElementById('otc-msg');
+  const btn = document.getElementById('otc-submit') as HTMLButtonElement | null;
+
+  function show(text: string, ok: boolean) {
+    if (!msg) return;
+    msg.textContent = text;
+    msg.className = 'text-sm leading-relaxed ' + (ok ? 'text-emerald-400' : 'text-red-400');
+    msg.classList.remove('hidden');
+  }
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const val = (id: string) => (document.getElementById(id) as HTMLInputElement | null)?.value?.trim() || '';
+    const wallet = val('otc-wallet');
+
+    if (!/^0x[a-fA-F0-9]{40}$/.test(wallet)) {
+      show('Please enter a valid Polygon wallet address (0x + 40 characters).', false);
+      return;
+    }
+    const amount = parseFloat(val('otc-amount'));
+    if (!(amount >= 50)) {
+      show('The minimum per operation is US$ 50.', false);
+      return;
+    }
+
+    const payload = {
+      name: val('otc-name'),
+      email: val('otc-email'),
+      country: val('otc-country'),
+      wallet,
+      amount,
+      token: (document.getElementById('otc-token') as HTMLSelectElement | null)?.value || 'USDC',
+      note: (document.getElementById('otc-note') as HTMLTextAreaElement | null)?.value || '',
+    };
+
+    if (btn) { btn.disabled = true; btn.textContent = 'Sending...'; }
+    try {
+      const r = await fetch('/api/otc-request', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const j = await r.json();
+      if (r.ok && j.ok) {
+        form.reset();
+        show('Request received. We will reply shortly with your quote — check your email (and the spam folder).', true);
+      } else {
+        show(j.error === 'invalid wallet address'
+          ? 'Please enter a valid Polygon wallet address.'
+          : (j.error || 'Something went wrong. Please try again.'), false);
+      }
+    } catch (_) {
+      show('Connection error. Please try again in a moment.', false);
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = 'Request a quote'; }
+    }
+  });
+</script>

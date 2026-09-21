@@ -5,402 +5,303 @@ import Title from "../Title.astro";
 import Description from "../Description.astro";
 import { cn } from "../../utils/cn";
 
-// Navigation Items
+// Navigation items for the whitepaper
 const navItems = [
   { id: "overview", label: "1. Executive Overview" },
   { id: "how-it-works", label: "2. How It Works" },
-  { id: "backing", label: "3. Reserve Backing & Custody" },
+  { id: "utility", label: "3. Utility & Governance" },
   { id: "contract", label: "4. Smart Contract Architecture" },
   { id: "ecosystem", label: "5. Ecosystem & Liquidity" },
   { id: "tokenomics", label: "6. Tokenomics" },
   { id: "transparency", label: "7. Transparency & Reporting" },
-  { id: "roadmap", label: "8. Governance & Future Roadmap" },
+  { id: "roadmap", label: "8. Governance & Roadmap" },
   { id: "security", label: "9. Security & Risk Mitigation" },
   { id: "team", label: "10. Team" },
   { id: "legal", label: "11. Legal Notice" },
 ];
 
-// Content Data
-const contentData = {
-  overview: {
-    title: "Executive Overview",
-    text: `VETRA (VTR) is an institutional stablecoin backed 1:1 by U.S. dollars and deployed on the Polygon network. For each mint, the contract guarantees that total supply does not exceed the value of reserves. Reserves are updated via Chainlink Functions and recorded on-chain with an eight-decimal USD value, a timestamp, and a security identifier.
+const contentData = [
+  {
+    id: "overview",
+    title: "1. Executive Overview",
+    text: `VETRA (VTR) is a utility and governance token deployed on the Polygon network. It is not a stablecoin and carries no fixed parity with any currency.
 
-The backing is provided by FT Asset Management KB, headquartered in Stockholm, Sweden, with an initial commitment of USD 100,000,000.00 dedicated to the currency's liquidity, credibility, and stability. As of June 2026, the protocol is over-collateralized at 333% (USD $100M reserves against 30M VTR supply), providing a significant safety buffer.
+VTR is built on an open, fully auditable on-chain infrastructure: a verified smart contract, a public liquidity pool on Uniswap V3, and open-market trading. The protocol focuses on three things that exist today — efficient transfers, low fees, and verifiable transparency.
 
-Key Metrics (June 2026):
+Key Metrics (September 2026):
+- Token: VTR (ERC-20)
 - Total Supply: 30,000,000 VTR
-- Reserves in Custody: $100,000,000 USD
-- Collateralization Ratio: 333%
-- Market Price: ~$0.20
+- Maximum Supply (cap): 1,000,000,000 VTR
 - Blockchain: Polygon Mainnet (Chain ID 137)
-- Smart Contract: UUPS Proxy
-- Reserve Custodian: FT Asset Management KB (Sweden)
-- Max Wallet: 3,000 VTR (anti-whale, whitelist exceptions)
-- Transfer Tax: 0%`,
+- Transfer Tax: 0%
+- Primary Liquidity: Uniswap V3 — VTR/USDC pool
+- Contract: verified and publicly auditable on PolygonScan`,
   },
-  "how-it-works": {
-    title: "How It Works",
-    text: `Proof-of-Reserves via Chainlink Functions
-VETRA integrates a reserves data source maintained by FT Asset Management KB into the smart contract through Chainlink Functions. At defined intervals, the function queries FT Asset Management KB's API and returns to the contract a snapshot containing:
-• Aggregate USD value (8 decimals)
-• Timestamp of the reading
-• Monotonic nonce (prevents replay attacks)
+  {
+    id: "how-it-works",
+    title: "2. How It Works",
+    text: `VTR is a standard ERC-20 token. There is no intermediary, no custodian and no reserve account involved in its operation.
 
-Mint Invariant
-Every mint operation checks:
-1. Reserve Freshness — The snapshot must be within its TTL (15 minutes)
-2. Supply Invariant — totalSupply + mintAmount ≤ scaledReserves
-If either criterion fails, the transaction is rejected. This guarantees that no VTR can be created without verified dollar backing.
+Circulation
+Transfers happen directly between wallets on Polygon. There is no transfer tax, no per-transaction limit, no per-wallet limit and no cooldown — by design, so the token circulates freely.
 
-Burn Mechanism
-VTR can be burned natively, reducing total supply. Burning can be triggered by:
-• Token holders: Standard ERC-20 burn
-• Operator Burn: Authorized roles can burn from any account per operational policy`,
+Fee Structure
+Sending VTR costs only the network gas fee of the Polygon blockchain. The protocol itself charges nothing.
+
+Verification
+Every parameter described in this document — supply, cap, balances and transfers — can be independently verified by anyone on PolygonScan. No trust in the team is required to confirm the facts.`,
   },
-  backing: {
-    title: "Reserve Backing & Custody",
-    text: `Institutional Custodian
-FT Asset Management KB is a regulated financial institution headquartered in Stockholm, Sweden. Key details:
-• Institution: FT Asset Management KB (Stockholm, Sweden)
-• License: Regulated financial institution
-• Current Reserves: $100,000,000 USD
-• Beneficiary: Pedro Fares Ramos
-• Entity: Vetra Foundation Ltd (Cayman Islands)
-• Verification: Public API + Certificate of Custody
+  {
+    id: "utility",
+    title: "3. Utility & Governance",
+    text: `What VTR Is
+VTR is the utility and governance token of the VETRA protocol. Its functions are technical and operational, not promotional.
 
-Public Reserve Verification
-Reserves are verifiable in real-time through:
-1. On-chain: Chainlink Functions snapshots recorded every 15 minutes
-2. REST API: Public API from FT Asset Management KB
-3. Certificate of Custody: Official PDF issued by FT Asset Management KB
+Governance
+The protocol is administered through distinct on-chain roles, each with limited scope:
+- MINTER — controls issuance, always within the hard cap
+- BURNER — can permanently remove tokens from circulation
+- PAUSER — can pause the contract in an emergency
+- UPGRADER — authorizes contract upgrades
+This separation means no single action requires — or grants — unchecked authority.
 
-Collateralization Ratio
-Current ratio: 333% (USD $100M ÷ $30M total supply). This over-collateralization provides a significant safety margin against market volatility and ensures full redeemability.`,
+Utility Today
+- Free circulation: transfer, receive and integrate VTR without friction
+- Liquidity provision: VTR is one side of the live VTR/USDC pool on Uniswap V3
+- Governance participation: token holders are the constituency the protocol answers to
+- Verifiability: every supply and transfer event is public and permanent
+
+What VTR Is Not
+VTR is not a stablecoin, is not pegged to any fiat currency, and is not backed by a fixed reserve. Its market value is discovered openly on the secondary market.`,
   },
-  contract: {
-    title: "Smart Contract Architecture",
-    text: `UUPS Proxy
-VETRA uses the Universal Upgradeable Proxy Standard (UUPS), enabling:
-• Upgradeability controlled by governance: Only the DEFAULT_ADMIN_ROLE can upgrade
-• State preservation: All token balances and contract state survive upgrades
-• Verified implementation: Contract verified on Polygonscan with green checkmark
+  {
+    id: "contract",
+    title: "4. Smart Contract Architecture",
+    text: `Deployed on Polygon Mainnet (Chain ID 137):
 
-Contract Addresses
-• Proxy (UUPS): 0xAA27bd271B01dd20CcFA079800616335416c95Fd (✅ Verified)
-• Implementation V2.6: 0x3241918D37d6ba63919fe9832e7C58f4821656Cb (✅ Verified)
+- Token contract (proxy): 0xAA27bd271B01dd20CcFA079800616335416c95Fd
+- Standard: ERC-20 with upgradeable proxy (UUPS / ERC-1967)
+- Source code: verified and readable on PolygonScan
+- Compiler: Solidity 0.8.x, optimizer enabled
 
-Role-Based Access Control (RBAC)
-• DEFAULT_ADMIN_ROLE: Contract governance, upgrades, pause
-• MINTER_ROLE: Mint new VTR (subject to reserve check)
-• BURNER_ROLE: Burn VTR (operator burn)
-• PAUSER_ROLE: Emergency pause of transfers/mints/burns
+Design Choices
+- Upgradeable (UUPS): allows the protocol to evolve without changing the token address, holder balances or integrations. The same architecture is used by the largest tokens in the market.
+- Hard cap: issuance can never exceed 1,000,000,000 VTR.
+- Role-based access control: administrative actions are split across four distinct roles.
+- Pausable: a dedicated role can halt transfers in a verified emergency.
+- No hidden fees: the contract applies no transfer tax and no blacklist.
 
-Security Parameters
-• Transfer Tax: 0% — No friction on transfers
-• Max Wallet: 3,000 VTR — Anti-whale (exempt for whitelisted)
-• Max Volume per Block: 1,000,000 VTR — Anti-manipulation
-• Cooldown: 0s (disabled for growth phase)
-• Reserve TTL: 15 minutes — Freshness guarantee`,
+Transparency
+Anyone can read the contract, verify the supply, and audit every administrative action directly on the blockchain.`,
   },
-  ecosystem: {
-    title: "Ecosystem & Liquidity",
-    text: `SushiSwap V3 Pool
-VETRA's primary liquidity pool is on SushiSwap V3 (Polygon):
-• Pool: VTR / USDC | Fee Tier: 0.05% (500)
-• Address: 0x8478D9B6de3A4c89B4acc904C67F9fD738dE2E4A
-• Current Liquidity: ~$288,000 | Active Range: $0.20 - $0.25
-
-VTR Pioneer NFT — Pre-Sale Program
-Contract: 0x4c336E0E4Da78156242f90320463F2d8e5A86D8b (Verified on Polygonscan)
-The VTR Pioneer program allows early adopters to:
-1. Buy a Pioneer NFT for $0.34 USDC (15% discount off the $0.40 target price)
-2. Refer friends and earn +5% VTR bonus per referral (0.05 VTR per person)
-3. Redeem 1 NFT → 1 VTR when the market price reaches $0.40
-This mechanism builds a waiting list without cost, creates a natural price-driven launch event, protects the price floor, and rewards early supporters with referral bonuses.
+  {
+    id: "ecosystem",
+    title: "5. Ecosystem & Liquidity",
+    text: `Primary Liquidity Pool
+VETRA's primary liquidity pool operates on Uniswap V3 (Polygon):
+- Pair: VTR / USDC | Fee Tier: 0.05%
+- Pool: 0x5484C717168175cFFDd77678ecAC3A38e76c4e2B
+- Protocol-owned liquidity (POL) — the project holds its own liquidity position
 
 Liquidity Strategy
-VETRA employs a "liquidity ladder" strategy with overlapping price ranges to ensure continuous liquidity during price discovery, escalator pools that activate as the market price rises, and no gaps between ranges — preventing liquidity holes.`,
+Liquidity is concentrated in overlapping price ranges, ensuring continuous trading and reducing slippage for users. Deepening liquidity is an ongoing operational focus.
+
+Where VTR Trades
+- Uniswap V3 (on-chain, permissionless)
+- KuCoin (centralized exchange listing)
+- Aggregators and trackers: GeckoTerminal, CoinGecko, CoinMarketCap, DexScreener
+- Contract verification: PolygonScan
+
+Note
+Liquidity depth is publicly visible. We do not use treasury funds to defend or manipulate the market price; price discovery is left to the open market.`,
   },
-  tokenomics: {
-    title: "Tokenomics",
+  {
+    id: "tokenomics",
+    title: "6. Tokenomics",
     text: `Supply
-• Maximum Supply: 30,000,000 VTR
-• Circulating Supply: ~921,000 VTR
-• Decimals: 18 | Standard: ERC-20
+- Total supply: 30,000,000 VTR
+- Hard cap (on-chain): 1,000,000,000 VTR
+- No issuance is scheduled. Any future issuance would be a deliberate, publicly communicated decision and could never exceed the cap.
 
-Distribution
-• ADM (Treasury): ~3,658 VTR — Operations, sales
-• OP2 (Reserve): ~27.7M VTR — Liquidity pools, strategic
-• OP3 (Burn): ~5K VTR — Permanently locked
-• Pioneer NFT Contract: 400K VTR — Redemption reserve
-• Other: ~921K VTR — Circulating
+Distribution (approximate)
+- Treasury: held by the project's administrative wallet
+- Operations: liquidity provision, integrations and development
+- Community: public market participants and VTR holders
 
-Price Discovery
-The current market price of ~$0.20 reflects early-stage liquidity conditions on SushiSwap V3. The target stabilization price is $0.40, at which point the Pioneer NFT redemption program activates. The protocol does not employ algorithmic price controls — stability derives from:
-1. Full collateralization (333% over-collateralized)
-2. Transparent reserves (on-chain PoR)
-3. Organic market discovery through liquidity pools
-4. Anti-whale mechanisms (max wallet, per-block volume limits)`,
+Policy
+Supply changes emit on-chain events and are publicly verifiable. There is no hidden mint, no rebase and no algorithmic expansion mechanism.`,
   },
-  transparency: {
-    title: "Transparency & Reporting",
-    text: `On-Chain Transparency
-• Event emissions: Every mint, burn, and reserve update emits on-chain events
-• Real-time monitoring: All operations trackable via Polygonscan
-• Reserve dashboard: Live at https://www.vetravtr.com (Real-Time Reserves section)
+  {
+    id: "transparency",
+    title: "7. Transparency & Reporting",
+    text: `Verification Without Intermediaries
+Every claim made in this document is verifiable on-chain. No custodian, auditor or third party needs to be trusted:
+• Supply and cap — readable directly from the contract
+• Transfers — recorded permanently on Polygon
+• Administrative actions — emitted as events and publicly visible
+• Source code — verified on PolygonScan
 
-Off-Chain Reporting
-• Periodic reports: Performance and project evolution
-• Reserve snapshot history: Published with timestamps and transaction references
-• KYC/AML: Conducted institutionally by the issuer and custodian
+Principle
+If a statement cannot be verified by anyone with a block explorer, it is not claimed here.
 
-Security Audits
-• Polygonscan: ✅ Verified
-• GoPlus Security: ✅ Approved
-• De.Fi Scanner: ✅ No rugpull risk`,
+Corrections
+Earlier documentation described a different model (a collateralized structure with an external custody partner). That arrangement was discontinued by the partner and is no longer in place. This document supersedes all previous versions.`,
   },
-  roadmap: {
-    title: "Governance & Future Roadmap",
-    text: `Current Phase (June 2026) — Completed:
+  {
+    id: "roadmap",
+    title: "8. Governance & Roadmap",
+    text: `Completed:
 ✅ Polygon mainnet deployment
 ✅ UUPS proxy with verified implementation
-✅ Chainlink Functions Proof-of-Reserves
-✅ SushiSwap V3 liquidity pool
-✅ VTR Pioneer NFT pre-sale program
-✅ RBAC governance (Admin, Minter, Burner, Pauser)
-✅ Real-Time Reserves dashboard on website
-✅ Over-collateralization (333%)
+✅ Migration to utility-token model (contract V3)
+✅ Removal of legacy reserve parameters and transfer limits
+✅ Fixed supply cap (1,000,000,000 VTR) implemented on-chain
+✅ Role-based governance (Admin, Minter, Burner, Pauser, Upgrader)
+✅ Contract verified on PolygonScan
+✅ Open OTC exchange for VTR (quote, payment and on-chain delivery)
 
-Next Phase (Q3 2026):
-🔲 Expand to additional DEXs and CEXs
-🔲 Public reserves dashboard with historical snapshot explorer
-🔲 Multi-source reserve data redundancy
-🔲 Automated reserve update routines
-🔲 VTR Pioneer NFT public mint (website integration)
+Next Phase (operations):
+🔲 Hardware-wallet custody with timelock delay
+🔲 Public transparency dashboard
+🔲 Deeper liquidity and market integrations
 
-Expansion Phase (Q4 2026+):
-🔲 Multi-chain deployment (Base, Arbitrum)
-🔲 Institutional mint/redeem portal
-🔲 Payment and compliance system integrations
-🔲 VTR-backed payment cards (VETRACARD)
-🔲 Euro-pegged stablecoin (VTE)`,
+We only describe as available what can be used today. Anything that cannot be verified on-chain is not claimed here.`,
   },
-  security: {
-    title: "Security & Risk Mitigation",
+  {
+    id: "security",
+    title: "9. Security & Risk Mitigation",
     text: `Protocol Security Layers
-1. Economic: 1:1 invariant enforced at every mint
-2. Technical: UUPS upgradeability with RBAC governance
-3. Operational: 15-minute reserve freshness TTL
-4. Emergency: Pausable mechanism for critical situations
-5. Monitoring: Real-time event monitoring and operational alerts
+1. Supply: hard on-chain cap — issuance can never exceed it
+2. Technical: UUPS upgradeability with role-based access control
+3. Emergency: pausable mechanism for critical situations
+4. Monitoring: real-time event monitoring and operational alerts
+5. Custody: migration to hardware-wallet custody with timelock delay
 
 Risk Factors
-• Smart contract risk: Independently audited prior to public launch
-• Custodial risk: Reserves held with regulated Swedish institution
-• Market risk: Price discovery through organic DEX trading
-• Regulatory risk: KYC/AML conducted institutionally`,
-  },
-  team: {
-    title: "Team",
-    text: `• Pedro Fares Ramos — Founder, Chairman & CEO
-• Rosemberg Alves Nascimento — Co-Founder & Head of Global Partnerships
-• Christine Schöberlein — European Reserve Custodian
+• Smart contract risk: source code verified and auditable on PolygonScan
+• Market risk: price is discovered organically; liquidity depth may be limited
+• Regulatory risk: token utility and applicable rules vary by jurisdiction
+• Technology risk: the protocol depends on the Polygon network
 
-Official Channels:
-• Website: https://www.vetravtr.com
-• X/Twitter: https://x.com/vetravtr
-• Email: contact@vetravtr.com
-• GitHub: https://github.com/vetravtr`,
+No statement in this document should be read as a guarantee of price, yield or future performance.`,
   },
-  legal: {
-    title: "Legal Notice",
-    text: `This document is strictly informational. Its content is subject to updates without prior notice to reflect contractual, operational, technological, or regulatory changes. In the event of any discrepancy, official information published through VETRA's institutional channels prevails.
+  {
+    id: "team",
+    title: "10. Team",
+    text: `The protocol is developed by a small, accountable team that operates in public:
 
-VETRA — Built for stability in the next era of finance.`,
+- Pedro Fares Ramos — Founder & CEO. Leads strategy, protocol development and partnerships.
+- Rosemberg Alves Nascimento — Co-Founder. Leads global partnerships and commercial development.
+
+We publish what we build. Our commitment is to keep public communication limited to what is verifiable on-chain.`,
   },
-};
+  {
+    id: "legal",
+    title: "11. Legal Notice",
+    text: `This document is provided for informational purposes only. It does not constitute financial, investment, legal or tax advice, nor an offer or solicitation to buy or sell any asset.
 
-// Styles (unchanged)
-const sectionOuterClasses = cn("flex items-start w-full relative");
-const sectionInnerClasses = cn("w-full h-auto py-[88px] relative");
-const mainLayoutClasses = cn(
-  "grid grid-cols-1 lg:grid-cols-12 gap-[72px] w-full relative z-10 items-start",
-);
-const navColumnClasses = cn(
-  "lg:col-span-4 flex flex-col gap-4 relative min-w-0",
-  "lg:sticky lg:top-24",
-);
-const navItemClasses = (isActive: boolean) =>
-  cn(
-    "flex items-center justify-between p-4 rounded-[32px] cursor-pointer transition-all duration-300 text-sm font-medium",
-    isActive
-      ? "bg-[#1E0B2B] text-[#B073FF] border border-[#3D1D55]"
-      : "bg-transparent text-gray-400 hover:text-white hover:bg-white/5",
-  );
-const contentColumnClasses = cn(
-  "lg:col-span-8 flex flex-col gap-2",
-  "lg:sticky lg:top-24 self-start",
-);
+VTR is a utility and governance token. It is not a security, share, bond, collective investment scheme or stablecoin, and it does not grant any ownership or profit-sharing rights in any entity.
+
+Digital assets involve significant risk, including total loss of value. Market prices are volatile and determined by open-market supply and demand. Nothing in this document should be interpreted as a promise of price, return or future functionality.
+
+Statements about items "in development" describe ongoing research objectives. They are not commitments, and no timeline should be inferred.
+
+Users are responsible for complying with the laws applicable in their jurisdiction.`,
+  },
+];
+
+// Seções para o script (versão achatada com \n\n)
+const contentDataFlat = contentData.map((s) => ({
+  id: s.id,
+  title: s.title,
+  text: s.text.replace(/\n/g, "\\n"),
+}));
 ---
 
-<SectionLayout
-  outerClassName={sectionOuterClasses}
-  innerClassName={sectionInnerClasses}
-  autoMargin={true}
->
-  <div class={mainLayoutClasses}>
-    {/* Navigation Column */}
-    <div class={navColumnClasses}>
-      <div
-        class={cn(
-          "flex lg:flex-col gap-4",
-          "max-lg:overflow-x-auto max-lg:pb-4 max-lg:snap-x",
-          "max-w-[280px] max-md:max-w-full w-full hide-scrollbar",
-        )}
-        id="whitepaper-nav"
-      >
-        {navItems.map((item, index) => (
-          <button
-            class={cn(
-              "nav-item whitespace-nowrap lg:whitespace-normal text-left max-lg:snap-start shrink-0",
-              "px-4 py-2 min-h-[52px] rounded-full cursor-pointer",
-              index === 0
-                ? "bg-[#190C26] text-light-purple"
-                : "text-text-grey hover:text-white transition-colors",
-            )}
-            data-id={item.id}
-          >
-            <span class="flex items-center justify-between w-full gap-4 font-serif text-[14px] leading-[18px]">
-              {item.label}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class={cn("w-4 min-w-4 h-4 transition-transform")}
-              >
-                <path d="M5 12h14" />
-                <path d="m12 5 7 7-7 7" />
-              </svg>
-            </span>
-          </button>
-        ))}
+<SectionLayout id="whitepaper-content" class="relative overflow-hidden">
+  <div class="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col lg:flex-row gap-8 lg:gap-12">
+      <!-- Navegação lateral -->
+      <aside class="lg:w-[280px] shrink-0">
+        <div class="lg:sticky lg:top-24">
+          <nav class="flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-x-visible pb-2 lg:pb-0">
+            {
+              navItems.map((item) => (
+                <a
+                  href={`#${item.id}`}
+                  data-nav={item.id}
+                  class="whitepaper-nav whitespace-nowrap lg:whitespace-normal text-left px-4 py-2.5 rounded-lg text-[14px] leading-[20px] text-text-grey hover:text-text-secondary hover:bg-white/[0.04] transition-colors"
+                >
+                  {item.label}
+                </a>
+              ))
+            }
+          </nav>
+        </div>
+      </aside>
+
+      <!-- Conteúdo -->
+      <div class="flex-1 min-w-0">
+        <div id="whitepaper-sections" class="flex flex-col gap-12">
+          {
+            contentData.map((section) => (
+              <section id={section.id} data-section={section.id} class="scroll-mt-28">
+                <Title
+                  text={section.title}
+                  className={cn(
+                    "text-text-secondary text-[24px] leading-[32px] max-sm:text-[20px] max-sm:leading-[28px] mb-4"
+                  )}
+                />
+                <Description
+                  text={section.text}
+                  className="whitespace-pre-line text-text-grey text-[16px] leading-[26px]"
+                />
+              </section>
+            ))
+          }
+        </div>
       </div>
     </div>
-
-    {/* Content Column */}
-    <div class={contentColumnClasses} id="whitepaper-content-area">
-      <Title
-        text={contentData.overview.title}
-        className="text-left text-[24px] leading-[32px] max-md:text-[24px] max-md:leading-[32px]"
-      />
-      <Description
-        text={contentData.overview.text}
-        className="text-left text-text-grey whitespace-pre-line"
-      />
-    </div>
   </div>
-</SectionLayout>
 
-<script>
-  const contentData = {
-    overview: {
-      title: "Executive Overview",
-      text: `VETRA (VTR) is an institutional stablecoin backed 1:1 by U.S. dollars and deployed on the Polygon network. For each mint, the contract guarantees that total supply does not exceed the value of reserves. Reserves are updated via Chainlink Functions and recorded on-chain with an eight-decimal USD value, a timestamp, and a security identifier.\n\nThe backing is provided by FT Asset Management KB, headquartered in Stockholm, Sweden, with an initial commitment of USD 100,000,000.00 dedicated to the currency's liquidity, credibility, and stability. As of June 2026, the protocol is over-collateralized at 333% (USD $100M reserves against 30M VTR supply), providing a significant safety buffer.\n\nKey Metrics (June 2026):\n- Total Supply: 30,000,000 VTR\n- Reserves in Custody: $100,000,000 USD\n- Collateralization Ratio: 333%\n- Market Price: ~$0.20\n- Blockchain: Polygon Mainnet (Chain ID 137)\n- Smart Contract: UUPS Proxy\n- Reserve Custodian: FT Asset Management KB (Sweden)\n- Max Wallet: 3,000 VTR (anti-whale, whitelist exceptions)\n- Transfer Tax: 0%`,
-    },
-    "how-it-works": {
-      title: "How It Works",
-      text: `Proof-of-Reserves via Chainlink Functions\n\nVETRA integrates a reserves data source maintained by FT Asset Management KB into the smart contract through Chainlink Functions. At defined intervals, the function queries FT Asset Management KB's API and returns to the contract a snapshot containing:\n• Aggregate USD value (8 decimals)\n• Timestamp of the reading\n• Monotonic nonce (prevents replay attacks)\n\nMint Invariant\n\nEvery mint operation checks:\n1. Reserve Freshness — The snapshot must be within its TTL (15 minutes)\n2. Supply Invariant — totalSupply + mintAmount ≤ scaledReserves\n\nIf either criterion fails, the transaction is rejected. This guarantees that no VTR can be created without verified dollar backing.\n\nBurn Mechanism\n\nVTR can be burned natively, reducing total supply. Burning can be triggered by:\n• Token holders: Standard ERC-20 burn\n• Operator Burn: Authorized roles can burn from any account per operational policy`,
-    },
-    backing: {
-      title: "Reserve Backing & Custody",
-      text: `Institutional Custodian\n\nFT Asset Management KB is a regulated financial institution headquartered in Stockholm, Sweden.\n• Institution: FT Asset Management KB (Stockholm, Sweden)\n• License: Regulated financial institution\n• Current Reserves: $100,000,000 USD\n• Beneficiary: Pedro Fares Ramos\n• Entity: Vetra Foundation Ltd (Cayman Islands)\n• Verification: Public API + Certificate of Custody\n\nPublic Reserve Verification\n\nReserves are verifiable in real-time through:\n1. On-chain: Chainlink Functions snapshots recorded every 15 minutes\n2. REST API: Public API from FT Asset Management KB\n3. Certificate of Custody: Official PDF issued by FT Asset Management KB\n\nCollateralization Ratio\n\nCurrent ratio: 333% (USD $100M ÷ $30M total supply). This over-collateralization provides a significant safety margin against market volatility and ensures full redeemability.`,
-    },
-    contract: {
-      title: "Smart Contract Architecture",
-      text: `UUPS Proxy\n\nVETRA uses the Universal Upgradeable Proxy Standard (UUPS), enabling:\n• Upgradeability controlled by governance: Only the DEFAULT_ADMIN_ROLE can upgrade\n• State preservation: All token balances and contract state survive upgrades\n• Verified implementation: Contract verified on Polygonscan with green checkmark\n\nContract Addresses\n• Proxy (UUPS): 0xAA27bd271B01dd20CcFA079800616335416c95Fd (✅ Verified)\n• Implementation V2.6: 0x3241918D37d6ba63919fe9832e7C58f4821656Cb (✅ Verified)\n\nRole-Based Access Control (RBAC)\n• DEFAULT_ADMIN_ROLE: Contract governance, upgrades, pause\n• MINTER_ROLE: Mint new VTR (subject to reserve check)\n• BURNER_ROLE: Burn VTR (operator burn)\n• PAUSER_ROLE: Emergency pause of transfers/mints/burns\n\nSecurity Parameters\n• Transfer Tax: 0% — No friction on transfers\n• Max Wallet: 3,000 VTR — Anti-whale (exempt for whitelisted)\n• Max Volume per Block: 1,000,000 VTR — Anti-manipulation\n• Reserve TTL: 15 minutes — Freshness guarantee`,
-    },
-    ecosystem: {
-      title: "Ecosystem & Liquidity",
-      text: `SushiSwap V3 Pool\n\nVETRA's primary liquidity pool is on SushiSwap V3 (Polygon):\n• Pool: VTR / USDC | Fee Tier: 0.05% (500)\n• Address: 0x8478D9B6de3A4c89B4acc904C67F9fD738dE2E4A\n• Current Liquidity: ~$288,000 | Active Range: $0.20 - $0.25\n\nVTR Pioneer NFT — Pre-Sale Program\n\nContract: 0x4c336E0E4Da78156242f90320463F2d8e5A86D8b (Verified on Polygonscan)\nThe VTR Pioneer program allows early adopters to:\n1. Buy a Pioneer NFT for $0.34 USDC (15% discount off the $0.40 target price)\n2. Refer friends and earn +5% VTR bonus per referral (0.05 VTR per person)\n3. Redeem 1 NFT → 1 VTR when the market price reaches $0.40\n\nLiquidity Strategy\n\nVETRA employs a "liquidity ladder" strategy with overlapping price ranges to ensure continuous liquidity during price discovery, escalator pools that activate as the market price rises, and no gaps between ranges — preventing liquidity holes.`,
-    },
-    tokenomics: {
-      title: "Tokenomics",
-      text: `Supply\n• Maximum Supply: 30,000,000 VTR\n• Circulating Supply: ~921,000 VTR\n• Decimals: 18 | Standard: ERC-20\n\nDistribution\n• ADM (Treasury): ~3,658 VTR — Operations, sales\n• OP2 (Reserve): ~27.7M VTR — Liquidity pools, strategic\n• OP3 (Burn): ~5K VTR — Permanently locked\n• Pioneer NFT Contract: 400K VTR — Redemption reserve\n• Other: ~921K VTR — Circulating\n\nPrice Discovery\n\nThe current market price of ~$0.20 reflects early-stage liquidity conditions on SushiSwap V3. The target stabilization price is $0.40, at which point the Pioneer NFT redemption program activates. The protocol does not employ algorithmic price controls — stability derives from:\n1. Full collateralization (333% over-collateralized)\n2. Transparent reserves (on-chain PoR)\n3. Organic market discovery through liquidity pools\n4. Anti-whale mechanisms (max wallet, per-block volume limits)`,
-    },
-    transparency: {
-      title: "Transparency & Reporting",
-      text: `On-Chain Transparency\n• Event emissions: Every mint, burn, and reserve update emits on-chain events\n• Real-time monitoring: All operations trackable via Polygonscan\n• Reserve dashboard: Live at https://www.vetravtr.com (Real-Time Reserves section)\n\nOff-Chain Reporting\n• Periodic reports: Performance and project evolution\n• Reserve snapshot history: Published with timestamps and transaction references\n• KYC/AML: Conducted institutionally by the issuer and custodian\n\nSecurity Audits\n• Polygonscan: ✅ Verified\n• GoPlus Security: ✅ Approved\n• De.Fi Scanner: ✅ No rugpull risk`,
-    },
-    roadmap: {
-      title: "Governance & Future Roadmap",
-      text: `Current Phase (June 2026) — Completed:\n✅ Polygon mainnet deployment\n✅ UUPS proxy with verified implementation\n✅ Chainlink Functions Proof-of-Reserves\n✅ SushiSwap V3 liquidity pool\n✅ VTR Pioneer NFT pre-sale program\n✅ RBAC governance (Admin, Minter, Burner, Pauser)\n✅ Real-Time Reserves dashboard on website\n✅ Over-collateralization (333%)\n\nNext Phase (Q3 2026):\n🔲 Expand to additional DEXs and CEXs\n🔲 Public reserves dashboard with historical snapshot explorer\n🔲 Multi-source reserve data redundancy\n🔲 Automated reserve update routines\n🔲 VTR Pioneer NFT public mint (website integration)\n\nExpansion Phase (Q4 2026+):\n🔲 Multi-chain deployment (Base, Arbitrum)\n🔲 Institutional mint/redeem portal\n🔲 Payment and compliance system integrations\n🔲 VTR-backed payment cards (VETRACARD)\n🔲 Euro-pegged stablecoin (VTE)`,
-    },
-    security: {
-      title: "Security & Risk Mitigation",
-      text: `Protocol Security Layers\n1. Economic: 1:1 invariant enforced at every mint\n2. Technical: UUPS upgradeability with RBAC governance\n3. Operational: 15-minute reserve freshness TTL\n4. Emergency: Pausable mechanism for critical situations\n5. Monitoring: Real-time event monitoring and operational alerts\n\nRisk Factors\n• Smart contract risk: Independently audited prior to public launch\n• Custodial risk: Reserves held with regulated Swedish institution\n• Market risk: Price discovery through organic DEX trading\n• Regulatory risk: KYC/AML conducted institutionally`,
-    },
-    team: {
-      title: "Team",
-      text: `• Pedro Fares Ramos — Founder, Chairman & CEO\n• Rosemberg Alves Nascimento — Co-Founder & Head of Global Partnerships\n• Christine Schöberlein — European Reserve Custodian\n\nOfficial Channels:\n• Website: https://www.vetravtr.com\n• X/Twitter: https://x.com/vetravtr\n• Email: contact@vetravtr.com\n• GitHub: https://github.com/vetravtr`,
-    },
-    legal: {
-      title: "Legal Notice",
-      text: `This document is strictly informational. Its content is subject to updates without prior notice to reflect contractual, operational, technological, or regulatory changes. In the event of any discrepancy, official information published through VETRA's institutional channels prevails.\n\nVETRA — Built for stability in the next era of finance.`,
-    },
-  };
+  <script is:inline define:vars={{ contentDataFlat }}>
+    (() => {
+      const data = contentDataFlat;
 
-  function initWhitepaperTabs() {
-    const navItems = document.querySelectorAll(".nav-item");
-    const contentArea = document.getElementById("whitepaper-content-area");
-    if (!navItems.length || !contentArea) return;
-
-    navItems.forEach((item) => {
-      item.addEventListener("click", () => {
-        navItems.forEach((nav) => {
-          nav.classList.remove("bg-[#190C26]", "text-light-purple");
-          nav.classList.add("text-text-grey", "hover:text-white", "transition-colors");
+      // Scroll suave ao clicar na navegação
+      document.querySelectorAll(".whitepaper-nav").forEach((link) => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          const id = link.getAttribute("data-nav");
+          const target = document.getElementById(id);
+          if (target) {
+            target.scrollIntoView({ behavior: "smooth", block: "start" });
+            history.replaceState(null, "", `#${id}`);
+          }
         });
-        item.classList.remove("text-text-grey", "hover:text-white", "transition-colors");
-        item.classList.add("bg-[#190C26]", "text-light-purple");
-
-        const id = item.getAttribute("data-id");
-        if (!id) return;
-        const data = contentData[id] || { title: "", text: "Content coming soon..." };
-
-        contentArea.style.opacity = "0";
-        setTimeout(() => {
-          contentArea.innerHTML = `
-            <div class="flex flex-col gap-2 text-left">
-              <h2 class="font-sans text-[24px] md:text-[24px] leading-[32px] font-medium text-text-secondary">
-                ${data.title}
-              </h2>
-              <p class="font-serif text-[16px] md:text-[16px] leading-[20px] text-text-grey whitespace-pre-line">
-                ${data.text}
-              </p>
-            </div>
-          `;
-          contentArea.style.opacity = "1";
-        }, 200);
       });
-    });
-  }
 
-  document.addEventListener("astro:page-load", initWhitepaperTabs);
-  if (document.readyState === "complete") {
-    initWhitepaperTabs();
-  } else {
-    document.addEventListener("DOMContentLoaded", initWhitepaperTabs);
-  }
-</script>
+      // Destaque da seção ativa durante o scroll
+      const sections = document.querySelectorAll("[data-section]");
+      const navLinks = document.querySelectorAll(".whitepaper-nav");
 
-<style>
-  .hide-scrollbar::-webkit-scrollbar { display: none; }
-  .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-</style>
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const id = entry.target.getAttribute("data-section");
+              navLinks.forEach((l) => {
+                const active = l.getAttribute("data-nav") === id;
+                l.classList.toggle("bg-white/[0.06]", active);
+                l.classList.toggle("text-text-secondary", active);
+              });
+            }
+          });
+        },
+        { rootMargin: "-20% 0px -70% 0px", threshold: 0 }
+      );
+
+      sections.forEach((s) => observer.observe(s));
+    })();
+  </script>
+</SectionLayout>

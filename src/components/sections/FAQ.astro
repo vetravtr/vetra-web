@@ -11,40 +11,44 @@ import Description from "../Description.astro";
 
 const faqItems = [
   {
-    q: "How much does a Pioneer NFT cost?",
-    a: "Each NFT costs $0.34 USDC. You can buy 1 or multiple in a single transaction — just adjust the quantity before clicking Buy.",
+    q: "How can I buy VTR?",
+    a: "Through our OTC desk. Send us a quote request with your name, email, country and the Polygon wallet address that will receive the VTR. We reply with the current quote — amount, quantity of VTR, receiving address and how long the quote is valid for. Once your USDC or USDT payment is confirmed on-chain, we send the VTR to your wallet.",
   },
   {
-    q: "I tried to buy more than 1 NFT but only 1 was purchased. Why?",
-    a: "If you bought before June 15, you used the old V1 contract which limited 1 NFT per wallet. The new V2 contract (live now) allows unlimited purchases. Try again and you can buy as many as you want in one transaction.",
+    q: "How is the price calculated?",
+    a: "The reference is the current market price of VTR on the Uniswap V3 pool on Polygon — public and verifiable on-chain by anyone. The quote you receive is locked for 30 minutes, so the price you accept is the price you pay.",
   },
   {
-    q: "What do I get when I redeem an NFT?",
-    a: "Each Pioneer NFT can be redeemed for 1 VTR once the market price reaches $0.40. You can redeem all your NFTs at once using the Redeem All button.",
+    q: "Which tokens do you accept?",
+    a: "USDC or USDT on the Polygon network only. Please do not send from other networks (Ethereum, BSC and others) — funds sent on a different network cannot be recovered.",
   },
   {
-    q: "Can I transfer or sell my NFT?",
-    a: "No. The Pioneer NFT is soulbound (non-transferable). It cannot be sold on marketplaces. It can only be redeemed for VTR.",
+    q: "What is the minimum purchase?",
+    a: "The minimum is US$ 50 per operation. For operations above US$ 1,000 we ask for a simple identification (name and document) before completing the exchange. Operations above US$ 5,000 are arranged directly with our team.",
   },
   {
-    q: "How does the referral program work?",
-    a: "Share your referral link with friends. When they buy an NFT using your link, you earn a 5% VTR bonus on each NFT they purchase. The bonus accumulates and can be claimed on redemption day.",
+    q: "How long does it take to receive the VTR?",
+    a: "Once your payment is confirmed on-chain, the VTR is sent to the wallet address you provided — usually within a few hours on working days. Both transactions (your payment and our VTR transfer) are public on Polygonscan.",
   },
   {
-    q: "I connected my wallet but nothing happens when I click Buy.",
-    a: "Make sure you have enough USDC on Polygon network. The wallet will ask you to approve the USDC spending first, then confirm the purchase transaction. You need a small amount of POL for gas fees.",
+    q: "Do I need to connect a wallet?",
+    a: "No. There is nothing to connect or sign. You simply tell us the wallet address where you want to receive the VTR — any Polygon wallet works (SafePal, MetaMask, Trust Wallet, Rabby, KuCoin Wallet and others).",
   },
   {
-    q: "What is the Collateralization Ratio?",
-    a: "VETRA is over-collateralized at 333%. This means there is $3.33 in reserve backing every 1 VTR in circulation, providing a strong safety buffer.",
+    q: "Is VTR a stablecoin?",
+    a: "No. VTR is the utility and governance token of the VETRA protocol on Polygon. It is not pegged to any fiat currency; its market value is determined by liquidity and market demand.",
   },
   {
-    q: "What wallet can I use?",
-    a: "Any WalletConnect-compatible wallet: SafePal, Trust Wallet, Rabby, MetaMask mobile, and others. Click Connect and scan the QR code with your wallet app.",
+    q: "What backs the value of VTR?",
+    a: "VTR is not backed by a fixed reserve. Its value comes from what already exists and works today: on-chain governance, real liquidity on Uniswap V3, and open-market trading. All token parameters (supply, maximum cap and transfers) are verifiable on-chain.",
   },
   {
-    q: "How do I get USDC on Polygon?",
-    a: "The NFT can only be purchased with USDC on the Polygon network (not Ethereum, BSC, or other chains). You can buy USDC on exchanges like KuCoin, Binance, or OKX, then withdraw directly to your wallet on the Polygon network — just select Polygon as the withdrawal network.",
+    q: "Are there any returns or guaranteed value?",
+    a: "No. VTR is sold as a utility and governance token — not as an investment. No return, yield, buyback or guaranteed value is offered, promised or implied. What you receive are governance and usage rights over the protocol.",
+  },
+  {
+    q: "How do I get USDC or USDT on Polygon?",
+    a: "You can buy USDC or USDT on exchanges like KuCoin, Binance or OKX, then withdraw directly to your wallet on the Polygon network — just select Polygon as the withdrawal network.",
   },
 ];
 
@@ -79,7 +83,7 @@ const TEXT_12_16 = "font-serif text-[12px] leading-[16px] max-md:text-[12px] max
       <Badge text="FAQ" />
       <AlignmentLayout direction="vertical" justify="center" align="center" className="gap-2">
         <Title text="Frequently asked questions" className="text-center" />
-        <Description text="Everything you need to know about the Pioneer NFT pre-sale." className="max-w-[588px] text-center" />
+        <Description text="Everything you need to know about buying VTR." className="max-w-[588px] text-center" />
       </AlignmentLayout>
     </AlignmentLayout>
 

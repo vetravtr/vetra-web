@@ -1,0 +1,159 @@
+---
+import Layout from "../layouts/Layout.astro";
+import GenericHeader from "../components/common/GenericHeader.astro";
+import Footer from "../components/sections/Footer.astro";
+
+const NOTICE_DATE = "September 14, 2026";
+const CONTRACT_URL =
+  "https://polygonscan.com/token/0xAA27bd271B01dd20CcFA079800616335416c95Fd";
+
+const changes = [
+  "Legacy reserve parameters have been removed from the smart contract.",
+  "Transfer limits and cooldown have been removed — VTR now circulates freely.",
+  "A fixed maximum supply (cap) of 1,000,000,000 VTR is enforced on-chain.",
+  "Current supply remains 30,000,000 VTR — no new tokens have been issued.",
+  "Governance is split into distinct roles: mint, burn, pause and upgrade.",
+  "The contract source code is verified and publicly auditable.",
+];
+
+const unchanged = [
+  "Token holders' balances — unchanged.",
+  "Contract address — unchanged (0xAA27bd271B01dd20CcFA079800616335416c95Fd).",
+  "Transfer tax — still 0%.",
+  "The project, the team and the community continue.",
+];
+---
+
+<Layout
+  title="Official Notice — Protocol Evolution | VETRA"
+  description="Official notice to the VETRA community regarding the evolution of the VTR token to a utility and governance token."
+>
+  <GenericHeader />
+  <div class="relative z-10">
+    <main class="w-full">
+      <section class="w-full pt-[120px] pb-[80px] px-5">
+        <div class="max-w-[760px] mx-auto flex flex-col gap-6 text-left">
+          <div class="flex flex-col gap-2">
+            <span
+              class="self-start text-[11px] tracking-widest uppercase border border-badge-purple text-badge-purple px-3 py-1 rounded-full"
+            >
+              Official Notice
+            </span>
+            <h1
+              class="font-sans text-[32px] leading-[40px] md:text-[38px] md:leading-[46px] font-medium text-text-secondary"
+            >
+              VETRA is evolving
+            </h1>
+            <p class="text-text-grey text-[14px] leading-[20px]">
+              Published: {NOTICE_DATE} · This notice will remain available while the transition is completed.
+            </p>
+          </div>
+
+          <p class="text-text-grey text-[16px] leading-[24px]">
+            We are writing to inform our community and holders about an important evolution in the
+            VETRA protocol.
+          </p>
+
+          <div class="flex flex-col gap-2">
+            <h2 class="font-sans text-[20px] leading-[26px] font-medium text-text-secondary">
+              What happened
+            </h2>
+            <p class="text-text-grey text-[16px] leading-[24px]">
+              The institutional custody arrangement previously communicated for VTR — provided by
+              FT Asset Management — was discontinued by that institution. As a result, the
+              fixed-parity model (1 VTR = 1 USD) that depended on that arrangement is no longer in
+              place, and will not continue to be represented as such.
+            </p>
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <h2 class="font-sans text-[20px] leading-[26px] font-medium text-text-secondary">
+              What this means
+            </h2>
+            <p class="text-text-grey text-[16px] leading-[24px]">
+              VTR is now positioned as the <strong>utility and governance token</strong> of the
+              VETRA protocol, deployed on Polygon. VTR is
+              <strong>not a stablecoin</strong> and is not pegged to any fiat currency. Its market
+              value is determined by open-market liquidity and demand.
+            </p>
+          </div>
+
+          <div class="flex flex-col gap-3">
+            <h2 class="font-sans text-[20px] leading-[26px] font-medium text-text-secondary">
+              What has changed on-chain
+            </h2>
+            <p class="text-text-grey text-[14px] leading-[20px]">
+              All of the following can be independently verified by anyone:
+            </p>
+            <ul class="flex flex-col gap-2">
+              {changes.map((item) => (
+                <li class="text-text-grey text-[15px] leading-[22px] flex gap-2">
+                  <span class="text-badge-purple">•</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+            <a
+              href={CONTRACT_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="self-start border border-badge-purple text-badge-purple px-5 py-2 rounded-full text-[13px] font-semibold hover:bg-badge-purple/10 transition-colors"
+            >
+              Verify on PolygonScan
+            </a>
+          </div>
+
+          <div class="flex flex-col gap-3">
+            <h2 class="font-sans text-[20px] leading-[26px] font-medium text-text-secondary">
+              What has not changed
+            </h2>
+            <ul class="flex flex-col gap-2">
+              {unchanged.map((item) => (
+                <li class="text-text-grey text-[15px] leading-[22px] flex gap-2">
+                  <span class="text-emerald-400">✓</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <h2 class="font-sans text-[20px] leading-[26px] font-medium text-text-secondary">
+              Token exchange
+            </h2>
+            <p class="text-text-grey text-[16px] leading-[24px]">
+              VTR can be acquired directly from the project through our OTC desk: you request a
+              quote, receive the current market reference and the receiving address, and the VTR is
+              sent to your wallet once your payment is confirmed on-chain. Both sides of every
+              operation are public and verifiable on Polygonscan.
+            </p>
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <h2 class="font-sans text-[20px] leading-[26px] font-medium text-text-secondary">
+              Our commitment
+            </h2>
+            <p class="text-text-grey text-[16px] leading-[24px]">
+              We are committed to transparency. On-chain information is public and can be verified
+              at any time, and this notice will remain available while the transition is completed.
+              For any questions, please reach out through our official channels.
+            </p>
+          </div>
+
+          <div
+            class="mt-2 border border-input-hover-bg rounded-[8px] p-5 flex flex-col gap-1 bg-dashboard-card-bg"
+          >
+            <p class="text-text-secondary text-[14px] font-semibold">Official channels</p>
+            <p class="text-text-grey text-[13px] leading-[20px]">
+              Website: https://www.vetravtr.com<br />
+              X/Twitter: https://x.com/vetravtr<br />
+              Telegram: https://t.me/vetravtr<br />
+              E-mail: contact@vetravtr.com
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+    <Footer />
+  </div>
+</Layout>
