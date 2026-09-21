@@ -39,3 +39,6 @@ pnpm-debug.log*
 
 # registros de clientes (OTC) — nunca versionar
 data/
+# projeto Next.js legado (nao pertence a este repo; usar vetravtr/dashboard-astro)
+dashboard/
+.next/
