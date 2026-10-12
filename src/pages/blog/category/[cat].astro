@@ -38,6 +38,7 @@ if (supabaseUrl && supabaseKey && cat) {
       .from("blog_posts")
       .select("*")
       .eq("category", cat)
+      .eq("published", true)
       .order("created_at", { ascending: false });
     if (data) posts = data;
   } catch (e) {

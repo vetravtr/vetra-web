@@ -24,6 +24,7 @@ if (supabaseUrl && supabaseKey && slug) {
       .from("blog_posts")
       .select("*")
       .eq("slug", slug)
+      .eq("published", true)   // rascunho nunca é publico: a pagina so existe com published = true
       .single();
     post = data;
   } catch (e) {

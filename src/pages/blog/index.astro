@@ -28,7 +28,7 @@ let error = null;
 if (supabaseUrl && supabaseKey) {
   try {
     const supabase = createClient(supabaseUrl, supabaseKey);
-    const { data } = await supabase.from("blog_posts").select("*").order("created_at", { ascending: false });
+    const { data } = await supabase.from("blog_posts").select("*").eq("published", true).order("created_at", { ascending: false });
     if (data) posts = data;
   } catch (e) {
     error = e.message;

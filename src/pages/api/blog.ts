@@ -21,8 +21,9 @@ export const GET: APIRoute = async ({ url }) => {
       .select("*")
       .order("created_at", { ascending: false });
 
-    // Em dev, mostrar todos (rascunhos inclusive)
-    if (url.searchParams.get("dev") !== "true") {
+    // NUNCA expor rascunho em produção: só o ambiente de dev local vê tudo.
+    // (antes bastava ?dev=true numa URL pública para vazar rascunho — corrigido 01/10/2026)
+    if (!import.meta.env.DEV) {
       query = query.eq("published", true);
     }
 
