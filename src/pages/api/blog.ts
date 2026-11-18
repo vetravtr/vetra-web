@@ -6,7 +6,7 @@ export const prerender = false;
 export const GET: APIRoute = async ({ url }) => {
   try {
     const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || import.meta.env.SUPABASE_URL;
-    const supabaseKey = import.meta.env.SUPABASE_SERVICE_KEY || import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+    const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
     
     if (!supabaseUrl || !supabaseKey) {
       return new Response(JSON.stringify({ error: "Supabase not configured" }), { status: 500 });

@@ -38,12 +38,15 @@ export const POST: APIRoute = async ({ request }) => {
     // Tentar salvar no Supabase (se falhar, não trava)
     try {
       const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || import.meta.env.SUPABASE_URL;
-      const supabaseKey = import.meta.env.SUPABASE_SERVICE_KEY || import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+      const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       if (supabaseUrl && supabaseKey) {
         const supabase = createClient(supabaseUrl, supabaseKey);
         const { error: upsertError } = await supabase.from("users").upsert(
           { wallet_address: wallet_address.toLowerCase(), name, email, referral_code: "r/" + wallet_address.slice(2, 10) },
-          { onConflict: "wallet_address" }
+          // 18/11/2026: ignoreDuplicates -> ON CONFLICT DO NOTHING (só precisa de INSERT).
+          // Motivo: o site deixou de usar a service key; dar UPDATE em `users` para `anon`
+          // permitiria sobrescrever cadastro alheio às cegas.
+          { onConflict: "wallet_address", ignoreDuplicates: true }
         );
         if (upsertError) {
           console.error('[SAVE-USER] Supabase upsert error:', upsertError);

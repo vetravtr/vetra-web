@@ -90,7 +90,7 @@ export const POST: APIRoute = async ({ request }) => {
     // ---- registro no Supabase ----
     try {
       const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || import.meta.env.SUPABASE_URL;
-      const supabaseKey = import.meta.env.SUPABASE_SERVICE_KEY || import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+      const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       if (supabaseUrl && supabaseKey) {
         const supabase = createClient(supabaseUrl, supabaseKey);
         const { error } = await supabase.from('otc_requests').insert({

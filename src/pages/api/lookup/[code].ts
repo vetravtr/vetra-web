@@ -10,7 +10,7 @@ export const GET: APIRoute = async ({ params }) => {
     }
 
     const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
-    const supabaseKey = import.meta.env.SUPABASE_SERVICE_KEY || import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+    const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
     
     if (!supabaseUrl || !supabaseKey) {
       return new Response(JSON.stringify({ address: null, error: "not configured" }), { status: 500 });
@@ -26,14 +26,15 @@ export const GET: APIRoute = async ({ params }) => {
 
 async function doLookup(supabase, code) {
   const cleanCode = code.startsWith('r/') ? code : 'r/' + code;
-  const { data: users } = await supabase
-    .from("users")
-    .select("wallet_address")
-    .eq("referral_code", cleanCode)
-    .limit(1);
+  // 18/11/2026: consulta a FUNCAO lookup_referral (SECURITY DEFINER, um codigo por vez).
+  // Antes era uma view que permitia listar TODOS os codigos e carteiras de uma vez.
+  const { data, error } = await supabase.rpc("lookup_referral", { p_code: cleanCode });
 
-  if (users && users.length > 0) {
-    return new Response(JSON.stringify({ address: users[0].wallet_address }));
+  if (error) {
+    return new Response(JSON.stringify({ address: null, error: error.message }), { status: 500 });
+  }
+  if (data) {
+    return new Response(JSON.stringify({ address: data }));
   }
 
   return new Response(JSON.stringify({ address: null }), { status: 404 });

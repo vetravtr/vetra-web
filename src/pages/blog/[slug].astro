@@ -12,7 +12,7 @@ const { slug } = Astro.params;
 
 // Buscar post no Supabase (server-side)
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
-const supabaseKey = import.meta.env.SUPABASE_SERVICE_KEY || import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
 let post = null;
 let errorMsg = null;
